@@ -2,7 +2,7 @@
 /**
  * validate-agent-contracts.ts
  *
- * 检查 CLAUDE.md 和 AGENTS.md 的 V2 共享核心区一致性。
+ * 检查 CLAUDE.md、AGENTS.md 和其他入口文档的 V2 契约一致性。
  *
  * 检查项：
  * 1. 两个入口文件存在
@@ -12,6 +12,8 @@
  * 5. 禁止旧表述不存在
  * 6. 两个入口都引用共享契约
  * 7. 共享契约文件存在
+ * 8. src/video-system/README.md 不含旧流程
+ * 9. lab entry 与生产 entry 隔离
  */
 
 import * as fs from "node:fs";
@@ -19,20 +21,19 @@ import * as path from "node:path";
 
 const ROOT = path.resolve(__dirname, "../../..");
 
-interface CheckResult {
+export interface CheckResult {
   rule: string;
   pass: boolean;
   message: string;
 }
 
 const REQUIRED_KEYWORDS = [
-  "制作前硬门禁",
+  "gate:preproduction",
   "Revision Router",
-  "SHA-256",
-  "candidate",
   "promotion",
-  "reviewerSystem",
+  "review-candidate",
   "approvedByUser",
+  "capabilityRegistry",
 ];
 
 const FORBIDDEN_PHRASES = [
@@ -43,6 +44,17 @@ const FORBIDDEN_PHRASES = [
 ];
 
 const REQUIRED_FILE_REFS = ["docs/agent/KNOWLEDGE_VIDEO_V2_CONTRACT.md"];
+
+// 旧流程模式 — 不得在任何入口文档中出现
+const OLD_FLOW_PATTERNS = [
+  /contentBrief\.json.*→.*videoSpec\.json.*→.*TTS.*→.*MP4/s,
+  /新会话入口文件/,
+  /改这个文件来制作新视频/,
+  /改这个做新视频/,
+  /13 个提示词文件/,
+  /00-16 共 17 个/,
+  /直接改 videoSpec/,
+];
 
 function extractSharedBlock(content: string): string | null {
   const begin = "<!-- BEGIN SHARED_V2_CONTRACT -->";
@@ -55,6 +67,12 @@ function extractSharedBlock(content: string): string | null {
 
 function checkFileExists(relPath: string): boolean {
   return fs.existsSync(path.join(ROOT, relPath));
+}
+
+function readFile(relPath: string): string | null {
+  const fullPath = path.join(ROOT, relPath);
+  if (!fs.existsSync(fullPath)) return null;
+  return fs.readFileSync(fullPath, "utf-8");
 }
 
 function countOccurrences(haystack: string, needle: string): number {
@@ -86,8 +104,8 @@ export function validateAgentContracts(): CheckResult[] {
 
   if (!claudeExists || !agentsExists) return results;
 
-  const claudeContent = fs.readFileSync(path.join(ROOT, "CLAUDE.md"), "utf-8");
-  const agentsContent = fs.readFileSync(path.join(ROOT, "AGENTS.md"), "utf-8");
+  const claudeContent = readFile("CLAUDE.md")!;
+  const agentsContent = readFile("AGENTS.md")!;
 
   // 2. Shared markers exist and unique
   for (const [name, content] of [
@@ -123,7 +141,6 @@ export function validateAgentContracts(): CheckResult[] {
   });
 
   // 4. Required keywords present
-  const combined = claudeContent + agentsContent;
   for (const kw of REQUIRED_KEYWORDS) {
     const inClaude = claudeContent.includes(kw);
     const inAgents = agentsContent.includes(kw);
@@ -176,6 +193,95 @@ export function validateAgentContracts(): CheckResult[] {
         rule: `ref-${path.basename(ref)}`,
         pass: present,
         message: `Shared block references "${ref}": ${present}`,
+      });
+    }
+  }
+
+  // 9. src/video-system/README.md 不含旧流程
+  const readmeContent = readFile("src/video-system/README.md");
+  if (readmeContent) {
+    for (const pattern of OLD_FLOW_PATTERNS) {
+      const match = readmeContent.match(pattern);
+      results.push({
+        rule: `readme-no-old-flow-${pattern.source.substring(0, 20)}`,
+        pass: !match,
+        message: match
+          ? `README contains old flow pattern: "${match[0].substring(0, 50)}..."`
+          : `README clean: ${pattern.source.substring(0, 30)}`,
+      });
+    }
+
+    // README 必须指向根入口或 V2 契约
+    const refsRoot =
+      readmeContent.includes("CLAUDE.md") ||
+      readmeContent.includes("AGENTS.md");
+    const refsContract = readmeContent.includes(
+      "docs/agent/KNOWLEDGE_VIDEO_V2_CONTRACT.md",
+    );
+    results.push({
+      rule: "readme-refs-root-entry",
+      pass: refsRoot || refsContract,
+      message: `README references root entry or V2 contract: root=${refsRoot}, contract=${refsContract}`,
+    });
+  } else {
+    results.push({
+      rule: "readme-exists",
+      pass: false,
+      message: "src/video-system/README.md does not exist",
+    });
+  }
+
+  // 10. Lab entry 与生产 entry 隔离
+  const labEntryExists = checkFileExists("src/lab.tsx");
+  const rootContent = readFile("src/Root.tsx");
+  const labContent = readFile("src/lab.tsx");
+
+  results.push({
+    rule: "lab-entry-exists",
+    pass: labEntryExists,
+    message: `src/lab.tsx exists: ${labEntryExists}`,
+  });
+
+  if (labContent && rootContent) {
+    // Lab entry 不得注册正式生产 Composition
+    const labHasProduction =
+      labContent.includes('id="KnowledgeVideo"') ||
+      labContent.includes('id="KnowledgeVideoWithSubtitles"') ||
+      labContent.includes('id="CoverImage');
+    results.push({
+      rule: "lab-no-production-composition",
+      pass: !labHasProduction,
+      message: labHasProduction
+        ? "src/lab.tsx registers production Composition (should not)"
+        : "src/lab.tsx does not register production Composition",
+    });
+
+    // Lab entry 必须使用 registerRoot
+    const labUsesRegisterRoot = labContent.includes("registerRoot(LabRoot)");
+    results.push({
+      rule: "lab-uses-register-root",
+      pass: labUsesRegisterRoot,
+      message: `src/lab.tsx uses registerRoot(LabRoot): ${labUsesRegisterRoot}`,
+    });
+  }
+
+  // 11. studio:lab 命令使用 lab entry
+  const pkgContent = readFile("package.json");
+  if (pkgContent) {
+    try {
+      const pkg = JSON.parse(pkgContent);
+      const studioLabCmd = pkg.scripts?.["studio:lab"] || "";
+      const usesLabEntry = studioLabCmd.includes("src/lab.ts");
+      results.push({
+        rule: "studio-lab-uses-lab-entry",
+        pass: usesLabEntry,
+        message: `studio:lab command uses src/lab.ts: ${usesLabEntry} (cmd: "${studioLabCmd}")`,
+      });
+    } catch {
+      results.push({
+        rule: "studio-lab-parse",
+        pass: false,
+        message: "Failed to parse package.json",
       });
     }
   }

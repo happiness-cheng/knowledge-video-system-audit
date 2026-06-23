@@ -39,7 +39,7 @@
     "validate:system": "npm run typecheck && npm test && npm run validate:registry && npm run validate:all && npm run validate:content -- src/video-system/fixtures/preproduction/contentBrief-reviewed-example.json && npm run gate:preproduction:review -- src/video-system/fixtures/preproduction/passing-example.json && npm run validate:agent-contracts",
     "prepare:preproduction": "tsx src/video-system/scripts/prepare-preproduction-review.ts",
     "refresh:preproduction-consensus": "tsx src/video-system/scripts/refresh-preproduction-consensus.ts",
-    "studio:lab": "npx remotion studio src/index.ts",
+    "studio:lab": "npx remotion studio src/lab.tsx",
     "packet:preproduction": "tsx src/video-system/scripts/generate-preproduction-review-packet.ts",
     "import:preproduction-review": "tsx src/video-system/scripts/import-preproduction-review.ts",
     "validate:quality": "tsx src/video-system/scripts/validate-quality-score.ts --draft",

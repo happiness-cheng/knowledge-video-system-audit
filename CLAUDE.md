@@ -1,148 +1,154 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file is the Claude Code entry contract for this repository.
 
-## 项目概述
+## 项目定位
 
-"世间一点尘"自媒体品牌的 Remotion 视频生产系统。用 React 组件化方式制作程序化视频，发布到 YouTube/Bilibili/抖音。
-
-品牌定位：一个普通大学生用 AI 做各种实验，把真实过程记录下来。不是"我教你"，而是"我试给你看"。
+"世间一点尘"的 Remotion 知识视频生产系统。内容质量由网页版 ChatGPT 与用户负责，Claude Code 主要负责消费已批准的正式输入，完成工程实现、音频字幕、Studio 预览、视觉验收和系统维护。
 
 <!-- BEGIN SHARED_V2_CONTRACT -->
 
-## V2 核心契约
+## 先判断任务模式
 
-详细规则见 `docs/agent/KNOWLEDGE_VIDEO_V2_CONTRACT.md`。
+开始工作前，必须先把当前任务归入一种模式；不确定时停止并询问，不得混用权限。
 
-### 两个模块
+### A. Production Execution Mode（默认生产模式）
 
-| 模块     | 负责人                | 职责                                                  |
-| -------- | --------------------- | ----------------------------------------------------- |
-| 内容模块 | 网页版 ChatGPT + 用户 | 吸引力、事实、证据、讲全讲透、制作前审查              |
-| 画面模块 | Agent                 | 执行已批准内容的 Remotion、素材、音频、字幕、视觉验收 |
+适用于：制作、调整、预览或渲染某一条视频。
 
-Agent 不得替代内容模块做最终内容判断。
+Agent 的职责是执行已经完成内容审查并 promotion 的正式交接物。Agent **不负责重新完成网页版 GPT 的选题讨论、Scope Contract、Coverage Map、Fact Evidence Map 或多 AI 评分**，也不得自行判断"内容应该通过"。这些由内容模块和机器门禁负责。
 
-### V2 正式流程
+开工接口：
+
+1. 运行 `npm run gate:preproduction`。
+2. 确认读取的是 promotion 后的正式执行输入，而不是 `*.review-candidate.*`。
+3. 门禁失败时立即停止，只报告失败原因；不得修改审查分数、digest、批准字段或候选稿来绕过门禁。
+4. 门禁通过后，才允许按顺序执行：
+   - `npm run generate-audio`
+   - `npm run generate-subtitles`
+   - `npm start`
+   - `npm run preview:visual`
+5. MP4 或正式封面只在用户明确要求时生成。
+
+生产模式禁止：
+
+- 把存在 `videoSpec.json` 当作内容已批准。
+- 把 `recommendation: pass` 当作用户授权。
+- 自行写入或推断 `userDecision`、`approvedByUser`、`decisionNote`、`decidedAt`。
+- 门禁失败后继续 TTS、字幕、生产 Studio、视觉预览或渲染。
+- 为解决内容问题先改 Remotion 组件。
+- 将实验入口作为正式生产门禁的绕过路径。
+
+### B. System Maintenance Mode（系统维护模式）
+
+适用于：升级流程、修复脚本、增加能力、修改组件、validator、registry、schema、文档或测试。
+
+维护前必须读取：
+
+- `docs/agent/KNOWLEDGE_VIDEO_V2_CONTRACT.md`
+- `knowledge-video-system/prompts/00_PROJECT_CONTEXT.md`
+- `knowledge-video-system/prompts/01_VIDEO_PIPELINE_V1.md`
+- `knowledge-video-system/prompts/17_PREPRODUCTION_REVIEW_GATE.md`
+- `knowledge-video-system/prompts/18_REVISION_ROUTER.md`
+- `knowledge-video-system/prompts/19_EXTERNAL_MULTI_AI_REVIEW.md`
+- `src/video-system/visual/capabilityRegistry.ts`
+- 相关 validator、测试和实际调用入口
+
+修改前输出 Project Understanding Report 与 Implementation Plan，明确修改文件、不修改文件、风险和回滚方式。修改后必须给出 diff、测试结果、失败项和剩余风险。不得通过降低阈值、篡改 fixture 或删除失败测试来获得 PASS。
+
+系统维护不得顺手生成正式 TTS、字幕、图片、视频或发布产物，除非用户明确要求该验证产物。
+
+### C. Audit / Review Mode（只读审查模式）
+
+适用于：审查完成度、验证 Agent 报告、寻找绕过路径或真源冲突。
+
+默认只读。结论必须以实际源码、脚本入口、测试覆盖和可复现行为为依据，不能把"文档写了""测试数量多"或 Agent 自报完成当作实现证据。
+
+## 硬边界
+
+- 用户是唯一最终决策人。
+- Agent 只运行机器门禁，不手工替代门禁算法判断评分是否通过。
+- 候选稿发生变化后，旧审查和 digest 失效；必须重新审查和 promotion。
+- 审片后先走 Revision Router，修改最小真源：内容问题回内容层，视觉意图问题回导演层，只有能力预检确认不足时才升级组件。
+- 未在源码、registry 和 validator 中落地的能力不得写成"已支持"。
+- 不得泄露、打印、提交或上传密钥、Token、Cookie、私人路径、私人素材和未授权二进制文件。
+- 未经用户明确授权，不得创建公开仓库、push、发布或发送外部请求。
+
+## 真源优先级
+
+发生冲突时按以下顺序处理，并报告冲突：
 
 ```text
-选题 / 文章
-→ contentBrief review candidate（含 Scope Contract / Coverage Map / Fact Evidence Map）
-→ videoSpec + coverBrief review candidate
-→ 多 AI 独立审查同一 SHA-256 快照
-→ 制作前 90 分门禁
-→ 用户明确批准
-→ promotion 为正式执行稿
-→ TTS / 字幕 / Studio / visual preview
-→ 用户审片
-→ Revision Router
-→ 成片发布门禁
+实际源码、调用入口、capabilityRegistry、validator 与测试
+> docs/agent/KNOWLEDGE_VIDEO_V2_CONTRACT.md
+> CLAUDE.md / AGENTS.md 的共享核心区
+> prompts 00—19
+> 迁移指南和当前 README
+> 历史报告、旧阶段文档和 Agent 完成声明
 ```
 
-### 制作前硬门禁
+`src/video-system/README.md` 不得定义与本契约竞争的生产流程；如有冲突，以本契约和机器门禁为准，并把 README 漂移列为待修复问题。
 
-以下条件全部满足前，禁止正式制作（TTS、字幕、生产 Studio、MP4）：
+## 关键停止条件
 
-1. 必需审查角色齐全
-2. 至少两个不同 `reviewerSystem`
-3. 平均分 ≥ 90，中位数 ≥ 90
-4. 任一审查者不得低于 85，分差 ≤ 8
-5. 关键维度达到独立阈值，无 hard veto
-6. `reviewedInputDigest` 与当前候选稿 SHA-256 一致
-7. 用户明确批准，promotion 已完成
+出现以下任一情况必须停止：
 
-### Candidate 与正式稿
-
-- 不得因为存在 `videoSpec.json` 就推断内容已批准
-- 内容阶段优先修改 `*.review-candidate.json`
-- 候选稿修改后旧审查和 digest 自动失效
-- promotion 后的文件才是 Agent 正式执行输入
-
-### 修改入口（Revision Router）
-
-审片后先判断问题类型，再修改最小真源。详见 `docs/agent/KNOWLEDGE_VIDEO_V2_CONTRACT.md` §六。
-
-### 用户权限
-
-- 用户是唯一最终决策人
-- Agent 不得自行写入或推断 `userDecision`、`approvedByUser`、`decisionNote`、`decidedAt`
-- `recommendation: pass` 不等于用户批准
-
-### 当前能力真源
-
-能力冲突时：源码 / capabilityRegistry / validator > 本文件 > prompts 00—19 > 历史报告。
-
-当前正式：22 scene / 22 renderer / 8 themes / 5 semantic patterns。以 `src/video-system/visual/capabilityRegistry.ts` 为准。
-
-<!-- END SHARED_V2_CONTRACT -->
+- `gate:preproduction` 失败。
+- 当前输入无法证明已 promotion。
+- 用户授权模糊或缺失。
+- reviewed digest 与当前输入不一致。
+- 生产入口与实验入口是否隔离无法确认。
+- 任务要求超出 capabilityRegistry 的已实现能力。
+- 发现秘密、隐私、未授权素材或不可逆外部操作风险。
 
 ## 常用命令
 
+### 生产执行
+
 ```bash
-# 系统自检
-npm run validate:system
-
-# 实验组件 Studio（不经过制作前门禁）
-npm run studio:lab
-
-# 正式 Studio（需要 gate:preproduction 通过）
-npm start
-
-# 生成 TTS / 字幕
+npm run gate:preproduction
 npm run generate-audio
 npm run generate-subtitles
-
-# 视觉预览
+npm start
 npm run preview:visual
-
-# 渲染 MP4（需要用户明确要求）
-npm run render:subs
 ```
 
-## 提示词系统
+只有用户明确要求时：
 
-`knowledge-video-system/prompts/` 目录下 00-19 共 20 个 prompt 文件：
+```bash
+npm run render:subs
+npm run cover:3x4
+npm run cover:4x3
+```
 
-| 文件 | 作用                       |
-| ---- | -------------------------- |
-| 00   | 系统能力清单（必读）       |
-| 01   | 流程总览                   |
-| 02   | 文章 → contentBrief        |
-| 03   | contentBrief → videoSpec   |
-| 04   | 素材接入                   |
-| 05   | TTS 文本处理               |
-| 06   | 审片指南                   |
-| 07   | 风格/主题/布局规则         |
-| 08   | videoSpec → coverBrief     |
-| 09   | coverBrief → coverSpec     |
-| 10   | 视频 → 通用发布元数据      |
-| 11   | 最终评分与发布门禁         |
-| 12   | spokenText → 同步字幕      |
-| 13   | 理论依据和最佳实践         |
-| 14   | 视觉系统底座               |
-| 15   | 内容账号策略与创作者定位   |
-| 16   | 观众研究与留存闭环         |
-| 17   | 制作前多方审查与 90 分门禁 |
-| 18   | 审片后 Revision Router     |
-| 19   | 外部多 AI 独立审查协议     |
+### 系统维护与审查
 
-## 关键技术约定
+```bash
+npm run typecheck
+npm test
+npm run validate:agent-contracts
+npm run validate:system
+```
 
-- 帧率固定 30fps，所有时间计算基于此
-- CSS transitions/animations 禁止使用，必须用 `interpolate()` + `spring()`
-- Tailwind 动画类名禁止
-- 场景时长从 audioTiming 读取，禁止硬编码帧数
-- 视频必须先 Studio 预览确认，再执行渲染
-- 封面默认由 GPT Image 生成，Remotion cover 只做 fallback
+`npm run studio:lab` 只能用于已确认与正式 Composition 隔离的实验入口。若它与生产 Studio 使用同一个 `src/index.ts` 且无法证明 Composition 隔离，不得把它视为安全的无门禁入口。
 
-## Claude Code 专属规则
+## 技术底线
 
-- 修改代码前先输出 Project Understanding Report 和 Implementation Plan
-- 修改后输出修改文件清单、验证结果、失败项、回滚方式
-- 禁止自行修改 `userDecision`、`approvedByUser`、`decisionNote`、`decidedAt`
-- 禁止创造新的 scene type 或把待开发能力写成已实现
-- 实验组件使用 `npm run studio:lab`，不经过制作前门禁
+- 帧率固定 30fps，时长以 `audioTiming` 为准。
+- 禁止 CSS `transition`、CSS animation、`@keyframes` 和 Tailwind 动画类；使用 Remotion frame-driven API。
+- 视频必须经过 Studio 与人工审片；命令成功不等于视觉通过。
+- 正式能力以 `src/video-system/visual/capabilityRegistry.ts` 为准，不在根入口复制静态数量作为长期真源。
+- 封面生产策略以当前项目契约为准；Remotion cover 不是默认唯一方案。
+
+<!-- END SHARED_V2_CONTRACT -->
+
+## Claude Code 专属执行要求
+
+- 先确认模式，再读取对应最小上下文；不要为生产任务吞入整套内容审查材料。
+- 涉及代码或系统修改时，先展示计划，等待用户确认后再执行。
+- 使用现有实现和官方 Remotion 方式，避免无依据重构。
+- 完成后区分：命令验证、自动门禁、人工审片和仍待确认项。
 
 ## 输出目录
 
-- `out/` — 渲染输出（视频、封面），已 gitignore
+- `out/`：本地渲染与审片产物，默认不提交。
