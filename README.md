@@ -22,8 +22,11 @@ npm ci --ignore-scripts
 ```bash
 npx tsc --noEmit
 npm test
+npm run validate:agent-contracts
 npm run validate:system
 ```
+
+> **注意**：此仓库是脱敏审查快照。`validate:system` 包含 `validate:registry` 和 fixture 门禁检查，可在本仓库独立运行。但 Remotion Studio 预览和 MP4 渲染需要完整生产素材（音频、图片、视频），本仓库不包含这些素材，因此无法运行 Studio 或渲染。
 
 ## 核心审查入口
 
