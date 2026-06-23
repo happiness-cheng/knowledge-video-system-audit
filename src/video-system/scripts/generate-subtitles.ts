@@ -11,34 +11,33 @@ import * as fs from "fs";
 import * as path from "path";
 import { assertPreProductionGate } from "../utils/preProductionGate";
 
-assertPreProductionGate();
+// ─── 类型 ─────────────────────────────────────────
 
-const DATA_DIR = path.resolve(__dirname, "../data");
-const videoSpec = JSON.parse(
-  fs.readFileSync(path.join(DATA_DIR, "videoSpec.json"), "utf-8"),
-);
-const audioTiming = JSON.parse(
-  fs.readFileSync(path.join(DATA_DIR, "audioTiming.json"), "utf-8"),
-);
-
-interface SubtitleItem {
+export interface SubtitleItem {
   sceneId: string;
   start: number;
   end: number;
   text: string;
 }
 
-/**
- * 拆分 spokenText 为字幕句子
- *
- * 规则：
- * 1. 按句号、问号、感叹号拆大句
- * 2. 大句内按逗号、顿号拆小句
- * 3. 每条字幕 12-22 字，超过则继续拆
- * 4. 不改变原意，不摘要改写
- */
-function splitIntoSubtitles(text: string): string[] {
-  // 第一步：按句号、问号、感叹号拆大句
+interface AudioSegment {
+  sceneId: string;
+  start: number;
+  end: number;
+  duration: number;
+}
+
+interface VideoScene {
+  id: string;
+  spokenText?: string;
+  voiceover?: string;
+  audioSegmentIds?: string[];
+  [key: string]: unknown;
+}
+
+// ─── 拆分 spokenText 为字幕句子 ───────────────────
+
+export function splitIntoSubtitles(text: string): string[] {
   const sentences = text
     .split(/(?<=[。？！])/)
     .map((s) => s.trim())
@@ -52,7 +51,6 @@ function splitIntoSubtitles(text: string): string[] {
       continue;
     }
 
-    // 大句太长，按逗号、顿号拆小句
     const clauses = sentence
       .split(/(?<=[，、])/)
       .map((s) => s.trim())
@@ -73,25 +71,42 @@ function splitIntoSubtitles(text: string): string[] {
   return result;
 }
 
-/**
- * 为每个 scene 生成字幕时间轴
- *
- * 按字数比例分配时间：
- * 句字数 / 总字数 × scene 时长
- */
-function generateSubtitles(): SubtitleItem[] {
+// ─── 依赖注入接口 ─────────────────────────────────
+
+export interface SubtitleGenerationDeps {
+  dataDir: string;
+  readFile: (path: string) => string;
+  writeFile: (path: string, content: string) => void;
+}
+
+const DEFAULT_DEPS: SubtitleGenerationDeps = {
+  dataDir: path.resolve(__dirname, "../data"),
+  readFile: (p: string) => fs.readFileSync(p, "utf-8"),
+  writeFile: (p: string, c: string) => fs.writeFileSync(p, c, "utf-8"),
+};
+
+// ─── 核心逻辑（可注入依赖） ───────────────────────
+
+export function runSubtitleGeneration(
+  deps: SubtitleGenerationDeps = DEFAULT_DEPS,
+): SubtitleItem[] {
+  const videoSpec = JSON.parse(
+    deps.readFile(path.join(deps.dataDir, "videoSpec.json")),
+  );
+  const audioTiming = JSON.parse(
+    deps.readFile(path.join(deps.dataDir, "audioTiming.json")),
+  );
+
   const subtitles: SubtitleItem[] = [];
 
   for (const segment of audioTiming.segments) {
-    // 先按 id 精确匹配，再按 audioSegmentIds 包含匹配
     const scene =
-      videoSpec.scenes.find((s: { id: string }) => s.id === segment.sceneId) ??
-      videoSpec.scenes.find((s: { id: string; audioSegmentIds?: string[] }) =>
+      videoSpec.scenes.find((s: VideoScene) => s.id === segment.sceneId) ??
+      videoSpec.scenes.find((s: VideoScene) =>
         s.audioSegmentIds?.includes(segment.sceneId),
       );
     if (!scene) continue;
 
-    // 优先 spokenText，fallback voiceover
     const text = scene.spokenText || scene.voiceover;
     if (!text) continue;
 
@@ -114,8 +129,13 @@ function generateSubtitles(): SubtitleItem[] {
   return subtitles;
 }
 
-const subtitles = generateSubtitles();
-const outputPath = path.join(DATA_DIR, "subtitles.json");
+// ─── CLI wrapper（门禁 → 执行） ───────────────────
+
+// 门禁必须在读取任何生产数据前执行
+assertPreProductionGate();
+
+const subtitles = runSubtitleGeneration();
+const outputPath = path.resolve(__dirname, "../data/subtitles.json");
 fs.writeFileSync(outputPath, JSON.stringify(subtitles, null, 2), "utf-8");
 
 console.log(`Generated ${subtitles.length} subtitle items → ${outputPath}`);

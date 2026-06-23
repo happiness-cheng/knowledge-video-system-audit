@@ -274,6 +274,18 @@ export function validateAgentContracts(rootDir = DEFAULT_ROOT): CheckResult[] {
     message: `src/lab.tsx exists: ${labContent !== null}`,
   });
 
+  // 10b. README must not reference src/lab.ts (wrong extension)
+  if (readmeContent) {
+    const readmeHasOldLabRef = /src\/lab\.ts(?!x)/.test(readmeContent);
+    results.push({
+      rule: "readme-lab-tsx-path",
+      pass: !readmeHasOldLabRef,
+      message: readmeHasOldLabRef
+        ? "README references src/lab.ts instead of src/lab.tsx"
+        : "README lab path correct (src/lab.tsx)",
+    });
+  }
+
   if (labContent) {
     // Lab must use registerRoot
     results.push({

@@ -36,33 +36,33 @@ src/video-system/
 
 ## 核心文件
 
-| 文件 | 职责 |
-|------|------|
-| `compositions/KnowledgeVideo.tsx` | 主视频 Composition |
+| 文件                                           | 职责                 |
+| ---------------------------------------------- | -------------------- |
+| `compositions/KnowledgeVideo.tsx`              | 主视频 Composition   |
 | `compositions/KnowledgeVideoWithSubtitles.tsx` | 带字幕版 Composition |
-| `compositions/CoverComposition.tsx` | 封面 Composition |
-| `scenes/SceneRenderer.tsx` | 场景分发器 |
-| `themes/index.ts` | 主题注册表 |
-| `visual/capabilityRegistry.ts` | 能力注册表 |
-| `utils/preProductionGate.ts` | 制作前机器门禁 |
-| `utils/qualityScoreGate.ts` | 发布门禁 |
-| `scripts/generate-audio.ts` | TTS 音频生成 |
-| `scripts/generate-subtitles.ts` | 字幕生成 |
+| `compositions/CoverComposition.tsx`            | 封面 Composition     |
+| `scenes/SceneRenderer.tsx`                     | 场景分发器           |
+| `themes/index.ts`                              | 主题注册表           |
+| `visual/capabilityRegistry.ts`                 | 能力注册表           |
+| `utils/preProductionGate.ts`                   | 制作前机器门禁       |
+| `utils/qualityScoreGate.ts`                    | 发布门禁             |
+| `scripts/generate-audio.ts`                    | TTS 音频生成         |
+| `scripts/generate-subtitles.ts`                | 字幕生成             |
 
 ## 实验与生产隔离
 
 - `experiments/` 和 `labs/` 中的组件不经过制作前门禁
-- `npm run studio:lab` 使用独立 entry（`src/lab.ts`），只注册实验 Composition
+- `npm run studio:lab` 使用独立 entry（`src/lab.tsx`），只注册实验 Composition
 - 实验入口不得作为正式生产门禁的绕过路径
 
 ## 数据文件
 
-| 文件 | 说明 |
-|------|------|
-| `data/videoSpec.json` | 正式场景定义 |
-| `data/contentBrief.json` | 内容策划 |
-| `data/audioTiming.json` | TTS 时序（自动生成） |
-| `data/subtitles.json` | 字幕（自动生成） |
-| `data/coverSpec.json` | 封面渲染数据 |
-| `data/preProductionReview.json` | 制作前审查状态 |
-| `data/qualityScore.json` | 发布评分 |
+| 文件                            | 说明                 |
+| ------------------------------- | -------------------- |
+| `data/videoSpec.json`           | 正式场景定义         |
+| `data/contentBrief.json`        | 内容策划             |
+| `data/audioTiming.json`         | TTS 时序（自动生成） |
+| `data/subtitles.json`           | 字幕（自动生成）     |
+| `data/coverSpec.json`           | 封面渲染数据         |
+| `data/preProductionReview.json` | 制作前审查状态       |
+| `data/qualityScore.json`        | 发布评分             |
