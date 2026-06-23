@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Pressure Build Hook Fixture",
+    "theme": "xhs-white-editorial"
+  },
+  "scenes": [
+    {
+      "id": "S_PRESSURE_BUILD_FIXTURE",
+      "type": "cover",
+      "visualRole": "hook",
+      "semanticPattern": "pressure-build",
+      "title": "不是失忆",
+      "subtitle": "是你没给它办入职",
+      "animation": "slide-up",
+      "pressureItems": [
+        { "text": "项目背景又要解释", "tone": "neutral" },
+        { "text": "目录职责又要说明", "tone": "accent" },
+        { "text": "测试命令又要提醒", "tone": "neutral" },
+        { "text": "敏感字段不能乱动", "tone": "warning" },
+        { "text": "交付前怎么验证", "tone": "accent" },
+        { "text": "为什么又要重讲", "tone": "warning" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,424 @@
+{
+  "meta": {
+    "title": "为什么每开一个新会话，都要重新介绍项目？",
+    "platform": "multi-platform",
+    "aspectRatio": "project-default",
+    "fps": 30,
+    "theme": "xhs-white-editorial",
+    "targetDurationSeconds": 231
+  },
+  "brand": {
+    "show": true,
+    "watermarkText": "世间一点尘",
+    "handle": "",
+    "logoAssetId": null
+  },
+  "background": {
+    "show": true,
+    "variant": "theme-default",
+    "showProgress": true
+  },
+  "qualityGate": {
+    "stage": "videoSpec",
+    "reviewer": "chatgpt",
+    "recommendation": "pass",
+    "keyRisks": [
+      "S02、S05、S08 引用了小尘图片素材，必须从 assetManifest 读取。",
+      "S06 的知识汇聚效果是去 PPT 化关键，最低可接受实现为节点逐步出现、CLAUDE.md 居中、最终稳定成手册卡。",
+      "S09-S10 的模板页必须基于 Claude Code 官方文档和用户真实 CLAUDE.md 提炼。"
+    ],
+    "userDecision": "continue",
+    "approvedByUser": true,
+    "decisionNote": "用户确认继续进入执行；使用小尘图片作为素材而非 Remotion 人物层。",
+    "decidedAt": "2026-06-18"
+  },
+  "scenes": [
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S01",
+      "beatId": "B01",
+      "beatRole": "hook",
+      "visualRole": "hook",
+      "chapterId": "CH01",
+      "humanPresence": "personal-judgment",
+      "caseStage": null,
+      "evidencePurpose": null,
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "困惑回声",
+      "type": "cover",
+      "semanticPattern": "pressure-build",
+      "hookVariant": "repeated-project-rules-chat",
+      "durationEstimate": 5,
+      "title": "每次新会话\n都要重讲？",
+      "subtitle": "你以为它忘了，其实规则没留在项目里",
+      "screenText": "每次新会话都要重讲？",
+      "keywords": ["Claude Code", "新会话", "项目规则"],
+      "pressureItems": [
+        {
+          "text": "这个目录不能动",
+          "tone": "warning"
+        },
+        {
+          "text": "改完必须测试",
+          "tone": "accent"
+        },
+        {
+          "text": "又要重讲一遍",
+          "tone": "warning"
+        }
+      ],
+      "voiceover": "每次新会话，都要重讲规则。换个需求，又重来一遍。",
+      "spokenText": "每次新会话，都要重讲规则。换个需求，又重来一遍。",
+      "deliveryHint": "S01 只做一件事：让观众认出重复解释的症状。快速命中，不要拖。画面是具体聊天窗口事件：用户输入规则，NEW CHAT 后清空，又从头开始。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S02",
+      "beatId": "B02",
+      "beatRole": "conflict",
+      "visualRole": "conflict",
+      "chapterId": "CH01",
+      "humanPresence": "user-scenario",
+      "caseStage": "original",
+      "evidencePurpose": "证明用户在新会话里反复解释同一个项目，沟通成本很高。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "痛点命中",
+      "type": "two-column",
+      "durationEstimate": 6,
+      "title": "规则说在聊天里",
+      "leftTitle": "旧聊天",
+      "leftItems": ["项目背景说过", "目录职责说过", "测试要求说过"],
+      "rightTitle": "新会话",
+      "rightItems": ["规则没有跟过来", "又要重新猜"],
+      "screenText": "规则断了",
+      "keywords": ["重复解释", "新会话"],
+      "assetLayout": {
+        "placement": "two-column",
+        "right": {
+          "assetId": "xiaochen-confused-newcomer",
+          "label": "新会话",
+          "caption": "像新人第一天上班",
+          "imageObjectPosition": "center 38%",
+          "imageTranslateY": -42
+        },
+        "animation": "left-then-right",
+        "left": {
+          "assetId": "claude-repeat-notes",
+          "label": "重复解释",
+          "caption": "知识散落在聊天里"
+        }
+      },
+      "voiceover": "规则说在聊天里，聊天结束就断了。知识留在了会消失的地方。",
+      "spokenText": "规则说在聊天里，聊天结束就断了。知识留在了会消失的地方。",
+      "deliveryHint": "S02 快速解释原因：规则在聊天里，聊天结束就断了。不要展开，留给 S03。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S03",
+      "beatId": "B03",
+      "beatRole": "case",
+      "visualRole": "story",
+      "chapterId": "CH01",
+      "humanPresence": "personal-experience",
+      "caseStage": "original",
+      "evidencePurpose": "展示项目知识其实存在，但散落在不同聊天记录里。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "真实场景",
+      "type": "bullets",
+      "durationEstimate": 8,
+      "title": "知识放错了地方",
+      "bullets": [
+        {
+          "text": "项目背景，说过很多次",
+          "accent": "背景"
+        },
+        {
+          "text": "目录职责，说过很多次",
+          "accent": "目录"
+        },
+        {
+          "text": "历史坑，也说过很多次",
+          "accent": "历史坑"
+        }
+      ],
+      "screenText": "知识放错地方",
+      "keywords": ["聊天记录", "项目知识"],
+      "voiceover": "不是它失忆。是项目知识没有变成手册。新会话没有上一轮上下文，本来就正常。",
+      "spokenText": "不是它失忆。是项目知识没有变成手册。新会话没有上一轮上下文，本来就正常。",
+      "deliveryHint": "快速完成认知反转：不是失忆，是没有手册。不要展开类比，留给 S04。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S04",
+      "beatId": "B04",
+      "beatRole": "thesis",
+      "visualRole": "insight",
+      "chapterId": "CH02",
+      "humanPresence": "personal-judgment",
+      "caseStage": "conclusion",
+      "evidencePurpose": "完成第一次认知反转：问题不是 AI 失忆，而是项目知识没有沉淀。",
+      "recapOf": "CH01",
+      "transferScenario": null,
+      "attentionTrigger": "误判反转",
+      "type": "big-quote",
+      "durationEstimate": 8,
+      "quote": "不是记忆问题\n是入职问题",
+      "subtitle": "新会话本来就没有上一轮上下文",
+      "screenText": "不是记忆问题",
+      "keywords": ["认知反转"],
+      "voiceover": "公司来了新人，你会先让他看背景、规范、哪些不能乱改。这就是入职。Claude Code 也一样。不给它读手册，别怪它不懂项目。",
+      "spokenText": "公司来了新人，你会先让他看背景、规范、哪些不能乱改。这就是入职。Claude Code 也一样。不给它读手册，别怪它不懂项目。",
+      "deliveryHint": "用新人入职类比，快速建立手册概念。不要展开细节，留给 S05。",
+      "animation": "fade-in"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S05",
+      "beatId": "B05",
+      "beatRole": "conflict",
+      "visualRole": "method",
+      "chapterId": "CH02",
+      "humanPresence": "personal-judgment",
+      "caseStage": "change",
+      "evidencePurpose": "用新员工类比解释 CLAUDE.md 的作用。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "类比解释",
+      "type": "two-column",
+      "durationEstimate": 12,
+      "title": "新人先读员工手册",
+      "leftTitle": "公司新人",
+      "leftItems": ["先看项目背景", "再看团队规范", "最后开始干活"],
+      "rightTitle": "Claude Code",
+      "rightItems": ["先读 CLAUDE.md", "理解项目规则", "再执行任务"],
+      "screenText": "先办入职",
+      "keywords": ["员工手册", "CLAUDE.md"],
+      "assetLayout": {
+        "placement": "two-column",
+        "right": {
+          "assetId": "xiaochen-reading-claude-handbook",
+          "label": "读手册",
+          "caption": "先理解项目规则"
+        },
+        "animation": "left-then-right",
+        "left": {
+          "assetId": "claude-handbook-flow",
+          "label": "公司新人",
+          "caption": "先读规则再干活"
+        }
+      },
+      "voiceover": "CLAUDE.md 就是这份员工手册。项目背景、目录职责、哪些模块不能改、改完怎么验证，都写进去。以前散在聊天里，聊天结束就断了。写进项目，它就不会断。",
+      "spokenText": "CLAUDE.md 就是这份员工手册。项目背景、目录职责、哪些模块不能改、改完怎么验证，都写进去。以前散在聊天里，聊天结束就断了。写进项目，它就不会断。",
+      "deliveryHint": "直接讲 CLAUDE.md 的作用，不再重复新人类比。画面是手册卡 + 散落便签汇聚。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S06",
+      "beatId": "B06",
+      "beatRole": "method",
+      "visualRole": "method",
+      "chapterId": "CH03",
+      "humanPresence": "personal-judgment",
+      "caseStage": "change",
+      "evidencePurpose": "解释项目知识如何从聊天记录沉淀成 CLAUDE.md。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "问题归因",
+      "type": "flow-diagram",
+      "semanticPattern": "fragment-to-manual",
+      "durationEstimate": 26,
+      "title": "把重复解释变成项目资产",
+      "nodes": ["聊天记录", "稳定规则", "CLAUDE.md", "项目手册", "默认共识"],
+      "fragmentLabels": [
+        "项目背景",
+        "目录职责",
+        "历史坑",
+        "测试规则",
+        "禁改模块"
+      ],
+      "manualTitle": "CLAUDE.md",
+      "manualSubtitle": "项目员工手册",
+      "outputLabels": ["项目手册", "默认共识"],
+      "revealMode": "progressive",
+      "screenText": "沉淀成手册",
+      "keywords": ["沉淀", "项目资产"],
+      "voiceover": "对我来说，CLAUDE.md 就是这份员工手册。它不是一个普通说明文档。它的价值，是把那些你每天反复解释的东西，沉淀到项目里。比如项目是做什么的。技术栈是什么。目录分别负责什么。哪些模块不能轻易修改。修改完必须怎么验证。以前，这些信息都散落在聊天记录里。聊天结束了，它们也就跟着断了。但项目不会结束。所以，真正稳定的项目知识，应该写进项目本身。",
+      "spokenText": "对我来说，CLAUDE.md 就是这份员工手册。它不是一个普通说明文档。它的价值，是把那些你每天反复解释的东西，沉淀到项目里。比如项目是做什么的。技术栈是什么。目录分别负责什么。哪些模块不能轻易修改。修改完必须怎么验证。以前，这些信息都散落在聊天记录里。聊天结束了，它们也就跟着断了。但项目不会结束。所以，真正稳定的项目知识，应该写进项目本身。",
+      "deliveryHint": "全片去 PPT 化关键页。视觉上应表现碎片汇聚到 CLAUDE.md。最低可接受实现：节点逐步出现，CLAUDE.md 居中放大，最终变成稳定手册卡。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S07",
+      "beatId": "B07",
+      "beatRole": "case",
+      "visualRole": "evidence",
+      "chapterId": "CH04",
+      "humanPresence": "personal-experience",
+      "caseStage": "original",
+      "evidencePurpose": "表现没有 CLAUDE.md 时，Claude Code 会重新摸索项目结构，容易误判目录职责。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "前后对比",
+      "type": "comparison",
+      "semanticPattern": "detour-vs-direct-path",
+      "pathVariant": "combined",
+      "audioSegmentIds": ["S07", "S08"],
+      "durationEstimate": 41,
+      "title": "同一个任务，两条路径",
+      "leftTitle": "没有 CLAUDE.md",
+      "leftItems": ["重新分析结构", "误判两个目录", "反复确认背景"],
+      "rightTitle": "用户要补充",
+      "rightItems": ["这个目录别动", "这里是历史逻辑", "改完要测试"],
+      "screenText": "没有手册",
+      "keywords": ["原状态", "路径变短"],
+      "voiceover": "我后来做过一个很简单的对比。没有 CLAUDE.md 的时候，我让 Claude Code 加一个导出功能。它会先花时间重新摸项目结构。中间还误判了两个目录的职责。很多我之前解释过的东西，又要重新说一遍。后来，我把项目定位、目录职责、开发原则、测试要求，还有几个不能轻易修改的核心模块，整理进了 CLAUDE.md。再让它做类似任务时，最大的变化，不是代码质量突然飞跃。而是沟通成本明显下降。它不是神秘地变聪明了。而是不用再从零理解项目了。",
+      "spokenText": "我后来做过一个很简单的对比。没有 CLAUDE.md 的时候，我让 Claude Code 加一个导出功能。它会先花时间重新摸项目结构。中间还误判了两个目录的职责。很多我之前解释过的东西，又要重新说一遍。后来，我把项目定位、目录职责、开发原则、测试要求，还有几个不能轻易修改的核心模块，整理进了 CLAUDE.md。再让它做类似任务时，最大的变化，不是代码质量突然飞跃。而是沟通成本明显下降。它不是神秘地变聪明了。而是不用再从零理解项目了。",
+      "deliveryHint": "同一画面内完成前后对比：先显示没有手册时的粉色绕路路径，再点亮 CLAUDE.md 后的绿色直达路径。不要拆成两页重复讲。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S09",
+      "beatId": "B09",
+      "beatRole": "method",
+      "visualRole": "insight",
+      "chapterId": "CH05",
+      "humanPresence": "action-guidance",
+      "caseStage": "conclusion",
+      "evidencePurpose": "基于官方文档说明 CLAUDE.md 的定位：它是持久上下文，但不是强制拦截。",
+      "recapOf": "CH04",
+      "transferScenario": null,
+      "attentionTrigger": "官方依据",
+      "type": "big-quote",
+      "durationEstimate": 24,
+      "quote": "CLAUDE.md 是上下文\n不是保险丝",
+      "subtitle": "规则提醒写进手册，硬拦截交给权限和 hook",
+      "screenText": "官方怎么说",
+      "keywords": ["官方文档", "边界"],
+      "voiceover": "不过这里也要注意一个边界。CLAUDE.md 是上下文，不是保险丝。它可以告诉 Claude Code 你的项目规则、协作偏好和注意事项。但如果你真的要阻止危险操作，比如删文件、改密钥、乱推送，还是应该用更硬的机制。比如 permissions.deny，或者 PreToolUse hook。",
+      "spokenText": "不过这里也要注意一个边界。CLAUDE.md 是上下文，不是保险丝。它可以告诉 Claude Code 你的项目规则、协作偏好和注意事项。但如果你真的要阻止危险操作，比如删文件、改密钥、乱推送，还是应该用更硬的机制。比如 permissions.deny，或者 PreToolUse hook。",
+      "deliveryHint": "本页必须严谨，避免把 CLAUDE.md 说成安全沙箱。画面用手册提醒和权限锁区分。",
+      "animation": "fade-in"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S10",
+      "beatId": "B09",
+      "scenePart": "B09-2",
+      "beatRole": "method",
+      "visualRole": "method",
+      "chapterId": "CH05",
+      "humanPresence": "action-guidance",
+      "caseStage": null,
+      "evidencePurpose": "把用户真实 CLAUDE.md 提炼成可执行模板。",
+      "recapOf": null,
+      "transferScenario": "长期项目、历史包袱项目、个人内容系统",
+      "attentionTrigger": "方法模板",
+      "type": "code",
+      "durationEstimate": 36,
+      "title": "我的 CLAUDE.md 分成四层",
+      "subtitle": "具体设置谨遵官方文档",
+      "filename": "CLAUDE.md",
+      "language": "markdown",
+      "showActiveLineInExplanation": false,
+      "lines": [
+        {
+          "text": "身份偏好：中文、结论先行、引用依据",
+          "annotation": "官方：写偏好和持久指令"
+        },
+        {
+          "text": "行为准则：实事求是，只改要求部分",
+          "annotation": "官方：写标准、流程和约定"
+        },
+        {
+          "text": "协作提醒：危险操作先问用户确认",
+          "annotation": "软提醒，硬拦截要靠 permissions 或 hook"
+        },
+        {
+          "text": "纠错闭环：跨项目写全局，项目内写规则",
+          "annotation": "官方：反复纠正的事，沉淀进记忆"
+        }
+      ],
+      "focusSequence": [0, 1, 2, 3],
+      "screenText": "这样写手册",
+      "keywords": ["模板", "可复制"],
+      "voiceover": "我自己的全局 CLAUDE.md，大概分成四层。第一层，是身份和表达偏好。比如默认中文，结论先行，涉及外部资料要给官方依据。第二层，是行为准则。比如实事求是，不迎合，不顺手重构，只改我要求的部分。第三层，是协作提醒。比如删除文件、改密钥、危险 git 操作之前，先跟用户确认。注意，这只是写给它看的提醒。真正要阻止，还得靠 permissions 或 hook。第四层，是纠错闭环。如果是跨项目都会反复犯的问题，就写入全局经验。如果只属于当前项目，就写进项目规则。如果只是一次性偏好，就不要乱记。你不需要照抄我的内容。但你可以照这个结构，给自己的项目写一份员工手册。",
+      "spokenText": "我自己的全局 CLAUDE.md，大概分成四层。第一层，是身份和表达偏好。比如默认中文，结论先行，涉及外部资料要给官方依据。第二层，是行为准则。比如实事求是，不迎合，不顺手重构，只改我要求的部分。第三层，是协作提醒。比如删除文件、改密钥、危险 git 操作之前，先跟用户确认。注意，这只是写给它看的提醒。真正要阻止，还得靠 permissions 或 hook。第四层，是纠错闭环。如果是跨项目都会反复犯的问题，就写入全局经验。如果只属于当前项目，就写进项目规则。如果只是一次性偏好，就不要乱记。你不需要照抄我的内容。但你可以照这个结构，给自己的项目写一份员工手册。",
+      "deliveryHint": "使用 code scene 表达真实 CLAUDE.md 文件结构：左侧像文档窗口，右侧解释当前高亮行。最终四行都必须清楚可读。",
+      "animation": "highlight-current"
+    },
+    {
+      "tts": {
+        "voice": "zh-CN-YunxiNeural",
+        "rate": "-5%",
+        "pitch": "+0Hz"
+      },
+      "id": "S11",
+      "beatId": "B10",
+      "beatRole": "cta",
+      "visualRole": "cta",
+      "chapterId": "CH05",
+      "humanPresence": "action-guidance",
+      "caseStage": null,
+      "evidencePurpose": null,
+      "recapOf": "CH05",
+      "transferScenario": null,
+      "attentionTrigger": "行动建议",
+      "type": "cta",
+      "durationEstimate": 18,
+      "title": "先写一份 CLAUDE.md",
+      "subtitle": "不要把项目知识只留在聊天记录里",
+      "actionText": "给 Claude Code 办入职",
+      "screenText": "先写一份",
+      "keywords": ["行动", "入职"],
+      "voiceover": "因为聊天记录会结束。项目会继续。不要把项目知识只留在聊天记录里。打开你最常用的项目。先写一份 CLAUDE.md。让 Claude Code 先入职，再干活。快去试试。",
+      "spokenText": "因为聊天记录会结束。项目会继续。不要把项目知识只留在聊天记录里。打开你最常用的项目。先写一份 CLAUDE.md。让 Claude Code 先入职，再干活。快去试试。",
+      "deliveryHint": "结尾只保留一个行动。行动按钮'给 Claude Code 办入职'需要轻微 pulse / 一闪一闪，强调快去试试；不能高频闪烁，最后一秒稳定停住。",
+      "animation": "fade-in"
+    }
+  ]
+}

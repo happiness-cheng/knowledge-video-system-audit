@@ -1,0 +1,127 @@
+{
+  "title": "为什么每开一个新会话，都要重新介绍项目？",
+  "targetAudience": "已经开始使用 Claude Code、Cursor、ChatGPT 或其他 AI coding 工具的人，尤其是那些在长期项目里反复向 AI 解释项目背景、目录结构、开发规范和历史坑的人。潜在受众是所有正在把 AI 当成学习、写作、开发协作者的人。",
+  "coreThesis": "很多 Claude Code 使用者遇到的不是单纯“AI 失忆”，而是项目规则只停留在当前聊天里，没有沉淀成每次新会话都能读取的项目指令入口。观众先看到自己反复解释项目的症状，再理解为什么 CLAUDE.md 能改善这个问题。",
+  "contentType": "first-person-methodology-case",
+  "tone": "真实复盘、轻度自嘲、方法清晰、不装专家",
+  "audienceStrategy": {
+    "researchStatus": "mixed",
+    "platformPriority": ["douyin", "bilibili", "xiaohongshu", "youtube"],
+    "primaryOptimizationPlatform": "douyin",
+    "secondaryReusePlatforms": ["bilibili", "xiaohongshu", "youtube"],
+    "platformTradeoff": "优先优化抖音前 15 秒停留、痛点识别和信息密度；正文深度、方法页和章节结构兼顾 B 站、小红书和 YouTube 复用。",
+    "primaryViewer": "已经在长期项目里使用 Claude Code 或其他 AI coding 工具，但经常反复解释项目背景、目录规则和测试要求的人。",
+    "potentialViewer": "正在使用 AI 辅助写代码、写作或做项目协作，但还不知道项目级指令文件能改善重复解释问题的人。",
+    "viewerPain": "每开一个新会话，AI 又像不认识项目一样，重新追问项目结构、哪些目录能改、改完怎么验证。",
+    "whyWatchNow": "这个痛点每天都会在 AI coding 工作流里重复出现，视频能把零散烦恼归因为一个可处理的问题。",
+    "viewerResistance": [
+      "观众可能以为这只是模型记忆差，不相信一个文件能改善。",
+      "观众可能担心视频变成 CLAUDE.md 教程，和自己的日常痛点无关。"
+    ],
+    "viewerPromise": "看完后，观众知道为什么规则只留在聊天里会反复失效，并能写出一份最小可用的 CLAUDE.md。",
+    "first15sPlan": {
+      "stopReason": "用聊天窗口反复解释项目规则，让目标观众立刻认出自己的症状。",
+      "continuePromise": "说明这不是单纯失忆，而是规则没有沉淀到项目里。",
+      "viewerFilter": "筛选出正在长期项目里使用 AI coding 工具的人。",
+      "firstProof": "展示没有 CLAUDE.md 时加导出功能会重新摸项目结构、误判目录职责。"
+    },
+    "expectedViewerReaction": "对，我就是每次都要重讲这些项目规则。",
+    "expectedComment": "评论区可能出现“原来可以这样写 CLAUDE.md”“我也每天重新解释项目”“能不能给模板”。",
+    "saveOrShareReason": "S10 的四层 CLAUDE.md 结构和结尾行动可以作为可保存模板。",
+    "audienceEvidence": [
+      {
+        "sourceType": "creator-insight",
+        "source": "用户对当前视频开场多轮审片反馈",
+        "finding": "抽象项目城市难理解，具体聊天窗口反复解释项目规则更容易一眼看懂。",
+        "confidence": "medium"
+      },
+      {
+        "sourceType": "user-assumption",
+        "source": "抖音主平台策略",
+        "finding": "前 15 秒优先命中强痛点、具体事件和视觉中心，后续再进入术语和方法。",
+        "confidence": "low"
+      }
+    ],
+    "dropOffRisks": [
+      "如果 S01 口播太长，会削弱聊天窗口事件的直接性。",
+      "如果过早出现 CLAUDE.md 术语，潜在观众可能误以为这是高级用户教程。"
+    ]
+  },
+  "durationStrategy": {
+    "type": "standard",
+    "targetRange": "3-4 分钟",
+    "evidenceSupport": "文章有明确痛点、真实项目经历、前后对比实验、核心反差和可执行方法，足以支撑 3-4 分钟。用户已明确截图不是必要证据，使用真实全局 CLAUDE.md 结构作为案例基础。",
+    "reason": "这条内容的价值不是先解释 CLAUDE.md 的功能，而是先让观众意识到：重复解释、规则不稳定、AI 乱猜，可能来自同一个原因。适合做成中等长度的方法论复盘视频。"
+  },
+  "mustKeep": [
+    "每天都在重复介绍同一个项目的痛点",
+    "先让观众认出自己每天反复解释项目的症状",
+    "一开始误以为 Claude Code 是记忆能力有问题",
+    "新员工入职和员工手册的类比",
+    "CLAUDE.md 不是普通说明文档，而是项目级员工手册",
+    "没有 CLAUDE.md 和有 CLAUDE.md 的前后对比实验",
+    "结论：不要把项目知识留在聊天记录里，要沉淀到项目本身"
+  ],
+  "canCut": [
+    "上上篇文章的长篇前情回顾",
+    "多次重复的‘后来我发现’表达",
+    "关于查资料过程的细节铺垫",
+    "版权声明",
+    "下一篇 Plan 的过长预告"
+  ],
+  "narrativeDesign": {
+    "personalAnchor": "作者在开发自己的内容发布系统时，几乎每天打开 Claude Code，却发现每次新会话都要重新解释项目背景、目录职责、限制条件和测试要求。这个真实重复沟通的疲惫感，是全片的人感锚点。",
+    "chapters": [
+      {
+        "id": "CH01",
+        "title": "为什么又要重讲项目",
+        "purpose": "先让观众认出自己的症状：每次新会话都要重新说项目背景、目录职责、测试要求，然后动摇“只是 AI 忘了”的旧归因。"
+      },
+      {
+        "id": "CH02",
+        "title": "问题不是记忆，而是入职",
+        "purpose": "解释隐藏机制：项目规则只停留在聊天里，没有成为新会话稳定可读取的项目入口；新员工类比后移，用来帮助理解。"
+      },
+      {
+        "id": "CH03",
+        "title": "项目知识放错了地方",
+        "purpose": "指出真正问题：重要信息散落在聊天记录里，没有沉淀进项目本身。"
+      },
+      {
+        "id": "CH04",
+        "title": "CLAUDE.md 变成员工手册",
+        "purpose": "用前后对比实验建立信任：整理项目定位、目录职责和禁改模块后，沟通成本明显下降。"
+      },
+      {
+        "id": "CH05",
+        "title": "给 Claude Code 办入职",
+        "purpose": "给出可执行方法：观众看完可以立刻回自己的项目写一份 CLAUDE.md。"
+      }
+    ],
+    "caseStructure": [
+      {
+        "caseId": "CASE01",
+        "original": "没有 CLAUDE.md 时，作者让 Claude Code 增加一个导出功能。Claude Code 花了很多时间分析项目结构，还误判了两个目录的职责，很多已经解释过的内容又要重新说。",
+        "change": "作者把项目定位、目录职责、开发原则和几个不能轻易修改的核心模块整理进 CLAUDE.md，然后重新开始执行类似任务。",
+        "result": "最大的变化不是代码质量立刻飞跃，而是沟通成本下降。很多过去需要解释半天的项目背景，现在从一开始就形成了共识。",
+        "conclusion": "Claude Code 的能力没有神秘变化，真正变化的是项目知识的位置。知识从聊天记录里被沉淀到项目里，AI 才能更快完成入职。",
+        "evidenceAssetIds": []
+      }
+    ],
+    "finalAction": "打开你最常用的项目，新建或整理一份 CLAUDE.md，先写项目是干什么的、技术栈是什么、目录分别负责什么、哪些模块不能乱动、修改完必须怎么验证。"
+  },
+  "qualityGate": {
+    "stage": "contentBrief",
+    "reviewer": "chatgpt",
+    "recommendation": "pass",
+    "keyRisks": [
+      "模板页必须参考 Claude Code 官方文档，不能只根据个人经验总结。",
+      "用户提供的全局 CLAUDE.md 可以作为真实案例素材，但视频中不应整段展示，只提炼为结构和关键原则。",
+      "如果视频超过 4 分钟，需要补充更完整的项目级 CLAUDE.md 示例，否则中后段可能信息增量不足。"
+    ],
+    "userDecision": "continue",
+    "approvedByUser": true,
+    "decisionNote": "截图不是必要证据；用户提供真实全局 CLAUDE.md 作为案例基础；后续模板页必须参考 Claude Code 官方文档。",
+    "decidedAt": "2026-06-18"
+  }
+}

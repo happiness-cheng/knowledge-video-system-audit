@@ -1,0 +1,257 @@
+{
+  "version": "director-system-v2-p2",
+  "status": "blocked-stale-audioTiming",
+  "contract": "docs/director/DIRECTOR_SYSTEM_V2_CONTRACT.md",
+  "sourceDraft": "src/video-system/data/directorCuesDraft.json",
+  "sourceVideoSpec": "src/video-system/data/videoSpec.json",
+  "sourceAudioTiming": "src/video-system/data/audioTiming.json",
+  "sourceSubtitles": "src/video-system/data/subtitles.json",
+  "fps": 30,
+  "summary": {
+    "resolvedCueCount": 0,
+    "unresolvedCueCount": 18,
+    "visualGateStatus": "inspect",
+    "manualReviewRequired": true,
+    "rendererConsumable": false,
+    "blockingReason": "audioTiming.json and subtitles.json do not match the active videoSpec spokenText, so semantic cue anchors cannot be resolved into reliable frame ranges."
+  },
+  "inputDriftEvidence": {
+    "videoSpecDurationEstimateSeconds": 71,
+    "audioTimingTotalDurationSeconds": 34.31,
+    "sceneTextComparison": [
+      {
+        "sceneId": "S02",
+        "videoSpecSpokenText": "比如我直接问，帮我解释一下这个问题。它确实回答了，但答案很标准，我反而更懵。",
+        "audioTimingText": "很多人一上来就说帮我写一下，但这些工具不知道你的上下文。",
+        "matchStatus": "mismatch"
+      },
+      {
+        "sceneId": "S03",
+        "videoSpecSpokenText": "后来我换了一个做法。同一个问题，我只改问法：先说明我完全不了解，再说希望用生活例子解释，最后加一句不要堆术语。",
+        "audioTimingText": "问题可能不是这些工具不懂你，而是你没有给它判断依据。",
+        "matchStatus": "mismatch"
+      },
+      {
+        "sceneId": "S04",
+        "videoSpecSpokenText": "结果差别很明显。直接问的时候，它给的是标准答案；补背景后，它开始用生活例子解释，我一下就能跟上。",
+        "audioTimingText": "下次问这些工具前，先套这四句话。",
+        "matchStatus": "mismatch"
+      },
+      {
+        "sceneId": "S06",
+        "videoSpecSpokenText": "这个规律不只适用于概念解释。写文章时，它需要知道读者和目的；学新概念时，比如 TCP 这种技术概念，它需要知道你的基础和卡点。",
+        "audioTimingText": "我用同一个问题问了两次，结果差别非常明显。",
+        "matchStatus": "mismatch"
+      },
+      {
+        "sceneId": "S07",
+        "videoSpecSpokenText": "所以，下次不要一上来就说帮我写一下。先写清楚三件事：我现在的情况，我想要的结果，还有这次回答的限制。最后再说明，你要几个方案，以及希望它怎么取舍。",
+        "audioTimingText": "把这个模板收藏下来，下次直接用。",
+        "matchStatus": "mismatch"
+      }
+    ]
+  },
+  "resolutionPolicy": {
+    "currentRun": "do-not-resolve",
+    "reason": "Frame ranges based on stale audio would create false cue timing.",
+    "nextRequiredAction": "After the user approves the active videoSpec for audio generation, regenerate audioTiming.json and subtitles.json, then rerun cue resolution.",
+    "allowedBeforeRegeneration": [
+      "manual review of directorBrief and shotPlan",
+      "semantic cue editing",
+      "Studio visual review without cue frame claims"
+    ],
+    "notAllowedBeforeRegeneration": [
+      "renderer consumption of directorCuesResolved.json",
+      "claiming frame-accurate cue alignment",
+      "committing cue timing as pass"
+    ]
+  },
+  "scenes": [
+    {
+      "sceneId": "S02",
+      "mode": "strict-switch",
+      "sceneTimingStatus": "inspect",
+      "blockingReason": "audioTiming S02 text does not match videoSpec S02 spokenText.",
+      "cues": [
+        {
+          "cueId": "S02-C01",
+          "activeTarget": "left",
+          "spokenAnchor": "我直接问 / 帮我解释一下这个问题",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S02-C02",
+          "activeTarget": "right",
+          "spokenAnchor": "它确实回答了 / 答案很标准 / 我反而更懵",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        }
+      ]
+    },
+    {
+      "sceneId": "S03",
+      "mode": "progressive-retain",
+      "sceneTimingStatus": "inspect",
+      "blockingReason": "audioTiming S03 text does not match videoSpec S03 spokenText.",
+      "cues": [
+        {
+          "cueId": "S03-C01",
+          "activeTarget": "experiment-title",
+          "spokenAnchor": "同一个问题 / 我只改问法",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S03-C02",
+          "activeTarget": "step-0",
+          "spokenAnchor": "先说明我完全不了解",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S03-C03",
+          "activeTarget": "step-1",
+          "spokenAnchor": "希望用生活例子解释",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S03-C04",
+          "activeTarget": "step-2",
+          "spokenAnchor": "不要堆术语",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        }
+      ]
+    },
+    {
+      "sceneId": "S04",
+      "mode": "strict-switch",
+      "sceneTimingStatus": "inspect",
+      "blockingReason": "audioTiming S04 text does not match videoSpec S04 spokenText.",
+      "cues": [
+        {
+          "cueId": "S04-C01",
+          "activeTarget": "comparison-title",
+          "spokenAnchor": "结果差别很明显",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S04-C02",
+          "activeTarget": "left-evidence",
+          "spokenAnchor": "直接问的时候 / 标准答案",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S04-C03",
+          "activeTarget": "right-evidence",
+          "spokenAnchor": "补背景后 / 生活例子解释",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S04-C04",
+          "activeTarget": "contrast-conclusion",
+          "spokenAnchor": "我一下就能跟上",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming",
+          "support": "reference-only"
+        }
+      ]
+    },
+    {
+      "sceneId": "S06",
+      "mode": "strict-switch",
+      "sceneTimingStatus": "inspect",
+      "blockingReason": "audioTiming S06 text does not match videoSpec S06 spokenText.",
+      "cues": [
+        {
+          "cueId": "S06-C01",
+          "activeTarget": "column-0",
+          "spokenAnchor": "写文章时 / 读者和目的",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S06-C02",
+          "activeTarget": "column-1",
+          "spokenAnchor": "学新概念时 / TCP / 基础和卡点",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S06-C03",
+          "activeTarget": "column-2",
+          "spokenAnchor": "共同规律 / 你给得越具体",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming",
+          "support": "needs-voiceover-anchor-review"
+        }
+      ]
+    },
+    {
+      "sceneId": "S07",
+      "mode": "progressive-retain",
+      "sceneTimingStatus": "inspect",
+      "blockingReason": "audioTiming S07 text does not match videoSpec S07 spokenText.",
+      "cues": [
+        {
+          "cueId": "S07-C01",
+          "activeTarget": "title",
+          "spokenAnchor": "下次不要一上来就说帮我写一下",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S07-C02",
+          "activeTarget": "item-0",
+          "spokenAnchor": "我现在的情况",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S07-C03",
+          "activeTarget": "item-1",
+          "spokenAnchor": "我想要的结果",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S07-C04",
+          "activeTarget": "item-2",
+          "spokenAnchor": "回答的限制",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        },
+        {
+          "cueId": "S07-C05",
+          "activeTarget": "item-3",
+          "spokenAnchor": "几个方案 / 怎么取舍",
+          "startFrame": null,
+          "endFrame": null,
+          "timingStatus": "unresolved-stale-audioTiming"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "videoTitle": "示例视频候选",
+  "coreThesis": "代码可以暴露项目事实，但项目规则需要被明确表达。",
+  "coverAngle": "用真实对照揭示看似正确的答案仍可能猜错边界",
+  "titleCandidates": [
+    "它看懂代码，却猜错规矩",
+    "项目能读懂，边界为什么还会错"
+  ],
+  "recommendedTitle": "它看懂代码，却猜错规矩",
+  "subtitle": "一次真实对照实验",
+  "coverType": "contrast",
+  "visualDirection": "同一问题的两份回答并排，一份列出宽泛目录，一份明确项目边界；标题突出‘看懂’与‘猜错’的反差。",
+  "avoidList": [
+    "不要使用无来源的效率倍数",
+    "不要把项目指令描述成绝对强制"
+  ],
+  "approval": {
+    "userDecision": "pending",
+    "approvedByUser": false,
+    "decisionNote": "",
+    "decidedAt": null
+  }
+}

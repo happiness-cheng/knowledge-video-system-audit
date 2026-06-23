@@ -1,0 +1,12 @@
+{
+  "scenes": [
+    {
+      "id": "S05",
+      "type": "process-steps",
+      "title": "操作步骤",
+      "steps": ["打开对话窗口", "输入四步提问模板", "检查 AI 回答"],
+      "screenText": "操作步骤",
+      "durationEstimate": 8
+    }
+  ]
+}

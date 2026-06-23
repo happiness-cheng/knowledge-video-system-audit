@@ -1,0 +1,379 @@
+{
+  "schemaVersion": "2.0",
+  "projectId": "example-only",
+  "mode": "quick",
+  "contentBriefPath": "src/video-system/fixtures/preproduction/contentBrief-reviewed-example.json",
+  "reviewedInputs": [
+    {
+      "id": "contentBrief",
+      "path": "src/video-system/fixtures/preproduction/contentBrief-reviewed-example.json",
+      "sha256": "67165bec72e2c11ccef96974a851c5e3c28356ed3e2be665e14932a72107d29a"
+    },
+    {
+      "id": "videoSpec",
+      "path": "src/video-system/fixtures/preproduction/videoSpec-reviewed-example.json",
+      "sha256": "0033e943384dfc3d6ce62d49d4b10377dfdea1d9c19074105716f61ed807fbe9"
+    },
+    {
+      "id": "coverBrief",
+      "path": "src/video-system/fixtures/preproduction/coverBrief-reviewed-example.json",
+      "sha256": "d8e7a2529d610da4d983c9d3c63be0a57cc609548682ccc98b5d3d25ef256859"
+    }
+  ],
+  "scopeContract": {
+    "corePromise": "用一个真实实验回答一个明确问题",
+    "targetDepth": "decision",
+    "mustAnswer": [
+      "实验看到了什么",
+      "真正原因是什么",
+      "观众下一步怎么做"
+    ],
+    "shouldAnswer": [
+      "适用边界"
+    ],
+    "explicitlyOutOfScope": [
+      "完整生态教程"
+    ],
+    "followUpDestination": [
+      "后续完整教程"
+    ],
+    "splitDecision": "single"
+  },
+  "reviews": [
+    {
+      "reviewerId": "viewer-a",
+      "role": "cold-viewer",
+      "independent": true,
+      "reviewedInputDigest": "40b009606ec25afdb93c1fa7dc8113be495d866982fabfbbcf63f03012955076",
+      "score": 100,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 12,
+          "maxScore": 12,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 8,
+          "maxScore": 8,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "first15-retention",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "actionable-value",
+          "score": 10,
+          "maxScore": 10,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-23T12:00:00+08:00",
+      "reviewerSystem": "OpenAI GPT-5.5 Thinking"
+    },
+    {
+      "reviewerId": "editor-b",
+      "role": "content-editor",
+      "independent": true,
+      "reviewedInputDigest": "40b009606ec25afdb93c1fa7dc8113be495d866982fabfbbcf63f03012955076",
+      "score": 100,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 12,
+          "maxScore": 12,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 8,
+          "maxScore": 8,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "first15-retention",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "actionable-value",
+          "score": 10,
+          "maxScore": 10,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-23T12:00:00+08:00",
+      "reviewerSystem": "Anthropic Claude"
+    },
+    {
+      "reviewerId": "fact-c",
+      "role": "fact-evidence",
+      "independent": true,
+      "reviewedInputDigest": "40b009606ec25afdb93c1fa7dc8113be495d866982fabfbbcf63f03012955076",
+      "score": 100,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 12,
+          "maxScore": 12,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 8,
+          "maxScore": 8,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "first15-retention",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 15,
+          "maxScore": 15,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "actionable-value",
+          "score": 10,
+          "maxScore": 10,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": [
+            "fixture evidence verified"
+          ],
+          "gaps": [],
+          "action": "保持"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-23T12:00:00+08:00",
+      "reviewerSystem": "Google Gemini"
+    }
+  ],
+  "consensus": {
+    "reviewedInputDigest": "40b009606ec25afdb93c1fa7dc8113be495d866982fabfbbcf63f03012955076",
+    "meanScore": 100,
+    "medianScore": 100,
+    "minReviewerScore": 100,
+    "scoreSpread": 0,
+    "dimensionMeans": {
+      "audience-pain": 12,
+      "title-cover-promise": 8,
+      "first15-retention": 15,
+      "scope-completeness": 15,
+      "explanation-depth": 15,
+      "fact-evidence": 15,
+      "actionable-value": 10,
+      "voiceover-expression": 5,
+      "visual-explainability": 5
+    },
+    "passed": true,
+    "blockingReasons": []
+  },
+  "approval": {
+    "userDecision": "continue",
+    "approvedByUser": true,
+    "decisionNote": "fixture approved",
+    "decidedAt": "2026-06-23T12:00:00+08:00"
+  }
+}

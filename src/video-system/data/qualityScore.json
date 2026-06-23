@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "stage": "release",
+  "previewGate": {
+    "reviewer": "chatgpt",
+    "recommendation": "revise",
+    "keyRisks": [
+      "尚未核验字幕在最终成片中的断句、两行限制和遮挡",
+      "尚未核验 S03 前后截图的真实性与手机端可读性",
+      "尚未完成 3:4 封面视觉验收"
+    ],
+    "userDecision": "pending",
+    "approvedByUser": false,
+    "decisionNote": "",
+    "decidedAt": null
+  },
+  "scoreRecommendation": "revise",
+  "userDecision": "pending",
+  "approvedByUser": false,
+  "decisionNote": "",
+  "decidedAt": null,
+  "totalScore": 82,
+  "contentScore": 72,
+  "packagingScore": 10,
+  "hardGatePassed": false,
+  "dimensions": [
+    {
+      "id": "topic-promise",
+      "name": "选题承诺",
+      "category": "content",
+      "score": 8,
+      "maxScore": 10,
+      "evidence": [
+        "S01 直接提出 AI 回答不到点上的问题",
+        "S08 承诺并给出三步提问法"
+      ],
+      "gaps": [
+        "开头还可以更明确说明看完会得到一套提问方法"
+      ],
+      "action": "在 S01 或 S02 增加一句明确的结果承诺"
+    },
+    {
+      "id": "pain-hit",
+      "name": "痛点命中",
+      "category": "content",
+      "score": 9,
+      "maxScore": 10,
+      "evidence": [
+        "S01 命中 AI 好像回答了但没有答到点上的高频挫败感",
+        "S05 和 S06 覆盖写作与技术学习场景"
+      ],
+      "gaps": [
+        "缺少更具体的返工后果"
+      ],
+      "action": "保留当前痛点表达，后续同类选题可补充一次真实返工结果"
+    },
+    {
+      "id": "gain-value",
+      "name": "获得感",
+      "category": "content",
+      "score": 13,
+      "maxScore": 15,
+      "evidence": [
+        "S08 给出三步提问法",
+        "S09 对比模糊问法和更好的问法"
+      ],
+      "gaps": [
+        "缺少一段可直接复制的完整提问模板"
+      ],
+      "action": "补充完整模板后可提升获得感和收藏价值"
+    },
+    {
+      "id": "surprise-value",
+      "name": "惊喜感 / 认知反差",
+      "category": "content",
+      "score": 8,
+      "maxScore": 10,
+      "evidence": [
+        "S02 将原因从模型不聪明转向自己没有问清楚",
+        "S04 总结 AI 没变，变的是上下文"
+      ],
+      "gaps": [
+        "实验结果差异的视觉证据需要更突出"
+      ],
+      "action": "在 S03 放大前后回答的关键差异"
+    },
+    {
+      "id": "real-case",
+      "name": "真实案例 / 实验",
+      "category": "content",
+      "score": 12,
+      "maxScore": 15,
+      "evidence": [
+        "S03 包含直接提问、补充背景和回答变化",
+        "videoSpec 为前后对比截图预留了素材位置"
+      ],
+      "gaps": [
+        "必须确认前后截图来自真实实验并在成片中清晰可见"
+      ],
+      "action": "审片时核验截图来源、裁切和结果差异"
+    },
+    {
+      "id": "structure-progression",
+      "name": "结构递进",
+      "category": "content",
+      "score": 9,
+      "maxScore": 10,
+      "evidence": [
+        "结构依次经过痛点、误判、实验、结论、迁移场景、方法和行动"
+      ],
+      "gaps": [
+        "S05 与 S06 都是迁移案例，节奏上可能略重复"
+      ],
+      "action": "审片时观察 S05-S06 是否拖慢节奏，必要时压缩"
+    },
+    {
+      "id": "actionable-method",
+      "name": "可执行方法 / 模板",
+      "category": "content",
+      "score": 9,
+      "maxScore": 10,
+      "evidence": [
+        "S08 给出三个明确步骤",
+        "S09 展示应避免的问法和替代方向"
+      ],
+      "gaps": [
+        "尚未形成一段完整可复制文本"
+      ],
+      "action": "在简介或画面中加入完整提问模板"
+    },
+    {
+      "id": "expression-emotion",
+      "name": "表达力 / 感染力",
+      "category": "content",
+      "score": 4,
+      "maxScore": 5,
+      "evidence": [
+        "口播采用我误判、我实验、我总结的成长复盘视角",
+        "多个 deliveryHint 要求真实吐槽和反思语气"
+      ],
+      "gaps": [
+        "实际感染力仍需以成片口播表现确认"
+      ],
+      "action": "审片时重点检查 TTS 是否像真实复盘而非教程读稿"
+    },
+    {
+      "id": "dual-covers",
+      "name": "3:4 + 4:3 双封面",
+      "category": "packaging",
+      "score": 0,
+      "maxScore": 5,
+      "evidence": [
+        "coverSpec 已包含 3x4 和 4x3 variants",
+        "out 目录已有 4:3 封面文件"
+      ],
+      "gaps": [
+        "未发现正式输出的 cover-3x4.png"
+      ],
+      "action": "渲染并核验 3:4 封面后重新评分"
+    },
+    {
+      "id": "title-clickability",
+      "name": "标题清楚有点击欲",
+      "category": "packaging",
+      "score": 4,
+      "maxScore": 4,
+      "evidence": [
+        "主标题明确包含用户问题和认知冲突",
+        "publishMetadata 提供一个主标题和一个备用标题"
+      ],
+      "gaps": [],
+      "action": "保持标题与视频承诺一致，发布前不再扩写多套平台标题"
+    },
+    {
+      "id": "subtitle-completeness",
+      "name": "同步字幕完整",
+      "category": "packaging",
+      "score": 3,
+      "maxScore": 3,
+      "evidence": [
+        "subtitles.json 包含从 S01 到 S10 的 46 个字幕片段"
+      ],
+      "gaps": [
+        "仍需在最终带字幕视频中确认断句、两行限制和遮挡情况"
+      ],
+      "action": "最终渲染后进行一次字幕画面审片"
+    },
+    {
+      "id": "reusable-metadata",
+      "name": "简介和标签可复用",
+      "category": "packaging",
+      "score": 3,
+      "maxScore": 3,
+      "evidence": [
+        "publishMetadata 提供短版简介、B站长版简介和一组通用标签"
+      ],
+      "gaps": [],
+      "action": "多平台发布时只做必要的字数裁切，不重写整套包装"
+    }
+  ],
+  "hardGates": [
+    {
+      "id": "subtitles-complete",
+      "name": "同步字幕完整",
+      "passed": false,
+      "evidence": [
+        "subtitles.json 已覆盖全部场景，但尚未完成最终成片视觉验收"
+      ],
+      "action": "最终成片确认字幕无遮挡"
+    },
+    {
+      "id": "dual-covers-complete",
+      "name": "双比例封面齐全",
+      "passed": false,
+      "evidence": [
+        "已发现 4:3 封面，未发现正式 3:4 封面"
+      ],
+      "action": "渲染 out/cover-3x4.png"
+    },
+    {
+      "id": "real-case-present",
+      "name": "真实案例 / 实验存在",
+      "passed": false,
+      "evidence": [
+        "S03 定义了前后问法并引用截图，但尚未核验截图真实性与可读性"
+      ],
+      "action": "审片时核验截图真实性和可读性"
+    },
+    {
+      "id": "actionable-method-present",
+      "name": "可执行方法 / 模板存在",
+      "passed": true,
+      "evidence": [
+        "S08 给出三步提问法"
+      ],
+      "action": "可选补充完整复制模板"
+    },
+    {
+      "id": "core-metrics-over-sixty-percent",
+      "name": "三项核心指标达到 60%",
+      "passed": true,
+      "evidence": [
+        "获得感 13/15",
+        "真实案例 / 实验 12/15",
+        "可执行方法 / 模板 9/10"
+      ],
+      "action": "保持三项核心指标不低于当前水平"
+    }
+  ],
+  "reviewSummary": {
+    "level": "基本合格",
+    "nextAction": "补齐并核验 3:4 封面后重新评分；硬门槛通过前不能发布"
+  }
+}

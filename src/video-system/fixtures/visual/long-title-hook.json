@@ -1,0 +1,12 @@
+{
+  "scenes": [
+    {
+      "id": "S01",
+      "type": "cover",
+      "visualRole": "hook",
+      "title": "你问 AI 的方式可能一直在浪费时间但你不知道为什么",
+      "screenText": "你问 AI 的方式可能一直在浪费时间",
+      "durationEstimate": 2.5
+    }
+  ]
+}

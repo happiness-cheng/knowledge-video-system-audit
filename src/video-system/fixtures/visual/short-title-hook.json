@@ -1,0 +1,12 @@
+{
+  "scenes": [
+    {
+      "id": "S01",
+      "type": "cover",
+      "visualRole": "hook",
+      "title": "AI 问法不对",
+      "screenText": "AI 问法不对",
+      "durationEstimate": 2.5
+    }
+  ]
+}

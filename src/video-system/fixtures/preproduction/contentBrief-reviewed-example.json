@@ -1,0 +1,111 @@
+{
+  "workflowMode": "quick",
+  "title": "示例：真实实验解释一个问题",
+  "scopeContract": {
+    "corePromise": "用一个真实实验回答一个明确问题",
+    "targetDepth": "decision",
+    "mustAnswer": [
+      "实验看到了什么",
+      "真正原因是什么",
+      "观众下一步怎么做"
+    ],
+    "shouldAnswer": [
+      "适用边界"
+    ],
+    "explicitlyOutOfScope": [
+      "完整生态教程"
+    ],
+    "followUpDestination": [
+      "后续完整教程"
+    ],
+    "splitDecision": "single"
+  },
+  "coverageMap": [
+    {
+      "questionId": "Q01",
+      "question": "实验看到了什么",
+      "priority": "must",
+      "answerSummary": "展示同条件对照结果",
+      "evidenceIds": [
+        "C01"
+      ],
+      "plannedScenes": [
+        "S01",
+        "S02"
+      ],
+      "status": "covered",
+      "gapAction": "保持真实原始记录"
+    },
+    {
+      "questionId": "Q02",
+      "question": "真正原因是什么",
+      "priority": "must",
+      "answerSummary": "区分可发现事实与隐性项目规则",
+      "evidenceIds": [
+        "C01",
+        "C02"
+      ],
+      "plannedScenes": [
+        "S03"
+      ],
+      "status": "covered",
+      "gapAction": "保留限定词"
+    },
+    {
+      "questionId": "Q03",
+      "question": "观众下一步怎么做",
+      "priority": "must",
+      "answerSummary": "给出最小行动清单",
+      "evidenceIds": [
+        "C02"
+      ],
+      "plannedScenes": [
+        "S04"
+      ],
+      "status": "covered",
+      "gapAction": "保持三步以内"
+    },
+    {
+      "questionId": "Q04",
+      "question": "适用边界",
+      "priority": "should",
+      "answerSummary": "说明上下文不是强制控制",
+      "evidenceIds": [
+        "C02"
+      ],
+      "plannedScenes": [
+        "S03"
+      ],
+      "status": "covered",
+      "gapAction": "保持边界说明"
+    }
+  ],
+  "factEvidenceMap": [
+    {
+      "claimId": "C01",
+      "claim": "对照实验在相同问题下产生不同答案边界",
+      "criticality": "core",
+      "claimType": "experiment",
+      "source": "src/video-system/fixtures/preproduction/example-experiment-record.md",
+      "confidence": "high",
+      "counterexampleChecked": true,
+      "qualification": "本实验只证明该项目和该问题下的差异",
+      "productionStatus": "qualify"
+    },
+    {
+      "claimId": "C02",
+      "claim": "项目指令作为上下文而不是确定性强制配置",
+      "criticality": "core",
+      "claimType": "official-fact",
+      "source": "https://docs.anthropic.com/en/docs/claude-code/memory",
+      "confidence": "high",
+      "counterexampleChecked": true,
+      "qualification": "需要硬阻止时使用权限或 hook",
+      "productionStatus": "allowed"
+    }
+  ],
+  "preProductionReadiness": {
+    "status": "ready-for-review",
+    "blockingReasons": []
+  }
+}

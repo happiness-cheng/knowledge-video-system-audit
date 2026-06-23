@@ -1,0 +1,247 @@
+{
+  "task": "P1-2B Director Layer Upgrade",
+  "status": "draft",
+  "scope": {
+    "purpose": "先把主线改成实验过程版导演稿，不迁移 PremiumMotionLab，不修改正式渲染链路。",
+    "currentRendererRule": "DirectorSpec 可以写理想导演动作，但 videoSpec.director-draft.json 只能使用当前 renderer 已支持字段。",
+    "notInScope": [
+      "不替换正式 videoSpec.json",
+      "不迁移动态背景、KineticTitle、GlassCard、BGM 或音效",
+      "不新增 scene type 或 videoSpec schema 字段",
+      "不渲染 mp4",
+      "不生成 TTS 或字幕"
+    ]
+  },
+  "scenes": [
+    {
+      "sceneId": "S01",
+      "directorRole": "cold-open-misjudgment",
+      "sceneMode": "Hook Shot / Pain Scene",
+      "viewerAttentionPath": [
+        "先看“我一开始以为”这个第一人称入口",
+        "再看“是 AI 不够聪明”这个误判",
+        "最后理解这不是教程开场，而是一次复盘"
+      ],
+      "narrativeFunction": "让观众立刻进入真实误判，而不是看到抽象标题页。",
+      "firstVisualFocus": "我一开始以为",
+      "secondVisualFocus": "是 AI 不够聪明",
+      "evidenceIntent": null,
+      "highlightTargets": [],
+      "motionPurpose": "制造误判入口；当前 draft 只要求 cover 的标题和副标题顺序成立，不声明句内高级分层已实现。",
+      "currentRendererSupport": "supported",
+      "whatMustNotHappen": [
+        "不能写成“你问 AI 的方式”这种抽象标题",
+        "不能堆复杂截图",
+        "不能像普通课程开场"
+      ],
+      "studioReviewQuestions": [
+        "0.5 秒内能否看懂这是第一人称误判？",
+        "这页是否比普通大标题页更像真实复盘开头？",
+        "副标题是否没有抢主标题视觉中心？"
+      ]
+    },
+    {
+      "sceneId": "S02",
+      "directorRole": "mistake-scene",
+      "sceneMode": "Mistake Shot",
+      "viewerAttentionPath": [
+        "先看左侧直接问法",
+        "再看右侧抽象回答结果",
+        "最后理解问题不是 AI 没回答，而是回答没有到点上"
+      ],
+      "narrativeFunction": "展示错误现场，建立后续实验的原状态。",
+      "firstVisualFocus": "左侧错误问法",
+      "secondVisualFocus": "右侧抽象结果",
+      "evidenceIntent": "证明原问题缺少背景、目标和限制，导致回答只能泛泛而谈。",
+      "highlightTargets": [],
+      "motionPurpose": "左右两栏按口播顺序出现，避免一上来把方法论摊开。",
+      "currentRendererSupport": "supported",
+      "whatMustNotHappen": [
+        "不能在这一页提前讲四步法",
+        "不能让左右两栏只是普通信息卡",
+        "不能让观众看不出左边错在哪里"
+      ],
+      "studioReviewQuestions": [
+        "左侧问法是否足够像真实错误现场？",
+        "右侧结果是否能说明“标准但没到点”？",
+        "这一页是否只承担原状态，不抢后面的结论？"
+      ]
+    },
+    {
+      "sceneId": "S03",
+      "directorRole": "experiment-variable-change",
+      "sceneMode": "Experiment Setup Shot",
+      "viewerAttentionPath": [
+        "先看“同一个问题”",
+        "再看三个新增变量逐条出现",
+        "最后理解实验只改了输入变量"
+      ],
+      "narrativeFunction": "展示变量改变，为 S04 的结果证据建立因果前提。",
+      "firstVisualFocus": "同一个问题，只改问法",
+      "secondVisualFocus": "补背景、说目标、加限制",
+      "evidenceIntent": "证明后续结果差异来自输入变量变化，而不是换了问题或换了模型。",
+      "highlightTargets": [],
+      "motionPurpose": "通过 process-steps 逐条加入变量。理想画面是 prompt 卡逐步补全，但本轮不声明 renderer 已支持 prompt morph。",
+      "currentRendererSupport": "partial",
+      "whatMustNotHappen": [
+        "不能在这一页直接给结论",
+        "不能写成普通方法总结页",
+        "不能把 prompt 卡动态变化写进 videoSpec 字段"
+      ],
+      "studioReviewQuestions": [
+        "观众能否看出这是一次实验设置？",
+        "三个变量是否足够清楚？",
+        "这一页是否为 S04 的前后对比做好铺垫？"
+      ]
+    },
+    {
+      "sceneId": "S04",
+      "directorRole": "evidence-proof",
+      "sceneMode": "Evidence Shot",
+      "viewerAttentionPath": [
+        "先看顶部结论：结果真的变了",
+        "再看左侧直接问结果",
+        "再看右侧补背景后结果",
+        "最后看高亮或 caption 指向的差异"
+      ],
+      "narrativeFunction": "证明同一个问题因为输入变量不同而产生结果差异。",
+      "firstVisualFocus": "左右证据卡的变量标签",
+      "secondVisualFocus": "右侧回答更具体的证据区域",
+      "evidenceIntent": "证明不是模型突然变聪明，而是上下文变量改变让输出更可用。",
+      "highlightTargets": [
+        {
+          "side": "left",
+          "target": "缺少背景和限制的位置",
+          "reason": "证明直接问缺少判断材料",
+          "precision": "inspect"
+        },
+        {
+          "side": "right",
+          "target": "具体解释或生活例子的位置",
+          "reason": "证明补背景后回答更贴近用户目标",
+          "precision": "inspect"
+        }
+      ],
+      "motionPurpose": "按口播顺序揭示证据，不一次性摊开。当前 draft 不写具体高亮坐标，避免假装精准。",
+      "currentRendererSupport": "partial",
+      "whatMustNotHappen": [
+        "不能把截图当背景装饰",
+        "不能让用户必须读截图小字才能懂",
+        "不能在未人工确认时写死高亮坐标"
+      ],
+      "studioReviewQuestions": [
+        "不读截图小字能否看懂差异？",
+        "截图是否是证据主体，而不是附属装饰？",
+        "需要补哪些精确高亮坐标？"
+      ]
+    },
+    {
+      "sceneId": "S05",
+      "directorRole": "insight-pin",
+      "sceneMode": "Insight Shot",
+      "viewerAttentionPath": [
+        "先看“AI 没变”",
+        "再看“变的是你给的信息”",
+        "最后把 S03-S04 的实验收束成一句判断"
+      ],
+      "narrativeFunction": "在证据之后钉住核心结论。",
+      "firstVisualFocus": "AI 没变",
+      "secondVisualFocus": "变的是你给的信息",
+      "evidenceIntent": "收束前面的变量改变和结果差异。",
+      "highlightTargets": [],
+      "motionPurpose": "用低密度金句给观众消化时间，不再新增复杂信息。",
+      "currentRendererSupport": "supported",
+      "whatMustNotHappen": [
+        "不能提前放到证据之前",
+        "不能写成长段观点",
+        "不能只是重复 S04 caption"
+      ],
+      "studioReviewQuestions": [
+        "这句话是否在证据之后更有说服力？",
+        "是否足够短、大、强？",
+        "是否给观众提供节奏缓冲？"
+      ]
+    },
+    {
+      "sceneId": "S06",
+      "directorRole": "transfer-proof",
+      "sceneMode": "Transfer Shot",
+      "viewerAttentionPath": [
+        "先看写文章场景",
+        "再看学 TCP 场景",
+        "最后看共同规律"
+      ],
+      "narrativeFunction": "证明上下文规律不是只适用于一个截图案例。",
+      "firstVisualFocus": "写文章需要读者和目的",
+      "secondVisualFocus": "学 TCP 需要基础和目标",
+      "evidenceIntent": "证明方法可迁移到创作和学习场景。",
+      "highlightTargets": [],
+      "motionPurpose": "两个场景依次出现，第三栏收束共同规律。",
+      "currentRendererSupport": "supported",
+      "whatMustNotHappen": [
+        "不能只堆“写文章 / TCP”两个名词",
+        "不能变成抽象道理页",
+        "不能说成所有场景都一定有效"
+      ],
+      "studioReviewQuestions": [
+        "每个迁移场景是否说明了为什么适用？",
+        "第三栏是否真正收束规律？",
+        "TCP 对目标观众是否需要改成更大众例子？"
+      ]
+    },
+    {
+      "sceneId": "S07",
+      "directorRole": "template-tool",
+      "sceneMode": "Template Shot",
+      "viewerAttentionPath": [
+        "先看标题：下次这样问",
+        "再看前三行上下文变量",
+        "最后看第四行输出要求"
+      ],
+      "narrativeFunction": "给用户一个可截图保存、可直接照做的 prompt 模板。",
+      "firstVisualFocus": "模板卡主体",
+      "secondVisualFocus": "三步上下文 + 一个输出要求",
+      "evidenceIntent": null,
+      "highlightTargets": [],
+      "motionPurpose": "四行逐个出现，形成可保存工具卡。当前项点亮由现有 todo-checklist + template 能力承载。",
+      "currentRendererSupport": "supported",
+      "whatMustNotHappen": [
+        "不能只是普通 checklist",
+        "不能和三步法冲突",
+        "不能缺少输出要求"
+      ],
+      "studioReviewQuestions": [
+        "不听口播，只看这一页能否照做？",
+        "前三行和第四行的职责是否清楚？",
+        "是否值得截图保存？"
+      ]
+    },
+    {
+      "sceneId": "S08",
+      "directorRole": "next-hook-cta",
+      "sceneMode": "CTA Shot / Next Hook",
+      "viewerAttentionPath": [
+        "先看本集收益：让 AI 理解你",
+        "再看下一步：让它按规则执行",
+        "最后形成下一篇期待"
+      ],
+      "narrativeFunction": "收束本集，并自然引出规则执行 / Claude Code Rules 下一篇。",
+      "firstVisualFocus": "让 AI 理解你之后",
+      "secondVisualFocus": "让它按规则执行",
+      "evidenceIntent": null,
+      "highlightTargets": [],
+      "motionPurpose": "先复述收益，再给下一集钩子，不只要求收藏模板。",
+      "currentRendererSupport": "supported",
+      "whatMustNotHappen": [
+        "不能只说点赞收藏",
+        "不能和 S07 重复",
+        "不能引入未落地的 Claude Code 画面能力"
+      ],
+      "studioReviewQuestions": [
+        "结尾是否自然接到下一篇？",
+        "是否有明确行动而不是空泛关注？",
+        "是否没有过度承诺后续能力？"
+      ]
+    }
+  ]
+}

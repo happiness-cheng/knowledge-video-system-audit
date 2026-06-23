@@ -1,0 +1,19 @@
+{
+  "primaryTitle": "为什么你用 AI 总是不满意？",
+  "backupTitle": "AI 没答到点上，也许是你没问清楚",
+  "shortDescription": "同一个问题，只是补充了背景，AI 的回答就完全不同。这期用一个真实对比实验，讲清楚提问前最该补的三件事。",
+  "longDescription": "为什么 AI 明明回答了，却总是答不到点上？这期从一次真实的提问对比实验出发，复盘直接提问与补充背景后的结果差异，再把这个规律迁移到写作和技术学习场景。最后给出一套可以立即使用的三步提问法：说明自己卡在哪里、想达到什么结果，以及回答需要遵守哪些限制条件。",
+  "tags": [
+    "AI使用",
+    "提示词",
+    "上下文",
+    "学习方法",
+    "AI成长实验"
+  ],
+  "approval": {
+    "userDecision": "pending",
+    "approvedByUser": false,
+    "decisionNote": "",
+    "decidedAt": null
+  }
+}

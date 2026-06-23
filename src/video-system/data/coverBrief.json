@@ -1,0 +1,49 @@
+{
+  "videoTitle": "为什么每开一个新会话，都要重新介绍项目？",
+  "coreThesis": "观众真正困惑的不是 CLAUDE.md 怎么写，而是为什么 Claude Code 换个新会话后又不认识项目规则。封面要先命中这个困惑，再让视频揭示 CLAUDE.md 是解决入口之一。",
+  "coverAngle": "痛点揭示：已经在用 Claude Code 的人，每次新会话都要重复解释项目背景、目录职责和验证方式。封面卖的是“怎么又不认识项目了”，不是“学习 CLAUDE.md”。",
+  "generationMethod": "image2",
+  "remotionCoverDeprecated": true,
+  "primaryPlatform": "douyin",
+  "secondaryReusePlatforms": [
+    "bilibili",
+    "xiaohongshu",
+    "youtube"
+  ],
+  "titleCandidates": [
+    "AI 怎么又不认识项目了？",
+    "每次新会话都要重讲？",
+    "Claude Code 又从零开始？"
+  ],
+  "recommendedTitle": "AI 怎么又不认识项目了？",
+  "subtitle": "问题可能不是它忘了",
+  "coverType": "pain-point",
+  "image2Directions": [
+    {
+      "id": "pain-chat",
+      "name": "痛点聊天窗口",
+      "prompt": "一张知识类短视频封面，16:9 横版。画面是精致的 AI coding 聊天窗口，深色编辑器界面，用户气泡写“帮我改登录逻辑”，AI 连续追问“项目是做什么的？”“哪个目录能改？”“改完怎么验证？”。主标题用大号中文：AI 怎么又不认识项目了？画面要清晰、强对比、少文字但痛点明确，不要机器人形象，不要复杂城市隐喻，不要夸张赛博背景。",
+      "why": "和当前开场痛点完全一致，观众第一眼能识别自己遇到的 AI Coding 问题。"
+    },
+    {
+      "id": "new-chat-reset",
+      "name": "NEW CHAT 规则清空",
+      "prompt": "一张知识类短视频封面，16:9 横版。画面中央是一个明显的 NEW CHAT 按钮，周围三张项目规则便签正在褪色消失，便签文字分别是“这个目录不能动”“优先复用现有实现”“改完必须运行测试”。主标题用大号中文：每次新会话都要重讲？整体精美、简洁、像真实 AI 工作流截图的视觉语言，不要人物，不要机器人，不要抽象城市。",
+      "why": "更强调新会话导致规则断掉，适合承接 S01 的规则消失逻辑。"
+    }
+  ],
+  "avoidList": [
+    "不要把 CLAUDE.md 放成封面第一主角",
+    "不要写“99% 的人不知道”“效率提升 10 倍”等无证据标题党",
+    "不要使用项目城市、认知核心、复杂节点网络等抽象隐喻",
+    "不要使用 AI 机器人头像作为主视觉",
+    "不要做成教程封面或知识点清单",
+    "不要让封面文字超过一个主标题和少量界面文字"
+  ],
+  "approval": {
+    "userDecision": "pending",
+    "approvedByUser": false,
+    "decisionNote": "",
+    "decidedAt": null
+  }
+}

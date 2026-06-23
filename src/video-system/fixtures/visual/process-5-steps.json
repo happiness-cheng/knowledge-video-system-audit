@@ -1,0 +1,18 @@
+{
+  "scenes": [
+    {
+      "id": "S05",
+      "type": "process-steps",
+      "title": "操作步骤",
+      "steps": [
+        "打开对话窗口",
+        "输入四步提问模板",
+        "检查 AI 回答",
+        "不满意就追问细节",
+        "复制最终结果"
+      ],
+      "screenText": "操作步骤",
+      "durationEstimate": 12
+    }
+  ]
+}

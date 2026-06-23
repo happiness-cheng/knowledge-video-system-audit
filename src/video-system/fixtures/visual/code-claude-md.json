@@ -1,0 +1,35 @@
+{
+  "scenes": [
+    {
+      "id": "S_CODE",
+      "type": "code",
+      "visualRole": "method",
+      "title": "CLAUDE.md 四层结构",
+      "subtitle": "说到哪一层，哪一行亮起来",
+      "filename": "CLAUDE.md",
+      "language": "markdown",
+      "animation": "highlight-current",
+      "showActiveLineInExplanation": false,
+      "durationEstimate": 10,
+      "lines": [
+        {
+          "text": "项目背景：这是一个 Remotion 知识视频生成系统",
+          "annotation": "官方指引：用 CLAUDE.md 提供项目持久上下文"
+        },
+        {
+          "text": "开发规范：动画只用 frame / interpolate，不用 CSS transition",
+          "annotation": "官方指引：写入代码风格和项目约定"
+        },
+        {
+          "text": "禁改区域：不要改 .env，不要代填用户确认字段",
+          "annotation": "官方指引：把项目约束写成明确指令"
+        },
+        {
+          "text": "常用命令：npm run validate:all；npx remotion studio src/index.ts",
+          "annotation": "官方指引：写入常用命令和工作流"
+        }
+      ],
+      "focusSequence": [0, 1, 2, 3]
+    }
+  ]
+}

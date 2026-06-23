@@ -1,0 +1,247 @@
+{
+  "version": "P1-2I-draft",
+  "basis": "videoSpec.durationEstimate + spokenText semantic estimate",
+  "fps": 30,
+  "leadFrames": 10,
+  "decayFrames": 15,
+  "defaultMinHoldFrames": 45,
+  "warning": "This draft does not use current audioTiming because audioTiming/subtitles are not synced with the active director videoSpec. Use durationEstimate * fps as totalFrames.",
+  "scenes": [
+    {
+      "sceneId": "S02",
+      "mode": "voiceover-cue",
+      "totalFrames": 270,
+      "durationEstimate": 9,
+      "spokenText": "比如我直接问，帮我解释一下这个问题。它确实回答了，但答案很标准，我反而更懵。",
+      "semanticSegments": [
+        {
+          "text": "比如我直接问，帮我解释一下这个问题。",
+          "estimatedDurationRatio": 0.45
+        },
+        {
+          "text": "它确实回答了，但答案很标准，我反而更懵。",
+          "estimatedDurationRatio": 0.55
+        }
+      ],
+      "cues": [
+        {
+          "cueId": "direct-ask",
+          "spokenAnchor": "我直接问 / 帮我解释一下这个问题",
+          "target": "left",
+          "startFrameEstimate": 0,
+          "holdFrames": 130,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'我直接问'时，左侧错误问法成为视觉中心。右侧尚未出现或刚入场。",
+          "fallback": "如果 renderer 不支持 active 切换，退化为左右同时 fadeSlideIn 入场（当前行为）"
+        },
+        {
+          "cueId": "standard-answer",
+          "spokenAnchor": "它确实回答了 / 答案很标准 / 我反而更懵",
+          "target": "right",
+          "startFrameEstimate": 120,
+          "holdFrames": 150,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'答案很标准/我反而更懵'时，右侧抽象结果接管视觉中心。左卡从 1.0 衰减到 0.65。",
+          "fallback": "如果 renderer 不支持 active 切换，右卡入场后两卡同权（当前行为）"
+        }
+      ]
+    },
+    {
+      "sceneId": "S04",
+      "mode": "voiceover-cue",
+      "totalFrames": 360,
+      "durationEstimate": 12,
+      "spokenText": "结果差别很明显。直接问的时候，它给的是标准答案；补背景后，它开始用生活例子解释，我一下就能跟上。",
+      "semanticSegments": [
+        {
+          "text": "结果差别很明显。直接问的时候，它给的是标准答案；",
+          "estimatedDurationRatio": 0.4
+        },
+        {
+          "text": "补背景后，它开始用生活例子解释，",
+          "estimatedDurationRatio": 0.35
+        },
+        {
+          "text": "我一下就能跟上。",
+          "estimatedDurationRatio": 0.25
+        }
+      ],
+      "cues": [
+        {
+          "cueId": "before-evidence",
+          "spokenAnchor": "直接问的时候 / 标准答案",
+          "target": "left-evidence",
+          "startFrameEstimate": 10,
+          "holdFrames": 140,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'直接问/标准答案'时，左侧截图证据成为视觉中心。右证据弱化或尚未完全入场。",
+          "fallback": "如果 renderer 不支持证据卡 active 切换，退化为左右证据同时入场（当前行为）"
+        },
+        {
+          "cueId": "after-evidence",
+          "spokenAnchor": "补背景后 / 生活例子解释",
+          "target": "right-evidence",
+          "startFrameEstimate": 150,
+          "holdFrames": 120,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'补背景后/生活例子'时，右侧截图证据接管视觉中心。左证据从 1.0 衰减到 0.65。",
+          "fallback": "退化为左右证据同权"
+        },
+        {
+          "cueId": "contrast-conclusion",
+          "spokenAnchor": "我一下就能跟上",
+          "target": "contrast-conclusion",
+          "startFrameEstimate": 270,
+          "holdFrames": 90,
+          "leadFrames": 10,
+          "support": "reference-only",
+          "motionIntent": "口播'跟上'时，对比结论区域成为视觉中心（如果 renderer 支持结论区高亮）。此时左右证据同时稳定。",
+          "fallback": "如果 renderer 不支持结论区 active，退化为左右证据同时稳定、无额外高亮。此 cue 标记为 reference-only，实现优先级最低。"
+        }
+      ]
+    },
+    {
+      "sceneId": "S06",
+      "mode": "voiceover-cue",
+      "totalFrames": 390,
+      "durationEstimate": 13,
+      "spokenText": "这个规律不只适用于概念解释。写文章时，它需要知道读者和目的；学新概念时，比如 TCP 这种技术概念，它需要知道你的基础和卡点。",
+      "semanticSegments": [
+        {
+          "text": "这个规律不只适用于概念解释。写文章时，它需要知道读者和目的；",
+          "estimatedDurationRatio": 0.45
+        },
+        {
+          "text": "学新概念时，比如 TCP 这种技术概念，它需要知道你的基础和卡点。",
+          "estimatedDurationRatio": 0.55
+        }
+      ],
+      "cues": [
+        {
+          "cueId": "writing-scene",
+          "spokenAnchor": "写文章时 / 读者和目的",
+          "target": "column-0",
+          "startFrameEstimate": 10,
+          "holdFrames": 175,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'写文章/读者和目的'时，第一栏 active。第二、三栏弱化。",
+          "fallback": "退化为三栏 progressiveReveal（当前行为）"
+        },
+        {
+          "cueId": "learning-scene",
+          "spokenAnchor": "学新概念时 / TCP / 基础和卡点",
+          "target": "column-1",
+          "startFrameEstimate": 185,
+          "holdFrames": 155,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'学新概念/TCP'时，第二栏 active。第一栏衰减到 0.65，第三栏弱化。",
+          "fallback": "退化为三栏 progressiveReveal"
+        },
+        {
+          "cueId": "common-pattern",
+          "spokenAnchor": "（视觉收束）",
+          "target": "column-2",
+          "startFrameEstimate": 340,
+          "holdFrames": 50,
+          "leadFrames": 10,
+          "support": "draft-director",
+          "motionIntent": "口播接近结束时，第三栏作为规律收束出现。前两栏稳定在 0.65。注意：当前 spokenText 没有明确说出'共同规律'四个字，此 cue 是视觉收束而非口播同步。后续可能需要补一句口播，或在 renderer 中作为尾段 visual recap 处理。",
+          "fallback": "如果 renderer 不支持尾段收束，退化为三栏 progressiveReveal 结束后全部 1.0。或删除此 cue，只保留两栏切换。"
+        }
+      ]
+    },
+    {
+      "sceneId": "S07",
+      "mode": "progressive-cue",
+      "highlightMode": "progressive-retain",
+      "totalFrames": 390,
+      "durationEstimate": 13,
+      "spokenText": "所以，下次不要一上来就说帮我写一下。先写清楚三件事：我现在的情况，我想要的结果，还有这次回答的限制。最后再说明，你要几个方案，以及希望它怎么取舍。",
+      "semanticSegments": [
+        {
+          "text": "所以，下次不要一上来就说帮我写一下。",
+          "estimatedDurationRatio": 0.15
+        },
+        {
+          "text": "先写清楚三件事：我现在的情况，",
+          "estimatedDurationRatio": 0.2
+        },
+        {
+          "text": "我想要的结果，",
+          "estimatedDurationRatio": 0.15
+        },
+        {
+          "text": "还有这次回答的限制。",
+          "estimatedDurationRatio": 0.2
+        },
+        {
+          "text": "最后再说明，你要几个方案，以及希望它怎么取舍。",
+          "estimatedDurationRatio": 0.3
+        }
+      ],
+      "cues": [
+        {
+          "cueId": "intro",
+          "spokenAnchor": "下次不要一上来就说帮我写一下",
+          "target": "title",
+          "startFrameEstimate": 0,
+          "holdFrames": 60,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "开场白，标题区域保持视觉中心。清单项尚未出现或刚入场。",
+          "fallback": "如果 renderer 不支持 title active，退化为所有项 progressiveReveal 入场"
+        },
+        {
+          "cueId": "situation",
+          "spokenAnchor": "我现在的情况",
+          "target": "item-0",
+          "startFrameEstimate": 50,
+          "holdFrames": 75,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'我现在的情况'时，第一行 active（最亮）。标题降权。其他项弱化。",
+          "fallback": "退化为 progressiveReveal（当前行为）"
+        },
+        {
+          "cueId": "goal",
+          "spokenAnchor": "我想要的结果",
+          "target": "item-1",
+          "startFrameEstimate": 110,
+          "holdFrames": 75,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'我想要的结果'时，第二行 active。item-0 保留较高可见性（progressive-retain），其他项弱化。",
+          "fallback": "退化为 progressiveReveal"
+        },
+        {
+          "cueId": "constraint",
+          "spokenAnchor": "回答的限制",
+          "target": "item-2",
+          "startFrameEstimate": 180,
+          "holdFrames": 80,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'限制'时，第三行 active。item-0/1 保留较高可见性。item-3 弱化。",
+          "fallback": "退化为 progressiveReveal"
+        },
+        {
+          "cueId": "output-request",
+          "spokenAnchor": "几个方案 / 怎么取舍",
+          "target": "item-3",
+          "startFrameEstimate": 270,
+          "holdFrames": 120,
+          "leadFrames": 10,
+          "support": "draft-estimate",
+          "motionIntent": "口播'几个方案/取舍'时，第四行 active。前三行全部保留可见（progressive-retain），形成可截图模板。",
+          "fallback": "退化为 progressiveReveal"
+        }
+      ]
+    }
+  ]
+}

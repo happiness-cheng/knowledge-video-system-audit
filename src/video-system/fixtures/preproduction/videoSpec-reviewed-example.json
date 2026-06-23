@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "title": "示例视频候选",
+    "fps": 30,
+    "theme": "xhs-white-editorial"
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "type": "cover",
+      "voiceover": "同一个问题，我做了两次对照。",
+      "spokenText": "同一个问题，我做了两次对照。",
+      "screenText": "同题对照",
+      "durationEstimate": 3,
+      "attentionTrigger": "真实实验反差",
+      "visualRole": "hook",
+      "animation": "fade-in"
+    },
+    {
+      "id": "S02",
+      "type": "comparison",
+      "voiceover": "结果看起来都对，但修改边界完全不同。",
+      "spokenText": "结果看起来都对，但修改边界完全不同。",
+      "screenText": "答案边界不同",
+      "durationEstimate": 6,
+      "attentionTrigger": "第一个证据",
+      "visualRole": "evidence",
+      "animation": "progressive-reveal"
+    },
+    {
+      "id": "S03",
+      "type": "big-quote",
+      "voiceover": "代码能告诉它项目是什么，项目指令告诉它希望怎么做。",
+      "spokenText": "代码能告诉它项目是什么，项目指令告诉它希望怎么做。",
+      "screenText": "事实能读，规矩会猜",
+      "durationEstimate": 6,
+      "attentionTrigger": "认知反差",
+      "visualRole": "insight",
+      "animation": "fade-in"
+    },
+    {
+      "id": "S04",
+      "type": "todo-checklist",
+      "voiceover": "先写项目目标、修改边界和验证命令。",
+      "spokenText": "先写项目目标、修改边界和验证命令。",
+      "screenText": "先写这三项",
+      "durationEstimate": 7,
+      "attentionTrigger": "模板收藏价值",
+      "visualRole": "template",
+      "animation": "progressive-reveal"
+    }
+  ]
+}

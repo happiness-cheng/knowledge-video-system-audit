@@ -1,0 +1,62 @@
+{
+  "version": "director-system-v2-p1",
+  "status": "sidecar-draft",
+  "sourceFiles": [
+    "src/video-system/data/contentBrief.json",
+    "src/video-system/data/videoSpec.json",
+    "docs/director/DIRECTOR_SYSTEM_V2_CONTRACT.md"
+  ],
+  "directorTheme": "从模糊到具体",
+  "viewerTransformation": "从以为 AI 不懂我，到意识到自己没有给出背景、目标和限制。",
+  "visualMetaphor": "问题逐步补全，回答逐步变清晰；同一个问题因为上下文变量改变而得到不同结果。",
+  "narrativeMode": "第一人称误判复盘 + 同题对照实验",
+  "emotionalCurve": [
+    "挫败",
+    "误判",
+    "反差",
+    "证据",
+    "顿悟",
+    "可执行",
+    "下一步期待"
+  ],
+  "viewerPromise": "看完后，观众知道为什么 AI 回答不到点，并能立刻用一张模板改写自己的提问。",
+  "coreConflict": {
+    "surfaceConflict": "AI 好像回答了，但没有答到点上。",
+    "realConflict": "用户以为问题在模型，其实是自己没有给判断材料。",
+    "resolution": "问 AI 前先交代卡点、目标和限制，再提出输出要求。"
+  },
+  "directorRules": [
+    "先呈现真实误判，再讲方法。",
+    "证据必须出现在结论之前。",
+    "每个 shot 只承担一个导演任务。",
+    "实践版优先使用 Level 1 / Level 2，不把实验能力写成已支持。",
+    "所有 cue 在 TTS 对齐前都保持 semantic-draft 状态。"
+  ],
+  "implementationBoundary": {
+    "practiceDefaultLevels": [1, 2],
+    "level3Policy": "new-shot-lab only",
+    "level4Policy": "separate project only",
+    "formalVideoSpecPolicy": "do not extend videoSpec schema during this sidecar trial"
+  },
+  "qualityRisks": [
+    {
+      "risk": "S04 截图证据如果不清晰，会削弱实验可信度。",
+      "mitigation": "shotPlan 将 S04 标为 manual-evidence-inspect，正式写入高亮坐标前必须人工审片。"
+    },
+    {
+      "risk": "S03 理想画面是 prompt 逐步补全，但实践版当前只稳定支持 process-steps。",
+      "mitigation": "shotPlan 将 prompt morph 标为 Level 3 candidate，实践版 fallback 到 process-steps。"
+    },
+    {
+      "risk": "S06 迁移场景可能变成三栏信息并列，缺少视线调度。",
+      "mitigation": "directorCuesDraft 用语义 cue 标注写文章、学新概念、共同规律的观看顺序。"
+    }
+  ],
+  "nonGoals": [
+    "不修改正式 videoSpec.json。",
+    "不新增 scene type。",
+    "不迁移 ultimate motion system 组件。",
+    "不生成 TTS、字幕或 mp4。",
+    "不把 semantic-draft cue 写成已对齐时间。"
+  ]
+}

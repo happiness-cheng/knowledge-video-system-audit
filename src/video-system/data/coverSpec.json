@@ -1,0 +1,72 @@
+{
+  "theme": "xhs-white-editorial",
+  "template": "big-title",
+  "title": "AI 怎么又不认识项目了？",
+  "subtitle": "问题可能不是它忘了",
+  "keywords": [
+    "Claude Code",
+    "新会话",
+    "项目规则"
+  ],
+  "coverType": "pain-point",
+  "badge": "",
+  "brandName": "世间一点尘",
+  "character": {
+    "show": false,
+    "assetId": null,
+    "placement": "center",
+    "pose": null
+  },
+  "decorations": [],
+  "cards": [
+    {
+      "text": "项目是做什么的？",
+      "style": "chat-question",
+      "position": "center-left"
+    },
+    {
+      "text": "哪个目录能改？",
+      "style": "chat-question",
+      "position": "center"
+    },
+    {
+      "text": "改完怎么验证？",
+      "style": "chat-question",
+      "position": "center-right"
+    }
+  ],
+  "image2Needed": true,
+  "remotionCoverDeprecated": true,
+  "image2PromptId": "pain-chat",
+  "layout": {
+    "titlePosition": "center",
+    "titleFontSize": 96,
+    "subtitleFontSize": 34,
+    "keywordFontSize": 22,
+    "badgePosition": "none"
+  },
+  "colors": {
+    "titleColor": null,
+    "accentOverride": null,
+    "highlightText": "不认识项目",
+    "highlightColor": "#FF5C4D"
+  },
+  "variants": {
+    "3x4": {
+      "size": "1080x1440",
+      "layoutMode": "portrait",
+      "titleFontSize": 104
+    },
+    "4x3": {
+      "size": "1440x1080",
+      "layoutMode": "landscape",
+      "titleFontSize": 92
+    }
+  },
+  "approval": {
+    "userDecision": "pending",
+    "approvedByUser": false,
+    "decisionNote": "",
+    "decidedAt": null
+  }
+}

@@ -1,0 +1,92 @@
+/**
+ * ImageHeroSceneFixture
+ *
+ * 用于验证 image-hero scene 的大图讲解、少量标注和右侧解释效果。
+ */
+
+import React from "react";
+import { SceneRenderer } from "../scenes/SceneRenderer";
+import type { ImageHeroSceneData } from "../scenes/ImageHeroScene";
+import { getTheme } from "../themes";
+
+export const IMAGE_HERO_SCENE_FIXTURE_FRAMES = 240;
+
+const scene: ImageHeroSceneData = {
+  id: "S_IMAGE_HERO_FIXTURE",
+  type: "image-hero",
+  visualRole: "example",
+  title: "复杂画面，不一定硬用卡片画",
+  subtitle: "关键图像负责承载现场，旁边只解释观众该看哪里",
+  assetId: "xiaochen-reading-claude-handbook",
+  imageAlt: "小尘正在阅读 Claude 项目手册",
+  imageFit: "contain",
+  objectPosition: "center center",
+  caption: "画面本身成为解释。",
+  points: [
+    "先让观众看到一个完整现场",
+    "框出画面里真正关键的对象",
+    "小字看不清时用局部放大",
+  ],
+  annotations: [
+    {
+      kind: "box",
+      label: "手册=知识入口",
+      x: 37.2,
+      y: 64.8,
+      width: 19.6,
+      height: 15.2,
+      labelX: 63,
+      labelY: 58,
+      tone: "success",
+    },
+    {
+      kind: "arrow",
+      label: "人在读，规则被理解",
+      x: 45,
+      y: 18,
+      width: 25,
+      height: 36,
+      labelX: 31,
+      labelY: 21,
+      tone: "accent",
+    },
+    {
+      kind: "magnify",
+      label: "局部放大",
+      x: 41.6,
+      y: 68.2,
+      width: 14.8,
+      height: 8.6,
+      labelX: 78,
+      labelY: 74,
+      zoom: 2.6,
+      tone: "warning",
+    },
+  ],
+  focusSequence: [0, 1, 2],
+  keywords: ["截图", "生成图", "复杂隐喻"],
+  animation: "highlight-current",
+};
+
+export const ImageHeroSceneFixture: React.FC = () => {
+  const theme = getTheme("xhs-white-editorial");
+
+  return (
+    <SceneRenderer
+      scene={scene}
+      theme={theme}
+      totalFrames={IMAGE_HERO_SCENE_FIXTURE_FRAMES}
+      current={1}
+      total={1}
+      sceneStartFrame={0}
+      layout="landscape"
+      presentationMode="default"
+      brand={{
+        watermarkText: "世间一点尘",
+        handle: "shijianyidianchen",
+        logoAssetId: null,
+      }}
+      showProgress
+    />
+  );
+};

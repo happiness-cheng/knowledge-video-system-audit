@@ -1,0 +1,31 @@
+{
+  "scenes": [
+    {
+      "id": "S06",
+      "type": "comparison",
+      "visualRole": "evidence",
+      "title": "效果对比",
+      "leftTitle": "直接问",
+      "leftItems": ["回答泛泛"],
+      "rightTitle": "补背景后",
+      "rightItems": ["回答具体"],
+      "keywords": ["AI 没变，变的是上下文"],
+      "assetLayout": {
+        "placement": "side-by-side",
+        "left": {
+          "assetId": "chatgpt-before-crop",
+          "label": "直接问",
+          "caption": "回答泛泛",
+          "highlight": [{ "top": 20, "left": 5, "width": 60, "height": 25 }]
+        },
+        "right": {
+          "assetId": "chatgpt-after-crop",
+          "label": "补背景后",
+          "caption": "回答具体",
+          "highlight": [{ "top": 15, "left": 5, "width": 70, "height": 30 }]
+        }
+      },
+      "durationEstimate": 10
+    }
+  ]
+}

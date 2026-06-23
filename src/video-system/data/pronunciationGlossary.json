@@ -1,0 +1,52 @@
+{
+  "terms": {
+    "AI": {
+      "spokenDefault": "这些工具",
+      "spokenCasual": "诶艾",
+      "rule": "spokenText 里自然避开 AI 这个词，用'它'/'这些工具'/'这个工具'替代；屏幕保留 AI"
+    },
+    "Claude Code": {
+      "spokenDefault": "Claude Code",
+      "spokenCasual": "Claude 代码工具",
+      "rule": "第一次出现时可加解释"
+    },
+    "API": {
+      "spokenDefault": "接口",
+      "rule": "面向普通观众不读 A P I"
+    },
+    "JSON": {
+      "spokenDefault": "配置文件",
+      "rule": "非技术视频优先说'配置文件'"
+    },
+    "TTS": {
+      "spokenDefault": "文字转语音",
+      "rule": "避免直接读 T T S"
+    },
+    "Remotion": {
+      "spokenDefault": "Remotion",
+      "spokenCasual": "视频渲染工具 Remotion",
+      "rule": "第一次出现时加解释"
+    },
+    "videoSpec": {
+      "spokenDefault": "视频配置文件",
+      "rule": "不读 videoSpec 点 json"
+    },
+    "Bug": {
+      "spokenDefault": "问题",
+      "spokenCasual": "八哥",
+      "rule": "普通观众用'问题'；技术语境可用'八哥'"
+    },
+    "Token": {
+      "spokenDefault": "登录凭证",
+      "rule": "不读透肯"
+    },
+    "CTA": {
+      "spokenDefault": "行动号召",
+      "rule": "不读 C T A"
+    },
+    "prompt": {
+      "spokenDefault": "提示词",
+      "rule": "普通观众用'提示词'"
+    }
+  }
+}

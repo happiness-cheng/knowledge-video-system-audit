@@ -1,0 +1,108 @@
+{
+  "version": "assetManifest.v1",
+  "project": "视频生成 / Claude Code 不是失忆，是我没给它办入职",
+  "createdAt": "2026-06-18T15:56:24Z",
+  "notes": [
+    "本包包含 ChatGPT 生成的小尘角色状态图，必须作为二进制素材交给 Agent。",
+    "小尘素材只作为 character image asset 使用，不代表 Remotion 已实现视频人物层。",
+    "S11 CTA 按钮需要 pulse 闪烁效果，由 Remotion 实现，不需要生图。"
+  ],
+  "assets": [
+    {
+      "id": "xiaochen-confused-newcomer",
+      "type": "character",
+      "path": "public/assets/images/xiaochen-confused-newcomer.png",
+      "title": "小尘疑惑新人状态图",
+      "description": "小尘坐在工位前，神色疑惑，右上角有问号。用于表现 Claude Code 新会话像新人第一天上班、缺少项目上下文。",
+      "usageIntent": "把‘新会话没有上下文’视觉化为‘新员工疑惑’。用于开场痛点和重复解释场景，增强人感与品牌识别。",
+      "allowedSceneTypes": [
+        "cover",
+        "two-column",
+        "comparison",
+        "big-quote"
+      ],
+      "targetScenes": [
+        "S02"
+      ],
+      "optionalScenes": [
+        "S01",
+        "S04"
+      ],
+      "cropPolicy": "保留人物上半身、笔记本电脑和右上角问号。用于右侧布局时可裁成半身，禁止裁掉问号和疑惑表情。",
+      "layoutNote": "优先放在画面右侧，左侧放重复解释便签或文字。人物视觉权重约 30%-40%，不能抢掉左侧痛点便签。",
+      "privacyStatus": "generated",
+      "dimensions": {
+        "width": 1086,
+        "height": 1448,
+        "aspectRatio": "3:4"
+      },
+      "source": "ChatGPT image generation based on user-approved 小尘 identity reference",
+      "processedPath": "public/assets/processed/xiaochen-confused-newcomer.png"
+    },
+    {
+      "id": "xiaochen-reading-claude-handbook",
+      "type": "character",
+      "path": "public/assets/images/xiaochen-reading-claude-handbook.png",
+      "title": "小尘阅读 CLAUDE.md 员工手册状态图",
+      "description": "小尘打开写有 CLAUDE.md 的员工手册阅读，右上角有小灯泡，旁边有项目目录结构提示。用于表现读完手册后完成入职、理解项目规则。",
+      "usageIntent": "把‘CLAUDE.md 被读取并形成项目共识’视觉化为‘读员工手册后的明悟’。用于类比、结果对比和项目地图点亮场景。",
+      "allowedSceneTypes": [
+        "two-column",
+        "comparison",
+        "process-steps",
+        "cta"
+      ],
+      "targetScenes": [
+        "S05",
+        "S08"
+      ],
+      "optionalScenes": [
+        "S06",
+        "S11"
+      ],
+      "cropPolicy": "保留人物、CLAUDE.md 手册文字、小灯泡和左侧项目结构提示。用于右侧布局时可裁去部分下半身，但不能裁掉手册标题和灯泡。",
+      "layoutNote": "S05 放在右侧对应‘Claude Code 先读 CLAUDE.md’；S08 放在右侧对应‘已入职 / 项目地图点亮’。人物视觉权重约 35%-45%。",
+      "privacyStatus": "generated",
+      "dimensions": {
+        "width": 1086,
+        "height": 1448,
+        "aspectRatio": "3:4"
+      },
+      "source": "ChatGPT image generation based on user-approved 小尘 identity reference",
+      "processedPath": "public/assets/processed/xiaochen-reading-claude-handbook.png"
+    },
+    {
+      "id": "claude-repeat-notes",
+      "type": "evidence",
+      "path": "public/assets/processed/claude-repeat-notes.png",
+      "title": "重复解释便签图",
+      "description": "用于 S02 左侧，表现项目知识散落在聊天记录中。",
+      "targetScenes": [
+        "S02"
+      ],
+      "privacyStatus": "generated"
+    },
+    {
+      "id": "claude-handbook-flow",
+      "type": "evidence",
+      "path": "public/assets/processed/claude-handbook-flow.png",
+      "title": "新人入职流程图",
+      "description": "用于 S05 左侧，表现公司新人先读规则再干活。",
+      "targetScenes": [
+        "S05"
+      ],
+      "privacyStatus": "generated"
+    },
+    {
+      "id": "claude-long-path",
+      "type": "evidence",
+      "path": "public/assets/processed/claude-long-path.png",
+      "title": "没有手册路径绕远图",
+      "description": "用于 S08 左侧，表现没有 CLAUDE.md 时路径绕远、误判和重复解释。",
+      "targetScenes": [
+        "S08"
+      ],
+      "privacyStatus": "generated"
+    }
+  ]
+}

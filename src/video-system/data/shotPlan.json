@@ -1,0 +1,211 @@
+{
+  "version": "director-system-v2-p1",
+  "status": "sidecar-draft",
+  "contract": "docs/director/DIRECTOR_SYSTEM_V2_CONTRACT.md",
+  "sourceVideoSpec": "src/video-system/data/videoSpec.json",
+  "shots": [
+    {
+      "shotId": "SH01",
+      "sceneId": "S01",
+      "sceneType": "cover",
+      "visualRole": "hook",
+      "shotTask": "cold-open-misjudgment",
+      "viewerAttentionPath": [
+        "先看第一人称入口：我一开始以为",
+        "再看误判对象：是 AI 不够聪明",
+        "最后意识到这是一场真实复盘，不是教程标题页"
+      ],
+      "visualCenter": "主标题中的第一人称误判",
+      "motionIntent": "标题先建立误判，再让副标题补出误判原因。",
+      "implementationLevel": 1,
+      "implementationPreference": "reuse-existing",
+      "currentSupport": "supported",
+      "fallback": "cover + visualRole=hook",
+      "qaRequired": ["studio-review"],
+      "mustNotHappen": [
+        "不能改成抽象方法论标题。",
+        "不能在开头堆方法或截图。"
+      ]
+    },
+    {
+      "shotId": "SH02",
+      "sceneId": "S02",
+      "sceneType": "two-column",
+      "visualRole": "conflict",
+      "shotTask": "mistake-scene",
+      "viewerAttentionPath": [
+        "先看左侧直接问法",
+        "再看右侧标准但无效的回答结果",
+        "最后理解原问题缺少背景、目标和限制"
+      ],
+      "visualCenter": "左侧错误问法到右侧抽象结果的切换",
+      "motionIntent": "左卡先成为视觉中心，右卡在口播讲到结果时接管视觉中心。",
+      "implementationLevel": 2,
+      "implementationPreference": "compose-existing",
+      "currentSupport": "supported",
+      "fallback": "two-column + conflict，退化为左右逐步入场",
+      "qaRequired": ["studio-review", "cue-wiring-check"],
+      "uses": ["directorCue strict-switch", "white-theme spotlight"],
+      "mustNotHappen": [
+        "不能在这一页提前讲解决方案。",
+        "不能让左右两栏等权到看不出错误现场。"
+      ]
+    },
+    {
+      "shotId": "SH03",
+      "sceneId": "S03",
+      "sceneType": "process-steps",
+      "visualRole": "method",
+      "shotTask": "experiment-variable-change",
+      "viewerAttentionPath": [
+        "先看同题实验这个设定",
+        "再看三个新增变量逐条出现",
+        "最后理解 S04 的结果差异来自输入变量变化"
+      ],
+      "visualCenter": "补背景、说目标、加限制三个变量",
+      "motionIntent": "变量逐条加入，旧变量保持可见，形成实验设置感。",
+      "implementationLevel": 2,
+      "implementationPreference": "compose-existing",
+      "currentSupport": "partial",
+      "fallback": "process-steps + progressive reveal",
+      "level3Candidate": {
+        "idea": "prompt card progressive completion",
+        "reason": "更直观表现问题从模糊到具体",
+        "targetArea": "shot-lab only"
+      },
+      "qaRequired": ["studio-review"],
+      "mustNotHappen": [
+        "不能写成普通方法总结页。",
+        "不能把 prompt morph 写进正式 videoSpec。"
+      ]
+    },
+    {
+      "shotId": "SH04",
+      "sceneId": "S04",
+      "sceneType": "comparison",
+      "visualRole": "evidence",
+      "shotTask": "evidence-proof",
+      "viewerAttentionPath": [
+        "先看顶部结论：结果真的变了",
+        "再看左侧直接问的标准答案",
+        "再看右侧补背景后的具体回答",
+        "最后看 caption 或高亮区域确认差异"
+      ],
+      "visualCenter": "右侧补背景后的具体回答证据",
+      "motionIntent": "左证据先说明原状态，右证据随后接管视觉中心，结尾收束到对比结论。",
+      "implementationLevel": 2,
+      "implementationPreference": "compose-existing",
+      "currentSupport": "partial",
+      "fallback": "comparison + evidence + assetLayout，未确认高亮坐标时不写 highlight",
+      "level3Candidate": {
+        "idea": "semantic screenshot zoom or local evidence highlight",
+        "reason": "如果截图小字手机端不可读，需要实验局部放大",
+        "targetArea": "shot-lab only"
+      },
+      "qaRequired": [
+        "studio-review",
+        "manual-evidence-inspect",
+        "contact-sheet",
+        "mobile-scaled-contact-sheet"
+      ],
+      "mustNotHappen": [
+        "不能让截图只是背景装饰。",
+        "不能在未人工确认时写死高亮坐标。"
+      ]
+    },
+    {
+      "shotId": "SH05",
+      "sceneId": "S05",
+      "sceneType": "big-quote",
+      "visualRole": "insight",
+      "shotTask": "insight-pin",
+      "viewerAttentionPath": [
+        "先看 AI 没变",
+        "再看变的是你给的信息",
+        "最后把 S03-S04 收束成一句判断"
+      ],
+      "visualCenter": "AI 没变 / 变的是你给的信息",
+      "motionIntent": "低密度停顿，给证据后的顿悟留时间。",
+      "implementationLevel": 1,
+      "implementationPreference": "reuse-existing",
+      "currentSupport": "supported",
+      "fallback": "big-quote + visualRole=insight",
+      "qaRequired": ["studio-review"],
+      "mustNotHappen": [
+        "不能放在证据前。",
+        "不能扩写成长段观点。"
+      ]
+    },
+    {
+      "shotId": "SH06",
+      "sceneId": "S06",
+      "sceneType": "three-column",
+      "visualRole": "example",
+      "shotTask": "transfer-proof",
+      "viewerAttentionPath": [
+        "先看写文章场景",
+        "再看学新概念场景",
+        "最后看共同规律"
+      ],
+      "visualCenter": "第三栏共同规律",
+      "motionIntent": "两个迁移场景依次出现，最后收束为共同规律。",
+      "implementationLevel": 2,
+      "implementationPreference": "compose-existing",
+      "currentSupport": "partial",
+      "fallback": "three-column + progressive reveal",
+      "level2Need": "three-column 尚未接入 director cue，当前只作为 sidecar 语义计划。",
+      "qaRequired": ["studio-review", "cue-wiring-check-before-implementation"],
+      "mustNotHappen": [
+        "不能只堆写文章和 TCP 两个名词。",
+        "不能把三栏做成永久等权。"
+      ]
+    },
+    {
+      "shotId": "SH07",
+      "sceneId": "S07",
+      "sceneType": "todo-checklist",
+      "visualRole": "template",
+      "shotTask": "template-tool",
+      "viewerAttentionPath": [
+        "先看标题：下次这样问",
+        "再看前三行上下文变量",
+        "最后看输出要求"
+      ],
+      "visualCenter": "可截图保存的四行模板",
+      "motionIntent": "当前项随口播高亮，已激活项保留可见，结尾全体稳定可截图。",
+      "implementationLevel": 2,
+      "implementationPreference": "compose-existing",
+      "currentSupport": "supported",
+      "fallback": "todo-checklist + template，退化为四行等权模板卡",
+      "qaRequired": ["studio-review", "cue-wiring-check", "screenshot-saveable-check"],
+      "uses": ["directorCue progressive-retain", "white-theme spotlight"],
+      "mustNotHappen": [
+        "不能只是普通 checklist。",
+        "结尾不能残留单项强高亮，必须稳定可截图。"
+      ]
+    },
+    {
+      "shotId": "SH08",
+      "sceneId": "S08",
+      "sceneType": "cta",
+      "visualRole": "cta",
+      "shotTask": "next-hook-cta",
+      "viewerAttentionPath": [
+        "先看本集收益：让 AI 理解你",
+        "再看下一步：让它按规则执行",
+        "最后形成下一篇期待"
+      ],
+      "visualCenter": "下一步，是让它按规则执行",
+      "motionIntent": "先收束本集，再给下一篇钩子。",
+      "implementationLevel": 1,
+      "implementationPreference": "reuse-existing",
+      "currentSupport": "supported",
+      "fallback": "cta",
+      "qaRequired": ["studio-review"],
+      "mustNotHappen": [
+        "不能只说点赞收藏。",
+        "不能承诺未落地的 Claude Code 画面能力。"
+      ]
+    }
+  ]
+}

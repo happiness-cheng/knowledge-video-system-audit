@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "title": "Claude Code 不是失忆，是我没给它办入职",
+    "purpose": "front60-validation-candidate",
+    "primaryOptimizationPlatform": "douyin",
+    "status": "draft-validation-only",
+    "sourceVideoSpec": "src/video-system/data/videoSpec.json",
+    "targetDurationSeconds": 60,
+    "theme": "xhs-white-editorial",
+    "note": "本文件是前60秒候选分镜，不替换正式 videoSpec.json，不作为系统硬规则。"
+  },
+  "validationHypotheses": [
+    {
+      "id": "H01",
+      "type": "creative-hypothesis",
+      "text": "先用“项目世界被 NEW CHAT 归零”的视觉事件抓住第一眼，再解释“不是失忆，是没入职”，比直接大字金句更适合抖音前3秒。"
+    },
+    {
+      "id": "H02",
+      "type": "design-hypothesis",
+      "text": "前15秒采用“视觉事件 → 反转命名 → 目标观众筛选”，能比先铺概念更想让人继续看。"
+    },
+    {
+      "id": "H03",
+      "type": "content-hypothesis",
+      "text": "45-60秒预告可抄的入职手册结构，能建立收藏和继续观看动机。"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "F60-S01",
+      "beatId": "F60-B01",
+      "beatRole": "hook",
+      "visualRole": "hook",
+      "chapterId": "CH01",
+      "humanPresence": "system-metaphor",
+      "caseStage": "original",
+      "evidencePurpose": "用项目世界被新会话归零的视觉事件，让观众先本能停下，而不是先读解释文字。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "强视觉诱因",
+      "type": "image-hero",
+      "semanticPattern": "visual-trigger-project-reset",
+      "durationEstimate": 4,
+      "title": "NEW CHAT",
+      "subtitle": "DAY 1",
+      "screenText": "DAY 1",
+      "keywords": ["项目世界", "归零", "新会话"],
+      "visualTrigger": {
+        "firstFrame": "一个精密运行的项目城市，目录像建筑，依赖像发光道路，中央有醒目的 NEW CHAT 按钮。",
+        "motionEvent": "NEW CHAT 被按下后，灯光从远到近熄灭，路径清空，一条红色错误路线误亮，中央出现 DAY 1。",
+        "viewerQuestion": "为什么一个新会话会让整个项目像第一天重新开始？"
+      },
+      "voiceover": "",
+      "spokenText": "",
+      "deliveryHint": "这一幕先不依赖口播和字幕。第一帧必须有项目城市的规模感，NEW CHAT 必须是可见触发点，DAY 1 是视觉事件后的结果。",
+      "animation": "frame-driven-project-reset"
+    },
+    {
+      "id": "F60-S02",
+      "beatId": "F60-B02",
+      "beatRole": "thesis",
+      "visualRole": "insight",
+      "chapterId": "CH01",
+      "humanPresence": "personal-judgment",
+      "caseStage": "conclusion",
+      "evidencePurpose": "把痛点命名为判断反转：不是失忆，而是没完成入职。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "误判反转",
+      "type": "big-quote",
+      "semanticPattern": "wrong-to-correct",
+      "durationEstimate": 11,
+      "quote": "不是失忆\n是没入职",
+      "wrongText": "失忆",
+      "leadText": "是",
+      "replacementText": "没入职",
+      "subtitle": "新会话不是员工老手，它只是第一天上班",
+      "screenText": "不是失忆",
+      "keywords": ["反转", "入职"],
+      "voiceover": "每次开新会话，它都像第一天来到这个项目。我一开始以为，是 Claude Code 失忆。后来发现不是，是我根本没给它办入职。",
+      "spokenText": "每次开新会话，它都像第一天来到这个项目。我一开始以为，是 Claude Code 失忆。后来发现不是，是我根本没给它办入职。",
+      "deliveryHint": "承接上一幕 DAY 1。先把视觉事件命名为“新会话像第一天”，再划掉“失忆”，浮现“没入职”。这句不是第一帧，而是视觉事件后的解释。",
+      "animation": "fade-in"
+    },
+    {
+      "id": "F60-S03",
+      "beatId": "F60-B03",
+      "beatRole": "case",
+      "visualRole": "story",
+      "chapterId": "CH01",
+      "humanPresence": "user-scenario",
+      "caseStage": "original",
+      "evidencePurpose": "筛选目标观众：反复解释、风格不一致、越改越乱的人。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "目标用户筛选",
+      "type": "bullets",
+      "durationEstimate": 10,
+      "title": "如果你也这样",
+      "bullets": [
+        {
+          "text": "每次新会话都要重讲项目",
+          "accent": "重复解释"
+        },
+        {
+          "text": "它总摸不准目录职责",
+          "accent": "找不到路"
+        },
+        {
+          "text": "改完还得你自己兜底",
+          "accent": "返工"
+        }
+      ],
+      "screenText": "这条是给你的",
+      "keywords": ["新手", "项目上下文"],
+      "voiceover": "如果你也觉得它每次都像新人，项目背景要重讲，目录职责要重讲，改完还得自己兜底，这条就是给你的。",
+      "spokenText": "如果你也觉得它每次都像新人，项目背景要重讲，目录职责要重讲，改完还得自己兜底，这条就是给你的。",
+      "deliveryHint": "三个标签要像用户脑内弹幕，不要做成普通 PPT bullet。每条出现后都让画面更像“这个人就是我”。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "id": "F60-S04",
+      "beatId": "F60-B04",
+      "beatRole": "case",
+      "visualRole": "evidence",
+      "chapterId": "CH02",
+      "humanPresence": "personal-experience",
+      "caseStage": "change",
+      "evidencePurpose": "用前后路径差异建立信任：没手册会绕路，有手册能直接定位。",
+      "recapOf": null,
+      "transferScenario": null,
+      "attentionTrigger": "第一证据",
+      "type": "comparison",
+      "semanticPattern": "detour-vs-direct-path",
+      "durationEstimate": 20,
+      "title": "同一个任务，两种开局",
+      "leftTitle": "没手册",
+      "leftItems": ["先猜目录", "再问规则", "容易误改"],
+      "rightTitle": "有手册",
+      "rightItems": ["先读职责", "定位路线", "按规则验证"],
+      "screenText": "有手册，少绕路",
+      "keywords": ["前后差异", "第一证据"],
+      "voiceover": "同一个修改任务，没手册的时候，它只能先猜目录、再问规则，还可能碰到不该碰的地方。有手册以后，它至少知道先看哪里，怎么改，改完怎么验证。",
+      "spokenText": "同一个修改任务，没手册的时候，它只能先猜目录、再问规则，还可能碰到不该碰的地方。有手册以后，它至少知道先看哪里，怎么改，改完怎么验证。",
+      "deliveryHint": "这是前60秒的信任建立段。不是抽象说理，而是画出左边绕路、右边直达。所有连线从卡片边中点连接，避免之前连线漂浮问题。",
+      "animation": "progressive-reveal"
+    },
+    {
+      "id": "F60-S05",
+      "beatId": "F60-B05",
+      "beatRole": "method",
+      "visualRole": "template",
+      "chapterId": "CH03",
+      "humanPresence": "action-guidance",
+      "caseStage": "conclusion",
+      "evidencePurpose": "预告收藏价值：后面会给可抄的入职手册结构。",
+      "recapOf": null,
+      "transferScenario": "自己的长期项目",
+      "attentionTrigger": "模板收藏价值",
+      "type": "todo-checklist",
+      "durationEstimate": 15,
+      "title": "入职手册先写 4 层",
+      "items": [
+        {
+          "text": "身份：这个项目是做什么的",
+          "checked": true
+        },
+        {
+          "text": "职责：每个目录负责什么",
+          "checked": true
+        },
+        {
+          "text": "路线：改动前先看哪里",
+          "checked": true
+        },
+        {
+          "text": "禁区：哪些地方不能乱动",
+          "checked": true
+        }
+      ],
+      "screenText": "手册 4 层",
+      "keywords": ["可截图", "模板"],
+      "voiceover": "所以这条视频最后，不是让你记一个概念。我会给你一份可抄的 Claude Code 入职手册结构：身份、职责、路线、禁区。先让它入职，再让它干活。",
+      "spokenText": "所以这条视频最后，不是让你记一个概念。我会给你一份可抄的 Claude Code 入职手册结构：身份、职责、路线、禁区。先让它入职，再让它干活。",
+      "deliveryHint": "这是收藏预告，不需要把完整模板全部讲完。要让观众知道继续看能拿到可执行结构。",
+      "animation": "progressive-reveal"
+    }
+  ],
+  "manualReviewChecklist": [
+    "前4秒有没有先出现强视觉事件，而不是孤立金句？",
+    "静音无字幕时，S01 是否仍然让人想继续看？",
+    "15秒时是否已经理解“入职”隐喻？",
+    "25-45秒是否有第一份可信差异，而不是只重复观点？",
+    "60秒时是否期待后面的模板页？",
+    "是否仍然像PPT翻页？如果像，应优先重做S01/S04画面，而不是继续改文案。"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "title": "Wrong To Correct Fixture",
+    "theme": "xhs-white-editorial"
+  },
+  "scenes": [
+    {
+      "id": "S_WRONG_TO_CORRECT_FIXTURE",
+      "type": "big-quote",
+      "visualRole": "insight",
+      "semanticPattern": "wrong-to-correct",
+      "quote": "不是记忆问题\n是入职问题",
+      "wrongText": "记忆问题",
+      "leadText": "是",
+      "replacementText": "入职问题",
+      "subtitle": "旧判断被否定，新判断成为焦点",
+      "animation": "strike-and-replace"
+    }
+  ]
+}
