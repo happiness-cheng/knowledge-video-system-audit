@@ -12,7 +12,7 @@
     "generate-audio": "tsx src/video-system/scripts/generate-audio.ts",
     "generate-subtitles": "tsx src/video-system/scripts/generate-subtitles.ts",
     "director:cues:resolve": "tsx src/video-system/scripts/resolve-director-cues.ts",
-    "test": "tsx --test \"src/**/*.test.ts\"",
+    "test": "tsx --test src/video-system/scripts/*.test.ts src/video-system/utils/*.test.ts",
     "typecheck": "tsc --noEmit",
     "validate:spec": "tsx src/video-system/scripts/validate-video-spec.ts",
     "validate:subs": "tsx src/video-system/scripts/validate-subtitles.ts",
