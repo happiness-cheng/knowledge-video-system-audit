@@ -44,12 +44,19 @@ export interface IndependentReview {
   hardVetoes: string[];
   recommendation: "pass" | "revise" | "split" | "stop";
   reviewedAt?: string;
+  contentSnapshotId?: string;
+  visualSnapshotId?: string;
+  candidateDigest?: string;
 }
 
 export interface PreProductionReview {
   schemaVersion: string;
+  contractVersion?: string;
   projectId: string;
   mode: WorkflowMode;
+  contentSnapshotId?: string;
+  visualSnapshotId?: string;
+  candidateDigest?: string;
   contentBriefPath: string;
   reviewedInputs: ReviewedInput[];
   scopeContract: ScopeContractV2;
@@ -145,12 +152,18 @@ function normalizeText(value: string): string {
 }
 
 export function sha256File(filePath: string): string {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+  return crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(filePath))
+    .digest("hex");
 }
 
 export function calculateReviewedInputDigest(inputs: ReviewedInput[]): string {
   const stable = [...inputs]
-    .map((item) => `${item.id}:${normalizePath(item.path)}:${item.sha256.toLowerCase()}`)
+    .map(
+      (item) =>
+        `${item.id}:${normalizePath(item.path)}:${item.sha256.toLowerCase()}`,
+    )
     .sort()
     .join("\n");
   return crypto.createHash("sha256").update(stable).digest("hex");
@@ -171,7 +184,9 @@ function validateReviewShape(
     errors.push(`${review.reviewerId || "review"}: reviewerSystem is empty`);
   }
   if (!review.reviewedAt || Number.isNaN(Date.parse(review.reviewedAt))) {
-    errors.push(`${review.reviewerId || "review"}: reviewedAt is empty or invalid`);
+    errors.push(
+      `${review.reviewerId || "review"}: reviewedAt is empty or invalid`,
+    );
   }
   const dimensions = Array.isArray(review.dimensions) ? review.dimensions : [];
   const dimensionIds = dimensions.map((item) => item.id);
@@ -191,8 +206,14 @@ function validateReviewShape(
         `${review.reviewerId}: ${id}.maxScore must be ${maxScore}, got ${dimension.maxScore}`,
       );
     }
-    if (!Number.isFinite(dimension.score) || dimension.score < 0 || dimension.score > maxScore) {
-      errors.push(`${review.reviewerId}: ${id}.score must be within 0-${maxScore}`);
+    if (
+      !Number.isFinite(dimension.score) ||
+      dimension.score < 0 ||
+      dimension.score > maxScore
+    ) {
+      errors.push(
+        `${review.reviewerId}: ${id}.score must be within 0-${maxScore}`,
+      );
     }
     if (!Array.isArray(dimension.evidence) || dimension.evidence.length === 0) {
       errors.push(`${review.reviewerId}: ${id}.evidence must not be empty`);
@@ -220,7 +241,9 @@ function validateReviewShape(
     errors.push(`${review.reviewerId}: review must be marked independent=true`);
   }
   if (review.reviewedInputDigest !== expectedDigest) {
-    errors.push(`${review.reviewerId}: reviewedInputDigest does not match reviewed inputs`);
+    errors.push(
+      `${review.reviewerId}: reviewedInputDigest does not match reviewed inputs`,
+    );
   }
   if (!Array.isArray(review.hardVetoes)) {
     errors.push(`${review.reviewerId}: hardVetoes must be an array`);
@@ -238,10 +261,11 @@ export function validateIndependentReview(
 function sameStringArray(a: string[] = [], b: string[] = []): boolean {
   return (
     a.length === b.length &&
-    a.map(normalizeText).every((item, index) => item === normalizeText(b[index] ?? ""))
+    a
+      .map(normalizeText)
+      .every((item, index) => item === normalizeText(b[index] ?? ""))
   );
 }
-
 
 interface CandidateVideoScene {
   id?: string;
@@ -286,7 +310,10 @@ function validateVideoReviewCandidate(input: unknown): {
   const errors: string[] = [];
   const sceneIds = new Set<string>();
   if (!input || typeof input !== "object") {
-    return { errors: ["videoSpec review candidate is not an object"], sceneIds };
+    return {
+      errors: ["videoSpec review candidate is not an object"],
+      sceneIds,
+    };
   }
   const spec = input as CandidateVideoSpec;
   if (!spec.meta?.title?.trim()) errors.push("videoSpec.meta.title is empty");
@@ -312,7 +339,10 @@ function validateVideoReviewCandidate(input: unknown): {
     if (!scene.voiceover?.trim()) errors.push(`${label}: voiceover is empty`);
     if (!scene.spokenText?.trim()) errors.push(`${label}: spokenText is empty`);
     if (!scene.screenText?.trim()) errors.push(`${label}: screenText is empty`);
-    if (!Number.isFinite(scene.durationEstimate) || (scene.durationEstimate ?? 0) <= 0) {
+    if (
+      !Number.isFinite(scene.durationEstimate) ||
+      (scene.durationEstimate ?? 0) <= 0
+    ) {
       errors.push(`${label}: durationEstimate must be a positive number`);
     }
     if (!scene.attentionTrigger?.trim()) {
@@ -332,7 +362,10 @@ function validateCoverReviewCandidate(input: unknown): string[] {
   if (!cover.videoTitle?.trim()) errors.push("coverBrief.videoTitle is empty");
   if (!cover.coreThesis?.trim()) errors.push("coverBrief.coreThesis is empty");
   if (!cover.coverAngle?.trim()) errors.push("coverBrief.coverAngle is empty");
-  if (!Array.isArray(cover.titleCandidates) || cover.titleCandidates.length !== 2) {
+  if (
+    !Array.isArray(cover.titleCandidates) ||
+    cover.titleCandidates.length !== 2
+  ) {
     errors.push("coverBrief.titleCandidates must contain exactly two titles");
   } else if (cover.titleCandidates.some((title) => !title?.trim())) {
     errors.push("coverBrief.titleCandidates contains an empty title");
@@ -346,8 +379,14 @@ function validateCoverReviewCandidate(input: unknown): string[] {
     errors.push("coverBrief.recommendedTitle must be one of titleCandidates");
   }
   if (!cover.subtitle?.trim()) errors.push("coverBrief.subtitle is empty");
-  if (!(new Set(["pain-point", "curiosity", "contrast", "data"])).has(cover.coverType ?? "")) {
-    errors.push("coverBrief.coverType must be pain-point | curiosity | contrast | data");
+  if (
+    !new Set(["pain-point", "curiosity", "contrast", "data"]).has(
+      cover.coverType ?? "",
+    )
+  ) {
+    errors.push(
+      "coverBrief.coverType must be pain-point | curiosity | contrast | data",
+    );
   }
   if (!cover.visualDirection?.trim()) {
     errors.push("coverBrief.visualDirection is empty");
@@ -355,8 +394,13 @@ function validateCoverReviewCandidate(input: unknown): string[] {
   if (!Array.isArray(cover.avoidList) || cover.avoidList.length < 2) {
     errors.push("coverBrief.avoidList must contain at least two items");
   }
-  if (cover.approval?.userDecision !== "pending" || cover.approval?.approvedByUser !== false) {
-    errors.push("review candidate coverBrief.approval must remain pending / false");
+  if (
+    cover.approval?.userDecision !== "pending" ||
+    cover.approval?.approvedByUser !== false
+  ) {
+    errors.push(
+      "review candidate coverBrief.approval must remain pending / false",
+    );
   }
   return errors;
 }
@@ -373,9 +417,11 @@ function validateInputFiles(
     ? reviewFile.reviewedInputs
     : [];
   const ids = inputs.map((item) => item.id);
-  if (new Set(ids).size !== ids.length) errors.push("reviewedInputs ids must be unique");
+  if (new Set(ids).size !== ids.length)
+    errors.push("reviewedInputs ids must be unique");
   for (const requiredId of REQUIRED_INPUT_IDS) {
-    if (!ids.includes(requiredId)) errors.push(`missing reviewed input: ${requiredId}`);
+    if (!ids.includes(requiredId))
+      errors.push(`missing reviewed input: ${requiredId}`);
   }
 
   for (const input of inputs) {
@@ -389,7 +435,9 @@ function validateInputFiles(
     }
     const candidatePath = path.resolve(root, input.path);
     if (!fs.existsSync(candidatePath)) {
-      errors.push(`${input.id}: reviewed file does not exist: ${normalizePath(input.path)}`);
+      errors.push(
+        `${input.id}: reviewed file does not exist: ${normalizePath(input.path)}`,
+      );
       continue;
     }
     const actualHash = sha256File(candidatePath);
@@ -399,7 +447,9 @@ function validateInputFiles(
 
     if (input.id === "contentBrief") {
       try {
-        contentBrief = JSON.parse(fs.readFileSync(candidatePath, "utf-8")) as ContentBriefV2;
+        contentBrief = JSON.parse(
+          fs.readFileSync(candidatePath, "utf-8"),
+        ) as ContentBriefV2;
         errors.push(
           ...validateContentBriefV2(contentBrief, {
             projectRoot: root,
@@ -438,11 +488,18 @@ function validateInputFiles(
     }
 
     if (requireExecutionInputs) {
-      const executionPath = path.resolve(root, input.executionPath ?? input.path);
+      const executionPath = path.resolve(
+        root,
+        input.executionPath ?? input.path,
+      );
       if (!fs.existsSync(executionPath)) {
-        errors.push(`${input.id}: execution file does not exist: ${normalizePath(input.executionPath ?? input.path)}`);
+        errors.push(
+          `${input.id}: execution file does not exist: ${normalizePath(input.executionPath ?? input.path)}`,
+        );
       } else if (sha256File(executionPath) !== input.sha256.toLowerCase()) {
-        errors.push(`${input.id}: execution file does not match the reviewed snapshot`);
+        errors.push(
+          `${input.id}: execution file does not match the reviewed snapshot`,
+        );
       }
     }
   }
@@ -450,9 +507,12 @@ function validateInputFiles(
   const contentInput = inputs.find((item) => item.id === "contentBrief");
   if (
     contentInput &&
-    normalizePath(reviewFile.contentBriefPath) !== normalizePath(contentInput.path)
+    normalizePath(reviewFile.contentBriefPath) !==
+      normalizePath(contentInput.path)
   ) {
-    errors.push("contentBriefPath does not match reviewedInputs[contentBrief].path");
+    errors.push(
+      "contentBriefPath does not match reviewedInputs[contentBrief].path",
+    );
   }
 
   if (contentBrief) {
@@ -463,7 +523,10 @@ function validateInputFiles(
     }
     const contentScope = contentBrief.scopeContract;
     const reviewScope = reviewFile.scopeContract;
-    if (normalizeText(contentScope.corePromise) !== normalizeText(reviewScope.corePromise)) {
+    if (
+      normalizeText(contentScope.corePromise) !==
+      normalizeText(reviewScope.corePromise)
+    ) {
       errors.push("scopeContract.corePromise does not match contentBrief");
     }
     if (contentScope.targetDepth !== reviewScope.targetDepth) {
@@ -481,7 +544,9 @@ function validateInputFiles(
         reviewScope.explicitlyOutOfScope,
       )
     ) {
-      errors.push("scopeContract.explicitlyOutOfScope does not match contentBrief");
+      errors.push(
+        "scopeContract.explicitlyOutOfScope does not match contentBrief",
+      );
     }
     if (contentScope.splitDecision !== reviewScope.splitDecision) {
       errors.push("scopeContract.splitDecision does not match contentBrief");
@@ -539,36 +604,104 @@ export function evaluatePreProductionGate(
   if (!Array.isArray(reviewFile.scopeContract?.mustAnswer)) {
     blockingReasons.push("scopeContract.mustAnswer is missing");
   } else if (reviewFile.scopeContract.mustAnswer.length === 0) {
-    blockingReasons.push("scopeContract.mustAnswer must contain at least one item");
+    blockingReasons.push(
+      "scopeContract.mustAnswer must contain at least one item",
+    );
   }
   if (reviewFile.scopeContract?.splitDecision === "stop") {
     blockingReasons.push("scopeContract.splitDecision=stop");
   }
+
+  // V3.1 Standard: dispatch to dual-review logic
+  const isV31 = reviewFile.contractVersion === "3.1";
+  const isStandardV31 = isV31 && reviewFile.mode === "standard";
 
   const reviews = Array.isArray(reviewFile.reviews) ? reviewFile.reviews : [];
   const reviewerIds = reviews.map((item) => item.reviewerId);
   if (new Set(reviewerIds).size !== reviewerIds.length) {
     blockingReasons.push("reviewerId values must be unique");
   }
-  const requiredRoles = REQUIRED_ROLES_BY_MODE[reviewFile.mode] ?? [];
-  const reviewRoles = reviews.map((item) => item.role);
-  const presentRoles = new Set(reviewRoles);
-  if (presentRoles.size !== reviewRoles.length) {
-    blockingReasons.push("reviewer roles must be unique; use exactly one independent reviewer per required role");
-  }
-  for (const role of requiredRoles) {
-    if (!presentRoles.has(role)) blockingReasons.push(`missing required reviewer role: ${role}`);
-  }
-  if (reviews.length !== requiredRoles.length) {
-    blockingReasons.push(
-      `review count ${reviews.length} must equal required ${requiredRoles.length} for mode=${reviewFile.mode}`,
+
+  if (isStandardV31) {
+    // V3.1 Standard: dual independent review, >85 threshold
+    const distinctSystems = new Set(
+      reviews.map((item) => item.reviewerSystem?.trim()).filter(Boolean),
     );
-  }
-  const distinctSystems = new Set(
-    reviews.map((item) => item.reviewerSystem?.trim()).filter(Boolean),
-  );
-  if (reviews.length > 0 && distinctSystems.size < 2) {
-    blockingReasons.push("multi-AI review requires at least two distinct reviewerSystem values");
+    if (reviews.length < 2) {
+      blockingReasons.push(
+        `v3.1 standard requires at least 2 reviews, got ${reviews.length}`,
+      );
+    }
+    if (distinctSystems.size < 2) {
+      blockingReasons.push(
+        "v3.1 standard requires at least 2 distinct reviewerSystem values",
+      );
+    }
+    const hasGptSelfCheck = reviews.some(
+      (r) =>
+        r.reviewerSystem?.toLowerCase().includes("gpt") ||
+        r.reviewerSystem?.toLowerCase().includes("chatgpt"),
+    );
+    if (!hasGptSelfCheck && reviews.length > 0) {
+      blockingReasons.push(
+        "v3.1 standard requires at least one GPT self-check review",
+      );
+    }
+
+    // V3.1: each review must carry the same snapshot identifiers as the top-level
+    for (const review of reviews) {
+      if (
+        reviewFile.contentSnapshotId &&
+        review.contentSnapshotId !== reviewFile.contentSnapshotId
+      ) {
+        blockingReasons.push(
+          `${review.reviewerId}: review contentSnapshotId=${review.contentSnapshotId} does not match declared ${reviewFile.contentSnapshotId}`,
+        );
+      }
+      if (
+        reviewFile.visualSnapshotId &&
+        review.visualSnapshotId !== reviewFile.visualSnapshotId
+      ) {
+        blockingReasons.push(
+          `${review.reviewerId}: review visualSnapshotId=${review.visualSnapshotId} does not match declared ${reviewFile.visualSnapshotId}`,
+        );
+      }
+      if (
+        reviewFile.candidateDigest &&
+        review.candidateDigest !== reviewFile.candidateDigest
+      ) {
+        blockingReasons.push(
+          `${review.reviewerId}: review candidateDigest does not match declared snapshot`,
+        );
+      }
+    }
+  } else {
+    // V2 / V3.1 Quick / V3.1 Deep: role-based review
+    const requiredRoles = REQUIRED_ROLES_BY_MODE[reviewFile.mode] ?? [];
+    const reviewRoles = reviews.map((item) => item.role);
+    const presentRoles = new Set(reviewRoles);
+    if (presentRoles.size !== reviewRoles.length) {
+      blockingReasons.push(
+        "reviewer roles must be unique; use exactly one independent reviewer per required role",
+      );
+    }
+    for (const role of requiredRoles) {
+      if (!presentRoles.has(role))
+        blockingReasons.push(`missing required reviewer role: ${role}`);
+    }
+    if (reviews.length !== requiredRoles.length) {
+      blockingReasons.push(
+        `review count ${reviews.length} must equal required ${requiredRoles.length} for mode=${reviewFile.mode}`,
+      );
+    }
+    const distinctSystems = new Set(
+      reviews.map((item) => item.reviewerSystem?.trim()).filter(Boolean),
+    );
+    if (reviews.length > 0 && distinctSystems.size < 2) {
+      blockingReasons.push(
+        "multi-AI review requires at least two distinct reviewerSystem values",
+      );
+    }
   }
 
   for (const review of reviews) {
@@ -579,7 +712,9 @@ export function evaluatePreProductionGate(
       );
     }
     if (review.recommendation !== "pass") {
-      blockingReasons.push(`${review.reviewerId} recommendation=${review.recommendation}`);
+      blockingReasons.push(
+        `${review.reviewerId} recommendation=${review.recommendation}`,
+      );
     }
   }
 
@@ -602,22 +737,41 @@ export function evaluatePreProductionGate(
       : 0;
   }
 
-  if (meanScore < 90) blockingReasons.push(`meanScore ${meanScore} < 90`);
-  if (medianScore < 90) blockingReasons.push(`medianScore ${medianScore} < 90`);
-  if (minReviewerScore < 85) blockingReasons.push(`minReviewerScore ${minReviewerScore} < 85`);
-  if (scoreSpread > 8) blockingReasons.push(`reviewer score spread ${scoreSpread} > 8; arbitration required`);
+  // Score thresholds: V3.1 Standard uses >85, others use >=90
+  if (isStandardV31) {
+    if (meanScore <= 85)
+      blockingReasons.push(`v3.1 standard meanScore ${meanScore} must be > 85`);
+    if (minReviewerScore <= 85)
+      blockingReasons.push(
+        `v3.1 standard minReviewerScore ${minReviewerScore} must be > 85`,
+      );
+  } else {
+    if (meanScore < 90) blockingReasons.push(`meanScore ${meanScore} < 90`);
+    if (medianScore < 90)
+      blockingReasons.push(`medianScore ${medianScore} < 90`);
+    if (minReviewerScore < 85)
+      blockingReasons.push(`minReviewerScore ${minReviewerScore} < 85`);
+    if (scoreSpread > 8)
+      blockingReasons.push(
+        `reviewer score spread ${scoreSpread} > 8; arbitration required`,
+      );
+  }
 
-  const thresholdByDimension: Record<string, number> = {
-    "first15-retention": 13,
-    "scope-completeness": 13,
-    "explanation-depth": 13,
-    "fact-evidence": 13,
-    "actionable-value": 8,
-    "visual-explainability": 4,
-  };
-  for (const [id, threshold] of Object.entries(thresholdByDimension)) {
-    if ((dimensionMeans[id] ?? 0) < threshold) {
-      blockingReasons.push(`dimension mean ${id}=${dimensionMeans[id] ?? 0} < ${threshold}`);
+  if (!isStandardV31) {
+    const thresholdByDimension: Record<string, number> = {
+      "first15-retention": 13,
+      "scope-completeness": 13,
+      "explanation-depth": 13,
+      "fact-evidence": 13,
+      "actionable-value": 8,
+      "visual-explainability": 4,
+    };
+    for (const [id, threshold] of Object.entries(thresholdByDimension)) {
+      if ((dimensionMeans[id] ?? 0) < threshold) {
+        blockingReasons.push(
+          `dimension mean ${id}=${dimensionMeans[id] ?? 0} < ${threshold}`,
+        );
+      }
     }
   }
 
@@ -630,28 +784,55 @@ export function evaluatePreProductionGate(
   if (!reviewFile.approval?.decisionNote?.trim()) {
     blockingReasons.push("approval.decisionNote is empty");
   }
-  if (!reviewFile.approval?.decidedAt || Number.isNaN(Date.parse(reviewFile.approval.decidedAt))) {
+  if (
+    !reviewFile.approval?.decidedAt ||
+    Number.isNaN(Date.parse(reviewFile.approval.decidedAt))
+  ) {
     blockingReasons.push("approval.decidedAt is empty or invalid");
   }
 
   if (reviewFile.consensus?.reviewedInputDigest !== reviewedInputDigest) {
-    blockingReasons.push("stored consensus.reviewedInputDigest does not match calculated digest");
+    blockingReasons.push(
+      "stored consensus.reviewedInputDigest does not match calculated digest",
+    );
   }
   if (Math.abs((reviewFile.consensus?.meanScore ?? -1) - meanScore) > 0.01) {
-    blockingReasons.push("stored consensus.meanScore does not match calculated value");
+    blockingReasons.push(
+      "stored consensus.meanScore does not match calculated value",
+    );
   }
-  if (Math.abs((reviewFile.consensus?.medianScore ?? -1) - medianScore) > 0.01) {
-    blockingReasons.push("stored consensus.medianScore does not match calculated value");
+  if (
+    Math.abs((reviewFile.consensus?.medianScore ?? -1) - medianScore) > 0.01
+  ) {
+    blockingReasons.push(
+      "stored consensus.medianScore does not match calculated value",
+    );
   }
-  if (Math.abs((reviewFile.consensus?.minReviewerScore ?? -1) - minReviewerScore) > 0.01) {
-    blockingReasons.push("stored consensus.minReviewerScore does not match calculated value");
+  if (
+    Math.abs(
+      (reviewFile.consensus?.minReviewerScore ?? -1) - minReviewerScore,
+    ) > 0.01
+  ) {
+    blockingReasons.push(
+      "stored consensus.minReviewerScore does not match calculated value",
+    );
   }
-  if (Math.abs((reviewFile.consensus?.scoreSpread ?? -1) - scoreSpread) > 0.01) {
-    blockingReasons.push("stored consensus.scoreSpread does not match calculated value");
+  if (
+    Math.abs((reviewFile.consensus?.scoreSpread ?? -1) - scoreSpread) > 0.01
+  ) {
+    blockingReasons.push(
+      "stored consensus.scoreSpread does not match calculated value",
+    );
   }
   for (const id of Object.keys(REQUIRED_DIMENSIONS)) {
-    if (Math.abs((reviewFile.consensus?.dimensionMeans?.[id] ?? -1) - dimensionMeans[id]) > 0.01) {
-      blockingReasons.push(`stored consensus.dimensionMeans.${id} does not match calculated value`);
+    if (
+      Math.abs(
+        (reviewFile.consensus?.dimensionMeans?.[id] ?? -1) - dimensionMeans[id],
+      ) > 0.01
+    ) {
+      blockingReasons.push(
+        `stored consensus.dimensionMeans.${id} does not match calculated value`,
+      );
     }
   }
   if (reviewFile.consensus?.passed !== true) {
@@ -721,4 +902,149 @@ export function assertPreProductionReviewReady(
     );
   }
   return evaluation;
+}
+
+// --- V3.1 Standard Dual-Review Gate ---
+
+export interface StandardDualReviewInput {
+  reviews: Array<{
+    reviewerId: string;
+    reviewerSystem: string;
+    score: number;
+    recommendation: string;
+    hardVetoes: string[];
+    contentSnapshotId?: string;
+    visualSnapshotId?: string;
+    candidateDigest?: string;
+  }>;
+  candidateDigest: string;
+  contentSnapshotId?: string;
+  visualSnapshotId?: string;
+}
+
+export function evaluateStandardDualReview(
+  input: StandardDualReviewInput,
+): string[] {
+  const blockingReasons: string[] = [];
+  const { reviews, candidateDigest } = input;
+
+  if (reviews.length < 2) {
+    blockingReasons.push(
+      `standard requires at least 2 reviews, got ${reviews.length}`,
+    );
+  }
+
+  const distinctSystems = new Set(
+    reviews.map((r) => r.reviewerSystem?.trim()).filter(Boolean),
+  );
+  if (distinctSystems.size < 2) {
+    blockingReasons.push(
+      "standard requires at least 2 distinct reviewerSystem values",
+    );
+  }
+
+  const hasGptSelfCheck = reviews.some(
+    (r) =>
+      r.reviewerSystem?.toLowerCase().includes("gpt") ||
+      r.reviewerSystem?.toLowerCase().includes("chatgpt"),
+  );
+  if (!hasGptSelfCheck && reviews.length > 0) {
+    blockingReasons.push(
+      "standard requires at least one GPT self-check review",
+    );
+  }
+
+  if (!/^[a-f0-9]{64}$/i.test(candidateDigest)) {
+    blockingReasons.push(
+      "candidateDigest must be a 64-character SHA-256 hex digest",
+    );
+  }
+
+  for (const review of reviews) {
+    // V3.1: each review must carry the same snapshot identifiers
+    if (
+      input.contentSnapshotId &&
+      review.contentSnapshotId !== input.contentSnapshotId
+    ) {
+      blockingReasons.push(
+        `${review.reviewerId}: review contentSnapshotId does not match declared snapshot`,
+      );
+    }
+    if (
+      input.visualSnapshotId &&
+      review.visualSnapshotId !== input.visualSnapshotId
+    ) {
+      blockingReasons.push(
+        `${review.reviewerId}: review visualSnapshotId does not match declared snapshot`,
+      );
+    }
+    if (review.candidateDigest && review.candidateDigest !== candidateDigest) {
+      blockingReasons.push(
+        `${review.reviewerId}: review candidateDigest does not match declared snapshot`,
+      );
+    }
+
+    if (review.recommendation !== "pass") {
+      blockingReasons.push(
+        `${review.reviewerId}: recommendation=${review.recommendation}, must be pass`,
+      );
+    }
+    if (Array.isArray(review.hardVetoes) && review.hardVetoes.length > 0) {
+      blockingReasons.push(
+        `${review.reviewerId} has vetoes: ${review.hardVetoes.join("; ")}`,
+      );
+    }
+  }
+
+  const scores = reviews.map((r) => r.score).filter(Number.isFinite);
+  if (scores.length > 0) {
+    const avg = scores.reduce((s, v) => s + v, 0) / scores.length;
+    const min = Math.min(...scores);
+    if (avg <= 85) {
+      blockingReasons.push(`standard averageScore ${round2(avg)} must be > 85`);
+    }
+    if (min <= 85) {
+      blockingReasons.push(`standard minimumScore ${min} must be > 85`);
+    }
+  }
+
+  return blockingReasons;
+}
+
+export function validateContentSnapshotConsistency(
+  declaredContentSnapshotId: string,
+  artifactContentSnapshotIds: string[],
+): string[] {
+  const errors: string[] = [];
+  for (const [index, id] of artifactContentSnapshotIds.entries()) {
+    if (id !== declaredContentSnapshotId) {
+      errors.push(
+        `artifact[${index}] contentSnapshotId=${id} does not match declared ${declaredContentSnapshotId}`,
+      );
+    }
+  }
+  return errors;
+}
+
+export function validateVisualSnapshotConsistency(
+  declaredVisualSnapshotId: string,
+  declaredCandidateDigest: string,
+  artifact: { visualSnapshotId?: string; candidateDigest?: string },
+): string[] {
+  const errors: string[] = [];
+  if (
+    artifact.visualSnapshotId &&
+    artifact.visualSnapshotId !== declaredVisualSnapshotId
+  ) {
+    errors.push(
+      `visualSnapshotId ${artifact.visualSnapshotId} does not match declared ${declaredVisualSnapshotId}`,
+    );
+  }
+  if (
+    artifact.candidateDigest &&
+    artifact.candidateDigest !== declaredCandidateDigest
+  ) {
+    errors.push(`candidateDigest does not match declared snapshot`);
+  }
+  return errors;
 }
