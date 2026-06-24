@@ -50,9 +50,10 @@ Agent 在正式视觉实现前必须提交简短的 `visualPhilosophyAcknowledge
 | 选题讨论                           | 10 + 01       | Topic Decision                                            |
 | 观众与素材研究 + 事实审查          | 10 + 02B + 02 | researchSynthesis                                         |
 | 内容母稿                           | 10 + 02B      | contentMasterDraft（含 draftBody）                        |
+| humanExpressionReview              | —             | humanExpressionReview                                     |
 | Hook / Beat / Content Segment Plan | 10 + 03       | Beat Sheet + Content Segment Plan                         |
-| 内容快照锁定                       | 07            | approvedContentSnapshot                                   |
 | 用户批准内容                       | —             | userDecision: approved                                    |
+| 内容快照锁定                       | 07            | approvedContentSnapshot                                   |
 | 读取视觉哲学                       | 11            | visualPhilosophyAcknowledgement                           |
 | Intent-First Shot Design           | 11 + 05       | Shot 设计（含声画对齐语义）                               |
 | Shot Director Spec                 | 11 + 05 + 07  | shotDirectorSpec（每个 Shot 一份）                        |
@@ -118,11 +119,15 @@ Agent 在正式视觉实现前必须提交简短的 `visualPhilosophyAcknowledge
 统一为：
 
 ```text
-contentMasterDraft.draftBody
-→ approvedContentSnapshot（只含内容产物）
+Topic Decision
+→ researchSynthesis / evidence notes
+→ contentMasterDraft
+→ humanExpressionReview
 → Beat Sheet + Content Segment Plan
 → 用户批准内容
+→ approvedContentSnapshot（只含内容产物）
 → 读取视觉哲学（11）
+→ visualPhilosophyAcknowledgement
 → Intent-First Shot Design
 → shotDirectorSpec（每个 Shot）
 → capabilityPreflight / capabilityNegotiation
@@ -131,10 +136,7 @@ contentMasterDraft.draftBody
 → candidateDigest
 → 四独立审查（cold-viewer / content-editor / fact-evidence / visual-audio-director）
 → userApproval
-→ TTS / audioTiming
-→ timedVisualAlignment
-→ Scene Compile
-→ videoSpec
+→ TTS / Scene Compile
 ```
 
 禁止：内容母稿直接生成 Scene。内容阶段不输出视觉 Shot Plan。

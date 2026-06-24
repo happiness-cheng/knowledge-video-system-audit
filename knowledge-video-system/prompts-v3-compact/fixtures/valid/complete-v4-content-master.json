@@ -1,0 +1,70 @@
+{
+  "coreQuestion": "Why does Claude Code lose memory every session?",
+  "viewerSituation": "Developer using Claude Code daily, frustrated by repeated context loss",
+  "openingTension": "You paid for Claude Code, why does it act like its first day?",
+  "personalCase": "Building a Remotion video system with persistent CLAUDE.md",
+  "keyEvidence": [
+    "CLAUDE.md file persistence",
+    "Session memory reset",
+    "Rule injection"
+  ],
+  "progressiveReveals": [
+    "Problem exists",
+    "Root cause",
+    "Solution works",
+    "Boundaries"
+  ],
+  "mustAnswer": [
+    "Why does it forget?",
+    "What is CLAUDE.md?",
+    "How to fix it?",
+    "What are limits?"
+  ],
+  "examplesAndAnalogies": ["New employee every day analogy"],
+  "boundaries": "Not covering API-level memory, only CLI tool",
+  "finalTakeaway": "CLAUDE.md is your project persistent brain",
+  "immediateAction": "Create a CLAUDE.md in your project root",
+  "contentToDefer": ["API memory management", "Enterprise deployment"],
+  "toneReference": "Real developer sharing a discovery",
+  "draftBody": "You open Claude Code in your project for the hundredth time. You explain your folder structure again. You explain your conventions again. You explain your decisions again. It is like a new employee every single day. But there is a file that fixes this. CLAUDE.md. A single markdown file in your project root that Claude Code reads on every session start. I tested this for 30 days across 3 projects. The results were clear: session setup time dropped from 5 minutes to 30 seconds.",
+  "viewerStateChange": {
+    "viewerStateBefore": "Claude Code is unreliable, loses context every time, nothing can fix it",
+    "viewerStateAfter": "CLAUDE.md solves this with a specific mechanism, it is a file with clear steps and real boundaries",
+    "stateChangeReason": "Showing the actual file, its growth over 30 days, and the before/after metrics"
+  },
+  "contentDesignRationale": {
+    "whyThisOpening": "Direct pain point recognition in 2 seconds, immediate self-identification",
+    "whyThisCase": "First-hand 30-day experiment across 3 projects, real metrics",
+    "whyThisEvidenceOrder": "Problem first, then mechanism, then proof, then boundaries",
+    "whyThisRevealOrder": "Start with frustration, reveal the file, show growth, state limits",
+    "whyThisBoundary": "Only cover CLI-level memory, not API memory management"
+  },
+  "visualHandoff": [
+    {
+      "beatId": "B01",
+      "contentSourceRef": "draftBody-paragraph-1",
+      "mustBeSeen": [
+        "Developer explaining folder structure for the 100th time",
+        "Claude Code with empty context"
+      ],
+      "canBeSpoken": ["Background on why this happens technically"],
+      "mustUseEvidence": [],
+      "needsVisualProcess": ["State change from forgetting to remembering"],
+      "needsEmotionalExperience": ["Frustration of repeated context loss"],
+      "whyThisNeedsVisualSupport": "Abstract concept of memory loss needs concrete visual metaphor of repeated setup"
+    },
+    {
+      "beatId": "B02",
+      "contentSourceRef": "draftBody-paragraph-2",
+      "mustBeSeen": [
+        "CLAUDE.md file content",
+        "Before/after session comparison"
+      ],
+      "canBeSpoken": ["Technical details of file structure"],
+      "mustUseEvidence": ["Actual CLAUDE.md file screenshot", "30-day metrics"],
+      "needsVisualProcess": ["File growth over time"],
+      "needsEmotionalExperience": ["Satisfaction of seeing it work"],
+      "whyThisNeedsVisualSupport": "Evidence must be visible to be believed, not just described"
+    }
+  ]
+}

@@ -24,13 +24,10 @@
           "beatId": { "type": "string" },
           "segmentId": { "type": "string" },
           "spokenUnit": { "type": "string", "description": "该分段对应的口播单元" },
-          "mustBeSeen": { "type": "boolean", "description": "是否必须被观众看到" },
-          "evidenceRequirement": {
-            "type": "string",
-            "enum": ["none", "optional", "required"],
-            "description": "证据需求等级"
-          },
-          "emotionalRequirement": { "type": "string", "description": "情感层面的要求" },
+          "contentSourceRef": { "type": "string", "description": "draftBody 中对应的段落或论点引用" },
+          "mustBeSeen": { "type": "array", "items": { "type": "string" }, "description": "必须被观众看到的内容要点" },
+          "evidenceRequirement": { "type": "array", "items": { "type": "string" }, "description": "证据层面的具体需求" },
+          "emotionalRequirement": { "type": "array", "items": { "type": "string" }, "description": "情感层面的具体需求" },
           "semanticRelationship": { "type": "string", "description": "与前一分段的语义关系" }
         },
         "additionalProperties": false

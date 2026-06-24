@@ -1,89 +1,392 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "preProductionReview",
-  "description": "四角色独立审查。角色：cold-viewer、content-editor、fact-evidence、visual-audio-director",
+  "$id": "preProductionReview",
+  "title": "PreProductionReview",
+  "description": "Pre-production review contract. 9 dimensions, 4 reviewer roles, multi-AI independent review with consensus and user approval. Must match runtime interface in src/video-system/utils/preProductionGate.ts",
   "type": "object",
-  "required": ["contractVersion", "contentSnapshotId", "visualSnapshotId", "candidateDigest", "reviews", "aggregate"],
+  "required": [
+    "schemaVersion",
+    "projectId",
+    "mode",
+    "contentBriefPath",
+    "reviewedInputs",
+    "scopeContract",
+    "reviews",
+    "consensus",
+    "approval"
+  ],
   "properties": {
-    "contractVersion": { "type": "string", "const": "4.0" },
-    "contentSnapshotId": { "type": "string" },
-    "visualSnapshotId": { "type": "string" },
-    "candidateDigest": { "type": "string" },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version identifier"
+    },
+    "contractVersion": {
+      "type": "string",
+      "const": "4.0",
+      "description": "Contract version, fixed at 4.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique project identifier"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["quick", "standard", "deep"],
+      "description": "Review depth mode. quick=3 roles, standard/deep=4 roles"
+    },
+    "contentSnapshotId": {
+      "type": "string",
+      "description": "Optional content snapshot identifier"
+    },
+    "visualSnapshotId": {
+      "type": "string",
+      "description": "Optional visual snapshot identifier"
+    },
+    "candidateDigest": {
+      "type": "string",
+      "description": "Optional candidate digest (sha256 hex)"
+    },
+    "contentBriefPath": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path to the content brief file"
+    },
+    "reviewedInputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/reviewedInput"
+      },
+      "description": "List of reviewed input files with sha256 digests"
+    },
+    "scopeContract": {
+      "$ref": "#/$defs/scopeContract"
+    },
     "reviews": {
       "type": "array",
-      "minItems": 4,
+      "minItems": 1,
       "items": {
-        "type": "object",
-        "required": [
-          "reviewId",
-          "role",
-          "independent",
-          "contentSnapshotId",
-          "visualSnapshotId",
-          "candidateDigest",
-          "scores",
-          "totalScore",
-          "issues",
-          "recommendation",
-          "reviewedAt"
-        ],
-        "properties": {
-          "reviewId": { "type": "string" },
-          "role": {
-            "type": "string",
-            "enum": ["cold-viewer", "content-editor", "fact-evidence", "visual-audio-director"]
-          },
-          "independent": { "type": "boolean", "const": true },
-          "contentSnapshotId": { "type": "string" },
-          "visualSnapshotId": { "type": "string" },
-          "candidateDigest": { "type": "string" },
-          "scores": {
-            "type": "object",
-            "required": ["topicPromise", "researchAndTruth", "contentMasterDraft", "hookStructure", "cover", "voiceoverVisualSync", "consistency"],
-            "properties": {
-              "topicPromise": { "type": "integer", "minimum": 0, "maximum": 100 },
-              "researchAndTruth": { "type": "integer", "minimum": 0, "maximum": 100 },
-              "contentMasterDraft": { "type": "integer", "minimum": 0, "maximum": 100 },
-              "hookStructure": { "type": "integer", "minimum": 0, "maximum": 100 },
-              "cover": { "type": "integer", "minimum": 0, "maximum": 100 },
-              "voiceoverVisualSync": { "type": "integer", "minimum": 0, "maximum": 100 },
-              "consistency": { "type": "integer", "minimum": 0, "maximum": 100 }
-            },
-            "additionalProperties": false
-          },
-          "totalScore": { "type": "integer" },
-          "issues": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["dimension", "severity", "description"],
-              "properties": {
-                "dimension": { "type": "string" },
-                "severity": { "type": "string", "enum": ["info", "warning", "critical"] },
-                "description": { "type": "string" },
-                "evidence": { "type": "string" }
-              },
-              "additionalProperties": false
-            }
-          },
-          "recommendation": { "type": "string", "enum": ["pass", "revise", "stop"] },
-          "reviewedAt": { "type": "string" }
-        },
-        "additionalProperties": false
-      }
+        "$ref": "#/$defs/independentReview"
+      },
+      "description": "Independent reviews, one per required role"
     },
-    "aggregate": {
+    "consensus": {
+      "$ref": "#/$defs/consensus"
+    },
+    "approval": {
+      "$ref": "#/$defs/approval"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "reviewerRole": {
+      "type": "string",
+      "enum": [
+        "cold-viewer",
+        "content-editor",
+        "fact-evidence",
+        "visual-audio-director"
+      ]
+    },
+    "requiredDimensionId": {
+      "type": "string",
+      "enum": [
+        "audience-pain",
+        "title-cover-promise",
+        "first15-retention",
+        "scope-completeness",
+        "explanation-depth",
+        "fact-evidence",
+        "actionable-value",
+        "voiceover-expression",
+        "visual-explainability"
+      ]
+    },
+    "reviewDimension": {
       "type": "object",
-      "required": ["meanScore", "medianScore", "minimumScore", "scoreRange", "pass"],
+      "required": ["id", "score", "maxScore", "evidence", "gaps", "action"],
       "properties": {
-        "meanScore": { "type": "number" },
-        "medianScore": { "type": "number" },
-        "minimumScore": { "type": "number" },
-        "scoreRange": { "type": "number" },
-        "pass": { "type": "boolean" }
+        "id": {
+          "$ref": "#/$defs/requiredDimensionId",
+          "description": "Dimension identifier, must be one of the 9 required dimensions"
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional human-readable dimension name"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Score for this dimension, 0..maxScore"
+        },
+        "maxScore": {
+          "type": "number",
+          "description": "Maximum score for this dimension (fixed per dimension: audience-pain=12, title-cover-promise=8, first15-retention=15, scope-completeness=15, explanation-depth=15, fact-evidence=15, actionable-value=10, voiceover-expression=5, visual-explainability=5)"
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Evidence items, must be non-empty"
+        },
+        "gaps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Identified gaps"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required action, must be non-empty"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reviewedInput": {
+      "type": "object",
+      "required": ["id", "path", "sha256"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Input identifier (e.g. contentBrief, videoSpec, coverBrief)"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "File path relative to project root"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$",
+          "description": "SHA-256 hex digest of the file"
+        },
+        "executionPath": {
+          "type": "string",
+          "description": "Optional formal execution path when the reviewed file is a candidate"
+        }
+      },
+      "additionalProperties": false
+    },
+    "scopeContract": {
+      "type": "object",
+      "required": [
+        "corePromise",
+        "targetDepth",
+        "mustAnswer",
+        "shouldAnswer",
+        "explicitlyOutOfScope",
+        "splitDecision"
+      ],
+      "properties": {
+        "corePromise": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Core promise of the content"
+        },
+        "targetDepth": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Target depth level"
+        },
+        "mustAnswer": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Questions that must be answered"
+        },
+        "shouldAnswer": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Questions that should be answered"
+        },
+        "explicitlyOutOfScope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Topics explicitly out of scope"
+        },
+        "splitDecision": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Split decision rule"
+        }
+      },
+      "additionalProperties": false
+    },
+    "independentReview": {
+      "type": "object",
+      "required": [
+        "reviewerId",
+        "reviewerSystem",
+        "role",
+        "independent",
+        "reviewedInputDigest",
+        "score",
+        "dimensions",
+        "hardVetoes",
+        "recommendation"
+      ],
+      "properties": {
+        "reviewerId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique reviewer identifier"
+        },
+        "reviewerSystem": {
+          "type": "string",
+          "minLength": 1,
+          "description": "AI system that performed the review (e.g. gpt-4o, claude-opus-4)"
+        },
+        "role": {
+          "$ref": "#/$defs/reviewerRole",
+          "description": "Reviewer role"
+        },
+        "independent": {
+          "type": "boolean",
+          "const": true,
+          "description": "Must be true; review must be independently conducted"
+        },
+        "reviewedInputDigest": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$",
+          "description": "SHA-256 hex digest of the reviewed inputs, must match calculated digest"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Total score, must equal sum of dimension scores"
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reviewDimension"
+          },
+          "minItems": 9,
+          "maxItems": 9,
+          "description": "All 9 required review dimensions"
+        },
+        "hardVetoes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Hard veto reasons (empty array if none)"
+        },
+        "recommendation": {
+          "type": "string",
+          "enum": ["pass", "revise", "split", "stop"],
+          "description": "Reviewer recommendation"
+        },
+        "reviewedAt": {
+          "type": "string",
+          "description": "ISO 8601 timestamp of when the review was conducted"
+        },
+        "contentSnapshotId": {
+          "type": "string",
+          "description": "Optional content snapshot identifier at review time"
+        },
+        "visualSnapshotId": {
+          "type": "string",
+          "description": "Optional visual snapshot identifier at review time"
+        },
+        "candidateDigest": {
+          "type": "string",
+          "description": "Optional candidate digest at review time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "consensus": {
+      "type": "object",
+      "required": [
+        "reviewedInputDigest",
+        "meanScore",
+        "medianScore",
+        "minReviewerScore",
+        "scoreSpread",
+        "dimensionMeans",
+        "passed",
+        "blockingReasons"
+      ],
+      "properties": {
+        "reviewedInputDigest": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$",
+          "description": "SHA-256 hex digest matching all reviewed inputs"
+        },
+        "meanScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Mean score across all reviewers"
+        },
+        "medianScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Median score across all reviewers"
+        },
+        "minReviewerScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Minimum individual reviewer score"
+        },
+        "scoreSpread": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Max score minus min score across reviewers"
+        },
+        "dimensionMeans": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 15
+          },
+          "description": "Mean score per dimension across all reviewers"
+        },
+        "passed": {
+          "type": "boolean",
+          "description": "Whether the review consensus passes all gate thresholds"
+        },
+        "blockingReasons": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of blocking reasons (empty if passed=true)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "approval": {
+      "type": "object",
+      "required": [
+        "userDecision",
+        "approvedByUser",
+        "decisionNote",
+        "decidedAt"
+      ],
+      "properties": {
+        "userDecision": {
+          "type": "string",
+          "enum": ["pending", "continue", "revise", "split", "stop"],
+          "description": "User's decision on the review"
+        },
+        "approvedByUser": {
+          "type": "boolean",
+          "description": "Whether user has approved"
+        },
+        "decisionNote": {
+          "type": "string",
+          "description": "User's decision note"
+        },
+        "decidedAt": {
+          "type": ["string", "null"],
+          "description": "ISO 8601 timestamp of user decision, or null if pending"
+        }
       },
       "additionalProperties": false
     }
-  },
-  "additionalProperties": false
+  }
 }

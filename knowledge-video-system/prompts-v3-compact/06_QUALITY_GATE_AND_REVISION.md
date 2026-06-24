@@ -14,25 +14,29 @@
 
 | 维度                 |    分值 |
 | -------------------- | ------: |
-| 选题、痛点与内容承诺 |      20 |
-| 研究、事实与证据     |      15 |
-| 内容母稿与人类表达   |      25 |
-| Hook、结构与留存     |      15 |
-| 封面方向             |      10 |
-| 声画导演与同步       |      10 |
-| 交付包一致性         |       5 |
+| audience-pain        |      12 |
+| title-cover-promise  |       8 |
+| first15-retention    |      15 |
+| scope-completeness   |      15 |
+| explanation-depth    |      15 |
+| fact-evidence        |      15 |
+| actionable-value     |      10 |
+| voiceover-expression |       5 |
+| visual-explainability|       5 |
 | **总分**             | **100** |
 
 ### Quick 门禁
 
 - 总分 ≥ 80
-- topicPromise ≥ 14/20
-- researchAndTruth ≥ 10/15
-- contentMasterDraft ≥ 18/25
-- hookStructure ≥ 11/15
-- cover ≥ 7/10
-- voiceoverVisualSync ≥ 7/10
-- consistency ≥ 3/5
+- audience-pain ≥ 9/12
+- title-cover-promise ≥ 6/8
+- first15-retention ≥ 12/15
+- scope-completeness ≥ 12/15
+- explanation-depth ≥ 12/15
+- fact-evidence ≥ 12/15
+- actionable-value ≥ 8/10
+- voiceover-expression ≥ 4/5
+- visual-explainability ≥ 4/5
 - 无 veto
 
 ### Standard / Deep 门禁（V4 统一 4-role gate）
@@ -69,76 +73,85 @@ Deep 进入 4-role gate 前需通过自检 >= 88 分。
 ### 输出（V4 4-role gate）
 
 ```text
-preProductionReview：
-  contractVersion: "4.0"
+preProductionReview:
+  schemaVersion: "4.0"
+  projectId: PID-...
   mode: standard | deep
-  contentSnapshotId: CS-...
-  visualSnapshotId: VS-...
-  candidateDigest: sha256
+  contentBriefPath: path/to/contentBrief.json
+  reviewedInputs:
+    contentMasterDraftPath: path/to/contentMasterDraft.json
+    beatSheetPath: path/to/beatSheet.json
+    contentSegmentPlanPath: path/to/contentSegmentPlan.json
+  scopeContract:
+    scope: full | partial
+    segments: [segmentId list]
   reviews:
-    - reviewId: R01
-      reviewerRole: cold-viewer
+    - reviewerId: unique-id
       reviewerSystem: openai-gpt
-      reviewerId: unique-id
+      role: cold-viewer
       independent: true
-      contentSnapshotId: CS-...
-      visualSnapshotId: VS-...
-      candidateDigest: sha256
-      scores: { topicPromise, researchAndTruth, contentMasterDraft, hookStructure, cover, voiceoverVisualSync, consistency }
-      totalScore: 0-100
-      issues: []
-      recommendation: pass / revise / stop
+      reviewedInputDigest: sha256
+      score: 0-100
+      dimensions:
+        audience-pain: 0-12
+        title-cover-promise: 0-8
+        first15-retention: 0-15
+        scope-completeness: 0-15
+        explanation-depth: 0-15
+        fact-evidence: 0-15
+        actionable-value: 0-10
+        voiceover-expression: 0-5
+        visual-explainability: 0-5
+      hardVetoes: []
+      recommendation: pass | revise | stop
       reviewedAt: ISO date
-    - reviewId: R02
-      reviewerRole: content-editor
+    - reviewerId: unique-id
       reviewerSystem: anthropic-claude
-      reviewerId: unique-id
+      role: content-editor
       independent: true
-      contentSnapshotId: CS-...
-      visualSnapshotId: VS-...
-      candidateDigest: sha256
-      scores: { ... }
-      totalScore: 0-100
-      issues: []
-      recommendation: pass / revise / stop
+      reviewedInputDigest: sha256
+      score: 0-100
+      dimensions: { ... }
+      hardVetoes: []
+      recommendation: pass | revise | stop
       reviewedAt: ISO date
-    - reviewId: R03
-      reviewerRole: fact-evidence
+    - reviewerId: unique-id
       reviewerSystem: google-gemini
-      reviewerId: unique-id
+      role: fact-evidence
       independent: true
-      contentSnapshotId: CS-...
-      visualSnapshotId: VS-...
-      candidateDigest: sha256
-      scores: { ... }
-      totalScore: 0-100
-      issues: []
-      recommendation: pass / revise / stop
+      reviewedInputDigest: sha256
+      score: 0-100
+      dimensions: { ... }
+      hardVetoes: []
+      recommendation: pass | revise | stop
       reviewedAt: ISO date
-    - reviewId: R04
-      reviewerRole: visual-audio-director
+    - reviewerId: unique-id
       reviewerSystem: openai-gpt
-      reviewerId: unique-id
+      role: visual-audio-director
       independent: true
-      contentSnapshotId: CS-...
-      visualSnapshotId: VS-...
-      candidateDigest: sha256
-      scores: { ... }
-      totalScore: 0-100
-      issues: []
-      recommendation: pass / revise / stop
+      reviewedInputDigest: sha256
+      score: 0-100
+      dimensions: { ... }
+      hardVetoes: []
+      recommendation: pass | revise | stop
       reviewedAt: ISO date
-  aggregate:
+  consensus:
+    reviewedInputDigest: sha256
     meanScore: 0
     medianScore: 0
-    minimumScore: 0
-    maxMinSpread: 0
-    pass: false
+    minReviewerScore: 0
+    scoreSpread: 0
+    dimensionMeans: { ... }
+    passed: false
+    blockingReasons: []
+  approval:
+    userDecision: pending
+    approvedByUser: false
 ```
 
 用户批准独立于审查，见 07 `userApproval` 小节。
 
-三个标识（contentSnapshotId、visualSnapshotId、candidateDigest）顶层和每份 review 全部必填，缺失或不一致均阻断。
+`reviewedInputDigest` 顶层和每份 review 全部必填，缺失或不一致均阻断。
 
 ### 输出（Quick / Legacy）
 

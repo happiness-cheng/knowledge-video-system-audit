@@ -21,7 +21,8 @@
     "draftBody",
     "viewerStateChange",
     "contentDesignRationale",
-    "visualHandoff"
+    "visualHandoff",
+    "visualIntentSummary"
   ],
   "properties": {
     "contractVersion": { "type": "string", "const": "4.0" },
@@ -66,23 +67,24 @@
     },
     "visualHandoff": {
       "type": "array",
-      "description": "内容层向视觉层的交接说明，每项对应一个需要视觉支持的内容单元",
+      "description": "内容层向视觉层的交接说明，每项对应一个需要视觉支持的内容单元。内容母稿阶段尚无 Beat 级细节，beatId 为可选。",
       "items": {
         "type": "object",
-        "required": ["beatId", "contentSourceRef", "mustBeSeen", "canBeSpoken", "mustUseEvidence", "needsVisualProcess", "needsEmotionalExperience", "whyThisNeedsVisualSupport"],
+        "required": ["contentSourceRef", "mustBeSeen", "canBeSpoken", "mustUseEvidence", "needsVisualProcess", "needsEmotionalExperience", "whyThisNeedsVisualSupport"],
         "properties": {
-          "beatId": { "type": "string" },
+          "beatId": { "type": "string", "description": "可选，内容母稿阶段可能尚未分配 Beat" },
           "contentSourceRef": { "type": "string", "description": "draftBody 中对应的段落或论点引用" },
-          "mustBeSeen": { "type": "boolean", "description": "是否必须被观众看到（而非仅口播）" },
-          "canBeSpoken": { "type": "boolean", "description": "是否可以通过口播传递" },
-          "mustUseEvidence": { "type": "boolean", "description": "是否必须使用证据素材" },
-          "needsVisualProcess": { "type": "boolean", "description": "是否需要视觉化展示过程" },
-          "needsEmotionalExperience": { "type": "boolean", "description": "是否需要情感体验" },
+          "mustBeSeen": { "type": "array", "items": { "type": "string" }, "description": "必须被观众看到的内容要点" },
+          "canBeSpoken": { "type": "array", "items": { "type": "string" }, "description": "可以通过口播传递的内容要点" },
+          "mustUseEvidence": { "type": "array", "items": { "type": "string" }, "description": "必须使用证据素材的内容要点" },
+          "needsVisualProcess": { "type": "array", "items": { "type": "string" }, "description": "需要视觉化展示过程的内容要点" },
+          "needsEmotionalExperience": { "type": "array", "items": { "type": "string" }, "description": "需要情感体验的内容要点" },
           "whyThisNeedsVisualSupport": { "type": "string", "description": "为什么这个内容单元需要视觉支持" }
         },
         "additionalProperties": false
       }
-    }
+    },
+    "visualIntentSummary": { "type": "string", "description": "整体视觉意图概述，概括本内容母稿对视觉层的核心要求" }
   },
   "additionalProperties": false
 }

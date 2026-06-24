@@ -1,0 +1,16 @@
+{
+  "coreQuestion": "Why does Claude Code lose memory?",
+  "viewerSituation": "Developer frustrated by context loss",
+  "openingTension": "You paid for Claude Code, why does it forget?",
+  "personalCase": "Building a Remotion video system",
+  "draftBody": "You open Claude Code for the hundredth time...",
+  "finalTakeaway": "CLAUDE.md solves this",
+  "contentDesignRationale": {
+    "whyThisOpening": "Direct pain point",
+    "whyThisCase": "First-hand experience",
+    "whyThisEvidenceOrder": "Problem first",
+    "whyThisRevealOrder": "Frustration to solution",
+    "whyThisBoundary": "CLI only"
+  },
+  "visualHandoff": []
+}

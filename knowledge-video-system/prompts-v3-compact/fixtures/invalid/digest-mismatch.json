@@ -1,0 +1,14 @@
+{
+  "contractVersion": "4.0",
+  "contentSnapshotId": "CS-20260624-0001",
+  "sourceDigest": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+  "approvedAt": "2026-06-24T10:00:00Z",
+  "userDecision": "approved",
+  "sources": {
+    "contentMasterDraft": "fixtures/valid/complete-v4-content-master.json",
+    "beatSheet": "fixtures/valid/complete-v4-beat-sheet.json",
+    "contentSegmentPlan": "fixtures/valid/content-segment-plan.json",
+    "scopeContract": "fixtures/valid/scope-contract.json"
+  },
+  "_comment": "This snapshot is valid as a standalone file. The digest-mismatch scenario is tested via the review gate where reviewedInputDigest does not match calculated digest from reviewedInputs."
+}

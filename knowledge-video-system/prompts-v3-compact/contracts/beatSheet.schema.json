@@ -14,9 +14,8 @@
         "required": [
           "beatId",
           "timeRange",
-          "role",
-          "content",
           "contentFunction",
+          "summary",
           "viewerStateBefore",
           "viewerStateAfter",
           "informationDelta",
@@ -26,9 +25,8 @@
         "properties": {
           "beatId": { "type": "string" },
           "timeRange": { "type": "string" },
-          "role": { "type": "string" },
-          "content": { "type": "string" },
-          "contentFunction": { "type": "string", "description": "这个 Beat 在内容结构中承担什么功能" },
+          "summary": { "type": "string", "description": "这个 Beat 的核心内容概括" },
+          "contentFunction": { "type": "string", "enum": ["建立处境", "制造冲突", "提供证据", "揭示原因", "给出边界", "推动行动"], "description": "这个 Beat 在内容结构中承担什么功能" },
           "viewerStateBefore": { "type": "string", "description": "进入这个 Beat 前观众的认知状态" },
           "viewerStateAfter": { "type": "string", "description": "离开这个 Beat 后观众的认知状态" },
           "informationDelta": { "type": "string", "description": "相比上一个 Beat 新增了什么认知" },

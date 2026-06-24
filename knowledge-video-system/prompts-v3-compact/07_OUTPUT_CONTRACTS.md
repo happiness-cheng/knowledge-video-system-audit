@@ -24,7 +24,7 @@
 
 | 合约                    | 文件                                                                                           | 说明                     |
 | ----------------------- | ---------------------------------------------------------------------------------------------- | ------------------------ |
-| approvedContentSnapshot | [contracts/approvedContentSnapshot.schema.json](contracts/approvedContentSnapshot.schema.json) | 内容快照，只含内容产物   |
+| approvedContentSnapshot | [contracts/approvedContentSnapshot.schema.json](contracts/approvedContentSnapshot.schema.json) | 内容快照，只含内容产物（sources: contentMasterDraft, beatSheet, contentSegmentPlan, scopeContract, evidenceNotes；不含 shotDirectorSpec 或 coverBrief） |
 | visualSnapshot          | [contracts/visualSnapshot.schema.json](contracts/visualSnapshot.schema.json)                   | 视觉产物汇总快照         |
 | preProductionReview     | [contracts/preProductionReview.schema.json](contracts/preProductionReview.schema.json)         | 四角色独立审查           |
 | userApproval            | [contracts/userApproval.schema.json](contracts/userApproval.schema.json)                       | 用户批准，独立于 AI 审查 |
