@@ -460,18 +460,24 @@ Shot 到 Scene 的编译映射。合并时保留所有 sourceShotIds 和 alignme
 
 ## V3.1 preProductionReview（Standard 双审查）
 
-Standard 模式必须包含两份独立审查：
+Standard 模式必须包含两份独立审查。用户批准不再嵌入本文件，见下方 `userApproval`。
 
 ```json
 {
   "contractVersion": "3.1",
+  "mode": "standard",
   "contentSnapshotId": "CS-...",
   "visualSnapshotId": "VS-...",
   "candidateDigest": "sha256",
   "reviews": [
     {
       "reviewId": "R01",
-      "reviewerSystem": "gpt",
+      "reviewerKind": "gpt-self",
+      "reviewerSystem": "openai-gpt",
+      "independent": true,
+      "contentSnapshotId": "CS-...",
+      "visualSnapshotId": "VS-...",
+      "candidateDigest": "sha256",
       "scores": {
         "topicPromise": 0,
         "researchAndTruth": 0,
@@ -484,42 +490,77 @@ Standard 模式必须包含两份独立审查：
       "totalScore": 0,
       "issues": [],
       "vetoes": [],
-      "recommendation": "pass | revise | stop"
+      "recommendation": "pass | revise | stop",
+      "reviewedAt": "ISO date"
     },
     {
       "reviewId": "R02",
-      "reviewerSystem": "external-ai",
-      "scores": {},
+      "reviewerKind": "external-ai",
+      "reviewerSystem": "anthropic-claude",
+      "independent": true,
+      "contentSnapshotId": "CS-...",
+      "visualSnapshotId": "VS-...",
+      "candidateDigest": "sha256",
+      "scores": { ... },
       "totalScore": 0,
       "issues": [],
       "vetoes": [],
-      "recommendation": "pass | revise | stop"
+      "recommendation": "pass | revise | stop",
+      "reviewedAt": "ISO date"
     }
   ],
   "aggregate": {
     "averageScore": 0,
     "minimumScore": 0,
     "pass": false
-  },
-  "approval": {
-    "userDecision": "pending",
-    "approvedByUser": false
   }
 }
 ```
 
+字段规则：
+
+- `reviewerKind`：`gpt-self` = GPT 自检，`external-ai` = 独立外部 AI。不再使用字符串包含判断。
+- `reviewerSystem`：规范为小写枚举（`openai-gpt`、`anthropic-claude`、`google-gemini`、`other`）。trim + lowercase 后判断是否不同系统。
+- 三个标识（`contentSnapshotId`、`visualSnapshotId`、`candidateDigest`）顶层和每份 review 全部必填，缺失或不一致均阻断。
+- `scores` 七个维度总分必须等于 `totalScore`。
+- `issues` 使用结构化 `ReviewIssue`（dimension / severity / description / evidence）。
+
 Standard 通过条件：
 
 - review 数量 ≥ 2
-- 至少 2 个不同 reviewerSystem
-- 其中一份必须是 GPT 自检
+- 至少 2 个不同 reviewerSystem（规范化后比较）
+- 至少 1 个 `reviewerKind = gpt-self`
 - averageScore > 85
 - minimumScore > 85
 - 所有 recommendation = pass
 - 所有 vetoes 为空
-- candidateDigest 完全一致
+- 三个标识全部一致
 
 评分为 85 不通过。Deep 仍按 90 分门禁执行。
+
+## V3.1 userApproval（独立于审查）
+
+用户批准独立于 AI 审查，不得嵌入 preProductionReview。
+
+```json
+{
+  "contractVersion": "3.1",
+  "contentSnapshotId": "CS-...",
+  "visualSnapshotId": "VS-...",
+  "candidateDigest": "sha256",
+  "userDecision": "pending | continue | revise | stop",
+  "approvedByUser": false,
+  "decisionNote": "",
+  "decidedAt": null
+}
+```
+
+规则：
+
+- AI review pass 不等于用户批准
+- Agent 不得自行把 pending 改为 continue
+- review-ready 阶段可以在用户批准前完成
+- execution gate 同时要求 review 通过和 userApproval 明确通过（userDecision=continue, approvedByUser=true）
 
 ## publishMetadata
 

@@ -74,39 +74,46 @@ Standard 执行双独立审查：
 ```text
 preProductionReview：
   contractVersion: "3.1"
+  mode: standard
   contentSnapshotId: CS-...
   visualSnapshotId: VS-...
   candidateDigest: sha256
-  mode: standard
   reviews:
     - reviewId: R01
-      reviewerSystem: gpt
+      reviewerKind: gpt-self
+      reviewerSystem: openai-gpt
+      independent: true
       contentSnapshotId: CS-...
       visualSnapshotId: VS-...
       candidateDigest: sha256
-      scores: { ... }
+      scores: { topicPromise, researchAndTruth, contentMasterDraft, hookStructure, cover, voiceoverVisualSync, consistency }
       totalScore: 0-100
-      recommendation: pass / revise / stop
+      issues: []
       vetoes: []
+      recommendation: pass / revise / stop
+      reviewedAt: ISO date
     - reviewId: R02
-      reviewerSystem: external-ai
+      reviewerKind: external-ai
+      reviewerSystem: anthropic-claude
+      independent: true
       contentSnapshotId: CS-...
       visualSnapshotId: VS-...
       candidateDigest: sha256
       scores: { ... }
       totalScore: 0-100
-      recommendation: pass / revise / stop
+      issues: []
       vetoes: []
+      recommendation: pass / revise / stop
+      reviewedAt: ISO date
   aggregate:
     averageScore: 0
     minimumScore: 0
     pass: false
-  approval:
-    userDecision: pending
-    approvedByUser: false
 ```
 
-两份审查的 contentSnapshotId、visualSnapshotId、candidateDigest 必须与顶层完全一致。
+用户批准独立于审查，见 07 `userApproval` 小节。
+
+三个标识（contentSnapshotId、visualSnapshotId、candidateDigest）顶层和每份 review 全部必填，缺失或不一致均阻断。
 
 ### 输出（Quick / Deep / Legacy）
 
