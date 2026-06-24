@@ -1,0 +1,68 @@
+{
+  "contractVersion": "4.0",
+  "contentSnapshotId": "CS-20260624-0001",
+  "beatId": "B01",
+  "shotId": "B01-S01",
+  "contentSourceRef": "draftBody-paragraph-1",
+  "spokenClause": "You open Claude Code in your project for the hundredth time. You explain your folder structure again.",
+  "explanationGoal": "Show the developer repeating context setup, establishing the pain of memory loss",
+  "informationDelta": "Claude Code forgets project context between sessions",
+  "primaryAttentionTarget": "Developer typing the same explanation again",
+  "viewerStateBefore": "Does not realize this is a solvable problem",
+  "viewerStateAfter": "Recognizes the frustration of repeated context setup",
+  "designRationale": "Visual metaphor of repeated typing makes abstract memory loss concrete and relatable",
+  "primaryVisualMode": "visual-narrative",
+  "secondaryVisualMode": null,
+  "explanationContribution": "Shows the specific action of re-explaining, which voiceover alone cannot convey",
+  "comprehensionContribution": "Reduces abstraction: memory loss becomes visible as repeated typing",
+  "attentionContribution": "Relatable frustration creates immediate engagement",
+  "audioVisualRelation": "reinforce",
+  "spokenResponsibility": "Describes the general problem of memory loss",
+  "visualResponsibility": "Shows the specific repeated action that triggers frustration",
+  "onScreenTextPurpose": "Highlights the key repeated phrase to anchor recognition",
+  "semanticAction": "Developer re-types project context explanation",
+  "objects": ["developer-avatar", "code-editor", "claude-code-terminal"],
+  "initialState": "Developer opens Claude Code with empty context",
+  "finalState": "Explanation complete, Claude Code still does not remember",
+  "carryIn": "None (first shot)",
+  "carryOut": "Established: Claude Code forgets, developer must repeat",
+  "persistentObjects": ["developer-avatar"],
+  "resetJustification": null,
+  "truthMode": "experiment",
+  "evidenceAnchor": "30-day session logs showing repeated setup",
+  "evidenceBoundary": "Must show real repeated actions, not dramatized exaggeration",
+  "lockedMeaning": "Claude Code requires repeated context setup due to session memory loss",
+  "flexibleImplementation": "Visual style of the typing animation, exact phrasing shown",
+  "forbiddenDowngrade": "Cannot reduce to a static text card saying memory loss",
+  "implementationLock": "preferred",
+  "enterMotion": {
+    "type": "fade-in",
+    "purpose": "Gentle entry to match frustration tone"
+  },
+  "holdMotion": {
+    "type": "drift",
+    "purpose": "Subtle movement while developer types",
+    "noneReason": null
+  },
+  "exitOrCarryMotion": { "type": "carry", "carryObject": "developer-avatar" },
+  "continuityAnchor": "developer-avatar",
+  "ambientMotion": {
+    "type": "breathe",
+    "purpose": "Life feeling without distraction"
+  },
+  "assetStrategy": "component-only",
+  "capabilityStatus": "supported",
+  "capabilityGap": null,
+  "negotiationLevel": "L0",
+  "acceptanceCriteria": [
+    "Viewer recognizes the repeated setup action",
+    "Avatar typing is clearly visible",
+    "No static text card replacement"
+  ],
+  "requiredRenderEvidence": [
+    "First frame: empty Claude Code terminal",
+    "Mid frame: developer typing explanation",
+    "Last frame: explanation complete, still empty context"
+  ],
+  "fallbackPolicy": "return-gap"
+}

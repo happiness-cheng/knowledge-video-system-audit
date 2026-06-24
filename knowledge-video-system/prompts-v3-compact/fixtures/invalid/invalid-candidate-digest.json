@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "4.0",
+  "contractVersion": "4.0",
+  "projectId": "PID-TEST-BAD-DIGEST",
+  "mode": "standard",
+  "contentSnapshotId": "CS-20260624-0001",
+  "visualSnapshotId": "VS-20260624-0001",
+  "candidateDigest": "not-a-valid-digest",
+  "contentBriefPath": "fixtures/valid/contentBrief.json",
+  "reviewedInputs": [
+    {
+      "id": "contentBrief",
+      "path": "fixtures/valid/contentBrief.json",
+      "sha256": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+    }
+  ],
+  "scopeContract": {
+    "corePromise": "Test",
+    "targetDepth": "standard",
+    "mustAnswer": ["Q1"],
+    "shouldAnswer": [],
+    "explicitlyOutOfScope": [],
+    "splitDecision": "continue"
+  },
+  "reviews": [
+    {
+      "reviewerId": "cv-001",
+      "reviewerSystem": "openai-gpt",
+      "role": "cold-viewer",
+      "independent": true,
+      "reviewedInputDigest": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+      "score": 89,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 11,
+          "maxScore": 12,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 7,
+          "maxScore": 8,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "first15-retention",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "actionable-value",
+          "score": 9,
+          "maxScore": 10,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["ok"],
+          "gaps": [],
+          "action": "pass"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-24T10:00:00Z"
+    }
+  ],
+  "consensus": {
+    "reviewedInputDigest": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+    "meanScore": 89,
+    "medianScore": 89,
+    "minReviewerScore": 89,
+    "scoreSpread": 0,
+    "dimensionMeans": {
+      "audience-pain": 11,
+      "title-cover-promise": 7,
+      "first15-retention": 13,
+      "scope-completeness": 13,
+      "explanation-depth": 13,
+      "fact-evidence": 13,
+      "actionable-value": 9,
+      "voiceover-expression": 5,
+      "visual-explainability": 5
+    },
+    "passed": true,
+    "blockingReasons": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "timedVisualAlignment",
+  "description": "TTS 后时序对齐，由 Agent 根据真实 audioTiming.json 编译",
+  "type": "object",
+  "required": ["contractVersion", "alignment"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "alignment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["alignmentId", "shotId", "audioSegmentId", "startMs", "endMs", "startFrame", "endFrame", "sceneId"],
+        "properties": {
+          "alignmentId": { "type": "string" },
+          "shotId": { "type": "string" },
+          "audioSegmentId": { "type": "string" },
+          "startMs": { "type": "integer", "minimum": 0 },
+          "endMs": { "type": "integer", "minimum": 0 },
+          "startFrame": { "type": "integer", "minimum": 0 },
+          "endFrame": { "type": "integer", "minimum": 0 },
+          "sceneId": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

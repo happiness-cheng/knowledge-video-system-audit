@@ -1,0 +1,71 @@
+{
+  "contractVersion": "4.0",
+  "beats": [
+    {
+      "beatId": "B01",
+      "timeRange": "0-5s",
+      "contentFunction": "建立处境",
+      "summary": "Developer frustration: explaining project context for the 100th time",
+      "viewerStateBefore": "Unaware this is a solvable problem",
+      "viewerStateAfter": "Recognizes own frustration, wants to know the solution",
+      "informationDelta": "Claude Code has a persistent memory problem that affects daily workflow",
+      "emotionalShift": "Neutral to frustration recognition",
+      "whyThisBeatExists": "Hook: immediate self-recognition in 2 seconds, establishes the pain"
+    },
+    {
+      "beatId": "B02",
+      "timeRange": "5-15s",
+      "contentFunction": "提供证据",
+      "summary": "Specific example: same setup repeated across 30 days, 3 projects",
+      "viewerStateBefore": "Recognizes the problem but may think it is just how things are",
+      "viewerStateAfter": "Sees concrete evidence that this is measurable and real",
+      "informationDelta": "Exact scenario: 5 minutes lost per session, 30 days of data",
+      "emotionalShift": "Recognition to validation",
+      "whyThisBeatExists": "First promise fulfillment: prove the problem is real with data"
+    },
+    {
+      "beatId": "B03",
+      "timeRange": "15-30s",
+      "contentFunction": "揭示原因",
+      "summary": "CLAUDE.md file mechanism: what it is, where it lives, how Claude reads it",
+      "viewerStateBefore": "Knows the problem is real but does not know the solution",
+      "viewerStateAfter": "Understands the mechanism: a file in project root that persists across sessions",
+      "informationDelta": "CLAUDE.md is a specific file with specific location and specific behavior",
+      "emotionalShift": "Validation to curiosity",
+      "whyThisBeatExists": "Core reveal: the solution is simpler than expected"
+    },
+    {
+      "beatId": "B04",
+      "timeRange": "30-60s",
+      "contentFunction": "提供证据",
+      "summary": "30-day experiment results: session setup time, file growth, before/after",
+      "viewerStateBefore": "Curious but skeptical",
+      "viewerStateAfter": "Convinced by real metrics and actual file content",
+      "informationDelta": "Setup time dropped from 5 min to 30s, file grew from 10 to 200+ lines",
+      "emotionalShift": "Curiosity to conviction",
+      "whyThisBeatExists": "Evidence section: show the actual numbers and file"
+    },
+    {
+      "beatId": "B05",
+      "timeRange": "60-90s",
+      "contentFunction": "给出边界",
+      "summary": "What CLAUDE.md cannot do: API memory, cross-project, automatic learning",
+      "viewerStateBefore": "Convinced and possibly over-enthusiastic",
+      "viewerStateAfter": "Has realistic expectations of what it can and cannot do",
+      "informationDelta": "Clear boundaries prevent disappointment and misuse",
+      "emotionalShift": "Enthusiasm to grounded understanding",
+      "whyThisBeatExists": "Boundary section: prevent over-promising, build trust through honesty"
+    },
+    {
+      "beatId": "B06",
+      "timeRange": "90s+",
+      "contentFunction": "推动行动",
+      "summary": "Step-by-step: create CLAUDE.md, start with project context, grow over time",
+      "viewerStateBefore": "Understands the concept but unsure how to start",
+      "viewerStateAfter": "Has a clear first action: create the file today",
+      "informationDelta": "Concrete steps to start, with example content",
+      "emotionalShift": "Grounded understanding to actionable motivation",
+      "whyThisBeatExists": "Action section: convert understanding into immediate behavior"
+    }
+  ]
+}

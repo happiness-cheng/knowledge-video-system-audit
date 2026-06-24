@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "beatSheet",
+  "description": "Beat 结构，含 contentFunction、viewerStateChange、informationDelta。不含视觉字段（visualFocus、visualState、transition、assetStrategy），那些属于 shotDirectorSpec",
+  "type": "object",
+  "required": ["contractVersion", "beats"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "beatId",
+          "timeRange",
+          "contentFunction",
+          "summary",
+          "viewerStateBefore",
+          "viewerStateAfter",
+          "informationDelta",
+          "emotionalShift",
+          "whyThisBeatExists"
+        ],
+        "properties": {
+          "beatId": { "type": "string" },
+          "timeRange": { "type": "string" },
+          "summary": { "type": "string", "description": "这个 Beat 的核心内容概括" },
+          "contentFunction": { "type": "string", "enum": ["建立处境", "制造冲突", "提供证据", "揭示原因", "给出边界", "推动行动"], "description": "这个 Beat 在内容结构中承担什么功能" },
+          "viewerStateBefore": { "type": "string", "description": "进入这个 Beat 前观众的认知状态" },
+          "viewerStateAfter": { "type": "string", "description": "离开这个 Beat 后观众的认知状态" },
+          "informationDelta": { "type": "string", "description": "相比上一个 Beat 新增了什么认知" },
+          "emotionalShift": { "type": "string", "description": "情感层面发生了什么变化" },
+          "whyThisBeatExists": { "type": "string", "description": "为什么需要这个 Beat，删掉会怎样" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

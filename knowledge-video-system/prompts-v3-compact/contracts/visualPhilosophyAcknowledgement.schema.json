@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "visualPhilosophyAcknowledgement",
+  "description": "Agent 设计哲学确认，在正式视觉实现前必须提交",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "contentSnapshotId",
+    "viewerStateChange",
+    "primaryVisualMode",
+    "criticalVisualMeanings",
+    "likelySilentDowngrade",
+    "componentBlindnessReminder"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "contentSnapshotId": { "type": "string" },
+    "viewerStateChange": { "type": "string", "description": "本次视频的观众认知变化是什么" },
+    "primaryVisualMode": { "type": "string", "description": "主要视觉模式是什么" },
+    "criticalVisualMeanings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "哪些画面语义不能丢失"
+    },
+    "likelySilentDowngrade": { "type": "string", "description": "最可能出现的静默降级是什么" },
+    "componentBlindnessReminder": { "type": "string", "description": "当前实现不能被哪些现有组件反向限制" }
+  },
+  "additionalProperties": false
+}

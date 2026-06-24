@@ -1,0 +1,92 @@
+{
+  "workflowMode": "standard",
+  "scopeContract": {
+    "corePromise": "Explain how CLAUDE.md gives Claude Code persistent project memory across sessions",
+    "targetDepth": "execution",
+    "mustAnswer": [
+      "Why does Claude Code lose context every session?",
+      "What is CLAUDE.md and where does it live?",
+      "How do you create and maintain a CLAUDE.md file?"
+    ],
+    "shouldAnswer": [
+      "What are the limits of CLAUDE.md?",
+      "How does session memory differ from API memory?"
+    ],
+    "explicitlyOutOfScope": [
+      "API-level memory management",
+      "Enterprise deployment patterns"
+    ],
+    "splitDecision": "single"
+  },
+  "coverageMap": [
+    {
+      "questionId": "Q01",
+      "question": "Why does Claude Code lose context every session?",
+      "priority": "must",
+      "answerSummary": "Claude Code resets session state on each launch; CLAUDE.md is read automatically at startup to restore project context",
+      "evidenceIds": ["C01"],
+      "plannedScenes": ["S01", "S02"],
+      "status": "covered",
+      "gapAction": "Show repeated setup as concrete visual metaphor"
+    },
+    {
+      "questionId": "Q02",
+      "question": "What is CLAUDE.md and where does it live?",
+      "priority": "must",
+      "answerSummary": "A markdown file in the project root that Claude Code reads on every session start, containing project conventions and rules",
+      "evidenceIds": ["C02"],
+      "plannedScenes": ["S03"],
+      "status": "covered",
+      "gapAction": "Display actual file content and location"
+    },
+    {
+      "questionId": "Q03",
+      "question": "How do you create and maintain a CLAUDE.md file?",
+      "priority": "must",
+      "answerSummary": "Start with project context, add rules as you discover needs, review and prune periodically",
+      "evidenceIds": ["C03"],
+      "plannedScenes": ["S04", "S05"],
+      "status": "covered",
+      "gapAction": "Show step-by-step creation with real examples"
+    }
+  ],
+  "factEvidenceMap": [
+    {
+      "claimId": "C01",
+      "claim": "Claude Code reads CLAUDE.md at the start of every session",
+      "criticality": "core",
+      "claimType": "experiment",
+      "source": "experiments/session-log-30day.md",
+      "confidence": "high",
+      "counterexampleChecked": true,
+      "qualification": "",
+      "productionStatus": "allowed"
+    },
+    {
+      "claimId": "C02",
+      "claim": "CLAUDE.md lives in the project root directory",
+      "criticality": "core",
+      "claimType": "official-fact",
+      "source": "https://docs.anthropic.com/en/docs/claude-code",
+      "confidence": "high",
+      "counterexampleChecked": true,
+      "qualification": "",
+      "productionStatus": "allowed"
+    },
+    {
+      "claimId": "C03",
+      "claim": "Session setup time dropped from 5 minutes to 30 seconds after 30 days of CLAUDE.md usage",
+      "criticality": "supporting",
+      "claimType": "experiment",
+      "source": "experiments/session-log-30day.md",
+      "confidence": "high",
+      "counterexampleChecked": false,
+      "qualification": "Measured across 3 personal projects, not a controlled study",
+      "productionStatus": "qualify"
+    }
+  ],
+  "preProductionReadiness": {
+    "status": "ready-for-review",
+    "blockingReasons": []
+  }
+}

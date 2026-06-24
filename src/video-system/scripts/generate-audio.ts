@@ -16,7 +16,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 import { EdgeTTS } from "node-edge-tts";
-import { assertPreProductionGate } from "../utils/preProductionGate";
+import { assertPreProductionExecutionGate } from "../utils/preProductionGate";
 
 // ─── 类型 ─────────────────────────────────────────
 
@@ -400,7 +400,7 @@ export async function runAudioGeneration(
 
 // ─── CLI wrapper（门禁 → 执行） ───────────────────
 async function main() {
-  assertPreProductionGate();
+  assertPreProductionExecutionGate();
   await runAudioGeneration();
 }
 

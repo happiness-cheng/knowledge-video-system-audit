@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "visualDirectionSpec",
+  "description": "视觉方向规格，包含完整的 V4 导演卡数组",
+  "type": "object",
+  "required": ["contractVersion", "contentSnapshotId", "shots"],
+  "properties": {
+    "contractVersion": { "type": "string", "enum": ["4.0"] },
+    "contentSnapshotId": { "type": "string" },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "./shotDirectorSpec.schema.json"
+      }
+    }
+  },
+  "additionalProperties": false
+}

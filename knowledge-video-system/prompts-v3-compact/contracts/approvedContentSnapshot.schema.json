@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "approvedContentSnapshot",
+  "description": "内容进入画面系统前的锁定快照。只含内容产物，不含 shotDirectorSpec 或 coverBrief。",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "contentSnapshotId",
+    "sourceDigest",
+    "approvedAt",
+    "userDecision",
+    "sources"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "contentSnapshotId": {
+      "type": "string",
+      "pattern": "^CS-\\d{8}-[a-z0-9]+$"
+    },
+    "sourceDigest": { "type": "string" },
+    "approvedAt": { "type": ["string", "null"] },
+    "userDecision": { "type": "string", "enum": ["approved", "pending"] },
+    "sources": {
+      "type": "object",
+      "required": [
+        "topicDecision",
+        "contentMasterDraft",
+        "beatSheet",
+        "contentSegmentPlan",
+        "scopeContract",
+        "evidenceNotes"
+      ],
+      "properties": {
+        "topicDecision": { "type": "string" },
+        "contentMasterDraft": { "type": "string" },
+        "beatSheet": { "type": "string" },
+        "contentSegmentPlan": { "type": "string" },
+        "scopeContract": { "type": "string" },
+        "evidenceNotes": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

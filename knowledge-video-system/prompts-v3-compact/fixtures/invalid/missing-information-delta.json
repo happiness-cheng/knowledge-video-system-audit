@@ -1,0 +1,14 @@
+{
+  "beatSheet": [
+    {
+      "beatId": "B01",
+      "timeRange": "0-5s",
+      "contentFunction": "建立处境",
+      "summary": "Developer frustration with memory loss",
+      "viewerStateBefore": "Unaware of the problem",
+      "viewerStateAfter": "Recognizes the frustration",
+      "emotionalShift": "Neutral to frustration",
+      "whyThisBeatExists": "Hook: immediate recognition"
+    }
+  ]
+}

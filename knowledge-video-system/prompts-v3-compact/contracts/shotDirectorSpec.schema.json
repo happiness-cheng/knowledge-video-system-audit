@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "shotDirectorSpec",
+  "description": "单 Shot 导演卡，是内容与画面的唯一交接规格（V4 全字段）",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "contentSnapshotId",
+    "beatId",
+    "shotId",
+    "contentSourceRef",
+    "spokenClause",
+    "explanationGoal",
+    "informationDelta",
+    "primaryAttentionTarget",
+    "viewerStateBefore",
+    "viewerStateAfter",
+    "designRationale",
+    "primaryVisualMode",
+    "secondaryVisualMode",
+    "explanationContribution",
+    "comprehensionContribution",
+    "attentionContribution",
+    "audioVisualRelation",
+    "spokenResponsibility",
+    "visualResponsibility",
+    "onScreenTextPurpose",
+    "objects",
+    "initialState",
+    "semanticAction",
+    "finalState",
+    "carryIn",
+    "carryOut",
+    "persistentObjects",
+    "resetJustification",
+    "truthMode",
+    "evidenceAnchor",
+    "evidenceBoundary",
+    "implementationLock",
+    "lockedMeaning",
+    "flexibleImplementation",
+    "forbiddenDowngrade",
+    "enterMotion",
+    "holdMotion",
+    "exitOrCarryMotion",
+    "continuityAnchor",
+    "ambientMotion",
+    "assetStrategy",
+    "capabilityStatus",
+    "capabilityGap",
+    "negotiationLevel",
+    "acceptanceCriteria",
+    "requiredRenderEvidence",
+    "fallbackPolicy"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "enum": ["4.0"] },
+    "contentSnapshotId": { "type": "string" },
+    "beatId": { "type": "string" },
+    "shotId": { "type": "string" },
+
+    "contentSourceRef": { "type": "string" },
+    "spokenClause": { "type": "string" },
+    "explanationGoal": { "type": "string" },
+    "informationDelta": { "type": "string" },
+    "primaryAttentionTarget": { "type": "string" },
+
+    "viewerStateBefore": { "type": "string" },
+    "viewerStateAfter": { "type": "string" },
+    "designRationale": { "type": "string" },
+    "primaryVisualMode": {
+      "type": "string",
+      "enum": [
+        "visual-narrative",
+        "visual-explanation",
+        "editorial-design",
+        "typographic-performance",
+        "real-evidence"
+      ]
+    },
+    "secondaryVisualMode": {
+      "type": ["string", "null"],
+      "enum": [
+        "visual-narrative",
+        "visual-explanation",
+        "editorial-design",
+        "typographic-performance",
+        "real-evidence",
+        null
+      ]
+    },
+    "explanationContribution": { "type": "string" },
+    "comprehensionContribution": { "type": "string" },
+    "attentionContribution": { "type": "string" },
+    "audioVisualRelation": {
+      "type": "string",
+      "enum": [
+        "reinforce",
+        "complement",
+        "contrast",
+        "evidence",
+        "typographic-performance"
+      ]
+    },
+    "spokenResponsibility": { "type": "string" },
+    "visualResponsibility": { "type": "string" },
+    "onScreenTextPurpose": { "type": "string" },
+
+    "objects": { "type": "array", "items": { "type": "string" } },
+    "initialState": { "type": "string" },
+    "semanticAction": { "type": "string" },
+    "finalState": { "type": "string" },
+
+    "carryIn": { "type": "string" },
+    "carryOut": { "type": "string" },
+    "persistentObjects": { "type": "array", "items": { "type": "string" } },
+    "resetJustification": { "type": ["string", "null"] },
+
+    "truthMode": {
+      "type": "string",
+      "enum": ["fact", "experiment", "inference", "opinion", "analogy"]
+    },
+    "evidenceAnchor": { "type": ["string", "null"] },
+    "evidenceBoundary": { "type": "string" },
+
+    "implementationLock": {
+      "type": "string",
+      "enum": ["locked", "preferred", "open"]
+    },
+    "lockedMeaning": { "type": "string" },
+    "flexibleImplementation": { "type": "string" },
+    "forbiddenDowngrade": { "type": "string" },
+
+    "enterMotion": {
+      "type": "object",
+      "required": ["type", "purpose"],
+      "properties": {
+        "type": { "type": "string" },
+        "purpose": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "holdMotion": {
+      "type": "object",
+      "required": ["type", "purpose", "noneReason"],
+      "properties": {
+        "type": { "type": "string" },
+        "purpose": { "type": "string" },
+        "noneReason": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "exitOrCarryMotion": {
+      "type": "object",
+      "required": ["type", "carryObject"],
+      "properties": {
+        "type": { "type": "string" },
+        "carryObject": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "continuityAnchor": { "type": "string" },
+    "ambientMotion": {
+      "type": "object",
+      "required": ["type", "purpose"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["none", "drift", "pulse", "flow", "breathe"]
+        },
+        "purpose": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "assetStrategy": {
+      "type": "string",
+      "enum": [
+        "generated-static",
+        "screenshot-led-raw",
+        "screenshot-led-prepared",
+        "component-only",
+        "hybrid"
+      ]
+    },
+    "capabilityStatus": {
+      "type": "string",
+      "enum": [
+        "supported",
+        "hold-motion-patch",
+        "new-component-gap",
+        "fallback-unacceptable"
+      ]
+    },
+    "capabilityGap": { "type": ["string", "null"] },
+    "negotiationLevel": { "type": "string", "enum": ["L0", "L1", "L2", "L3"] },
+
+    "acceptanceCriteria": { "type": "array", "items": { "type": "string" } },
+    "requiredRenderEvidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "fallbackPolicy": { "type": "string", "const": "return-gap" }
+  },
+  "additionalProperties": false
+}

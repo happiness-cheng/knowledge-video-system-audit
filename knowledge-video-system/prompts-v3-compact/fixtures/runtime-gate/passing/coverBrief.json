@@ -1,0 +1,22 @@
+{
+  "videoTitle": "Why Claude Code Forgets Your Project Every Day",
+  "coreThesis": "CLAUDE.md is a single file that gives Claude Code persistent project memory across sessions",
+  "coverAngle": "Developer frustration turning into relief: the repeated setup pain vs the one-file solution",
+  "titleCandidates": [
+    "Why Claude Code Forgets Your Project Every Day (And the One File That Fixes It)",
+    "Stop Explaining Your Project to Claude Code Every Morning"
+  ],
+  "recommendedTitle": "Why Claude Code Forgets Your Project Every Day (And the One File That Fixes It)",
+  "subtitle": "CLAUDE.md: the persistent memory file you are not using",
+  "coverType": "pain-point",
+  "visualDirection": "Split-screen: left side shows frustrated developer re-typing context, right side shows clean CLAUDE.md file with green checkmark",
+  "avoidList": [
+    "Generic AI robot imagery",
+    "Overly technical code snippets that are unreadable at thumbnail size",
+    "Clickbait shocked-face thumbnails"
+  ],
+  "approval": {
+    "userDecision": "pending",
+    "approvedByUser": false
+  }
+}
