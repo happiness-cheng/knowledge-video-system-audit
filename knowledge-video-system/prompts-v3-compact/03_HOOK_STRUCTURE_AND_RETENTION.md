@@ -141,7 +141,7 @@ beat:
 ## 输出：Beat Sheet + Content Segment Plan
 
 ```text
-beatSheet:
+beats:
   - beatId: B01
     timeRange: [0-5s]
     contentFunction: [建立处境]

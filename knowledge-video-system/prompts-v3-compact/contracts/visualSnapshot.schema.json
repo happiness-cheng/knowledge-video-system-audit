@@ -3,12 +3,12 @@
   "title": "visualSnapshot",
   "description": "视觉产物汇总快照",
   "type": "object",
-  "required": ["contractVersion", "visualSnapshotId", "contentSnapshotId", "candidateDigest", "shotDirectorSpecs", "semanticAlignments"],
+  "required": ["contractVersion", "visualSnapshotId", "contentSnapshotId", "visualDigest", "shotDirectorSpecs", "semanticAlignments"],
   "properties": {
     "contractVersion": { "type": "string", "const": "4.0" },
     "visualSnapshotId": { "type": "string", "pattern": "^VS-\\d{8}-[a-z0-9]+$" },
     "contentSnapshotId": { "type": "string" },
-    "candidateDigest": { "type": "string" },
+    "visualDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "sha256 hex digest of the visual artifacts" },
     "shotDirectorSpecs": { "type": "array", "items": { "type": "string" } },
     "semanticAlignments": { "type": "array", "items": { "type": "string" } }
   },

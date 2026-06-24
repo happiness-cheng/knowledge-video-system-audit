@@ -175,7 +175,7 @@ contentSnapshotId: CS-YYYYMMDD-xxxx
 sourceDigest: sha256
 approvedAt: ISO date | null
 userDecision: approved | pending
-sources: { contentMasterDraft, beatSheet, contentSegmentPlan, scopeContract, evidenceNotes }
+sources: { topicDecision, contentMasterDraft, beatSheet, contentSegmentPlan, scopeContract, evidenceNotes }
 ```
 
 所有视觉产物必须携带同一个 contentSnapshotId。draftBody、Beat 顺序、核心证据、口播含义或标题承诺发生实质修改时，旧视觉产物全部失效。
@@ -188,10 +188,12 @@ sources: { contentMasterDraft, beatSheet, contentSegmentPlan, scopeContract, evi
 contractVersion: "4.0"
 visualSnapshotId: VS-YYYYMMDD-xxxx
 contentSnapshotId: CS-...
-candidateDigest: sha256
+visualDigest: sha256
 shotDirectorSpecs: [路径列表]
 semanticAlignments: [路径列表]
 ```
+
+> candidateDigest 在 visualSnapshot 和 coverBrief 完成后单独生成，覆盖全部正式 reviewedInputs。
 
 ## 关键 Shot 导演卡
 

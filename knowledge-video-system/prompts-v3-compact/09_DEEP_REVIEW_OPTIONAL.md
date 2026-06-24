@@ -6,17 +6,20 @@ Quick 和 Standard 不加载本文件。模式判定规则见 00。
 
 ## Deep 内部预检
 
-GPT 自评分 ≥ 88，各核心维度达标后，才进入多 AI 审查：
+GPT 自评分 >= 88（9 维度总分 100），各核心维度达标后，才进入 4 角色门禁：
 
-- topicPromise ≥ 17/20
-- researchAndTruth ≥ 13/15
-- contentMasterDraft ≥ 22/25
-- hookStructure ≥ 13/15
-- cover ≥ 8/10
-- voiceoverVisualSync ≥ 9/10
-- consistency ≥ 4/5
-
-全目录不得再出现旧版 25/20/20/15/15/5 分制。
+| 维度                  | 满分 |
+| --------------------- | ---- |
+| audience-pain         | 12   |
+| title-cover-promise   | 8    |
+| first15-retention     | 15   |
+| scope-completeness    | 15   |
+| explanation-depth     | 15   |
+| fact-evidence         | 15   |
+| actionable-value      | 10   |
+| voiceover-expression  | 5    |
+| visual-explainability | 5    |
+| **合计**              | 100  |
 
 ## Scope Contract
 
@@ -69,24 +72,23 @@ GPT 自评分 ≥ 88，各核心维度达标后，才进入多 AI 审查：
 - 涉及竞品对比的主张
 - 涉及技术原理的主张
 
-## 多 AI 独立审查
+## 4 角色独立审查
 
 1. 准备审查包（同一快照）
-2. 至少 3 份独立审查
+2. 4 份独立审查，role 各不相同
 3. 至少 2 个不同 reviewerSystem
-4. cold-viewer、content-editor、fact-evidence 三个角色齐全
-5. 可选角色：visual-audio-director
+4. 四个角色齐全：cold-viewer、content-editor、fact-evidence、visual-audio-director
 
 ## 90 分门禁
 
-通过条件（全部满足）：
+4 角色门禁通过条件（全部满足）：
 
-- 平均分 ≥ 90
-- 中位数 ≥ 90
-- 任一审查者不得低于 85
-- 最高与最低分差 ≤ 8
+- meanScore >= 90
+- medianScore >= 90
+- minReviewerScore >= 85
+- scoreSpread <= 8（最高与最低分差）
 - 无 hard veto
-- 必需角色齐全
+- 四个角色齐全（cold-viewer、content-editor、fact-evidence、visual-audio-director）
 - 至少 2 个不同 reviewerSystem
 
 ## Veto 规则
@@ -110,8 +112,8 @@ veto 后必须修改并重新审查。
 ## 模式边界
 
 - Quick 和 Standard 不加载本文件
-- Standard 执行 06 定义的双独立审查（均分 > 85，最低 > 85）
-- Deep 继续执行本文件的多 AI 90 分门禁
+- Standard 执行 06 定义的独立审查
+- Deep 继续执行本文件的 4 角色 90 分门禁
 - 不降低 Deep 门槛
 
 ## 参考

@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "Why Claude Code Forgets Your Project Every Day (And the One File That Fixes It)",
+    "fps": 30,
+    "theme": "developer-productivity"
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "type": "hook",
+      "voiceover": "You open Claude Code for the hundredth time. You explain your folder structure again.",
+      "spokenText": "You open Claude Code for the hundredth time. You explain your folder structure again.",
+      "screenText": "Day 1... Day 100... Same setup.",
+      "durationEstimate": 5,
+      "attentionTrigger": "Immediate pain recognition",
+      "visualRole": "frustration-establishment"
+    },
+    {
+      "id": "S02",
+      "type": "evidence",
+      "voiceover": "I tracked this for 30 days across 3 projects. Five minutes lost every single session.",
+      "spokenText": "I tracked this for 30 days across 3 projects. Five minutes lost every single session.",
+      "screenText": "30 days / 3 projects / 5 min per session",
+      "durationEstimate": 10,
+      "attentionTrigger": "Concrete data validates the pain",
+      "visualRole": "data-validation"
+    },
+    {
+      "id": "S03",
+      "type": "reveal",
+      "voiceover": "But there is a file that fixes this. CLAUDE.md. A single markdown file in your project root.",
+      "spokenText": "But there is a file that fixes this. CLAUDE.md. A single markdown file in your project root.",
+      "screenText": "CLAUDE.md",
+      "durationEstimate": 8,
+      "attentionTrigger": "Solution reveal",
+      "visualRole": "solution-introduction"
+    },
+    {
+      "id": "S04",
+      "type": "proof",
+      "voiceover": "After 30 days, setup time dropped to 30 seconds. The file grew from 10 lines to over 200.",
+      "spokenText": "After 30 days, setup time dropped to 30 seconds. The file grew from 10 lines to over 200.",
+      "screenText": "5 min → 30 sec / 10 → 200+ lines",
+      "durationEstimate": 10,
+      "attentionTrigger": "Before/after metrics",
+      "visualRole": "evidence-display"
+    },
+    {
+      "id": "S05",
+      "type": "action",
+      "voiceover": "Create a CLAUDE.md in your project root today. Start with your folder structure and conventions.",
+      "spokenText": "Create a CLAUDE.md in your project root today. Start with your folder structure and conventions.",
+      "screenText": "mkdir project && touch CLAUDE.md",
+      "durationEstimate": 8,
+      "attentionTrigger": "Clear next step",
+      "visualRole": "actionable-close"
+    }
+  ]
+}

@@ -1,0 +1,406 @@
+{
+  "schemaVersion": "4.0",
+  "contractVersion": "4.0",
+  "projectId": "PID-RUNTIME-GATE-TEST",
+  "mode": "standard",
+  "contentBriefPath": "fixtures/runtime-gate/passing/contentBrief.json",
+  "reviewedInputs": [
+    {
+      "id": "contentBrief",
+      "path": "fixtures/runtime-gate/passing/contentBrief.json",
+      "sha256": "c749d24c25b9da16a98cf8f5b512be188c682ef51fea10e3d9adf7ef55ebd49c"
+    },
+    {
+      "id": "videoSpec",
+      "path": "fixtures/runtime-gate/passing/videoSpec.json",
+      "sha256": "6ab64c0a1c7d1a8c92ecefbe9486bed6f351b6c45256f788a191e8e5d6f4b675"
+    },
+    {
+      "id": "coverBrief",
+      "path": "fixtures/runtime-gate/passing/coverBrief.json",
+      "sha256": "9794e4d9c169df3f509eb02c93a8140b695f751bd103c612e2cf96b35044252a"
+    }
+  ],
+  "scopeContract": {
+    "corePromise": "Show how CLAUDE.md solves Claude Code memory loss",
+    "targetDepth": "decision",
+    "mustAnswer": [
+      "Why does Claude Code forget?",
+      "What is CLAUDE.md?",
+      "How to set it up?",
+      "What are the limits?"
+    ],
+    "shouldAnswer": ["How fast does it improve?"],
+    "explicitlyOutOfScope": ["API-level memory"],
+    "followUpDestination": [],
+    "splitDecision": "single"
+  },
+  "reviews": [
+    {
+      "reviewerId": "cv-001",
+      "reviewerSystem": "OpenAI GPT",
+      "role": "cold-viewer",
+      "independent": true,
+      "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
+      "score": 95,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 11,
+          "maxScore": 12,
+          "evidence": ["Hook matches real frustration"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 8,
+          "maxScore": 8,
+          "evidence": ["Title clearly states promise"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "first15-retention",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Hook payoff within 10s"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["All must-answer addressed"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Mechanism clearly explained"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["30-day experiment data"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "actionable-value",
+          "score": 9,
+          "maxScore": 10,
+          "evidence": ["Clear first action step"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["Natural tone"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["Visual metaphors work"],
+          "gaps": [],
+          "action": "pass"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-24T10:00:00Z"
+    },
+    {
+      "reviewerId": "ce-001",
+      "reviewerSystem": "Anthropic Claude",
+      "role": "content-editor",
+      "independent": true,
+      "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
+      "score": 93,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 11,
+          "maxScore": 12,
+          "evidence": ["Pain is specific"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 7,
+          "maxScore": 8,
+          "evidence": ["Promise concrete"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "first15-retention",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Strong opening"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["Covers all key points"],
+          "gaps": ["Could expand migration"],
+          "action": "note"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Good depth"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Evidence sufficient"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "actionable-value",
+          "score": 9,
+          "maxScore": 10,
+          "evidence": ["Clear steps"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["Natural"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["Adequate"],
+          "gaps": [],
+          "action": "pass"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-24T10:00:00Z"
+    },
+    {
+      "reviewerId": "fe-001",
+      "reviewerSystem": "OpenAI GPT",
+      "role": "fact-evidence",
+      "independent": true,
+      "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
+      "score": 92,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 11,
+          "maxScore": 12,
+          "evidence": ["Verified by community"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 7,
+          "maxScore": 8,
+          "evidence": ["Factual"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "first15-retention",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["Hook strong"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Well-defined"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["Accurate"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["All facts verified"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "actionable-value",
+          "score": 9,
+          "maxScore": 10,
+          "evidence": ["Implementable"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["No issues"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["Accurate"],
+          "gaps": [],
+          "action": "pass"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-24T10:00:00Z"
+    },
+    {
+      "reviewerId": "vad-001",
+      "reviewerSystem": "Anthropic Claude",
+      "role": "visual-audio-director",
+      "independent": true,
+      "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
+      "score": 94,
+      "dimensions": [
+        {
+          "id": "audience-pain",
+          "score": 11,
+          "maxScore": 12,
+          "evidence": ["Visual pain clear"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "title-cover-promise",
+          "score": 8,
+          "maxScore": 8,
+          "evidence": ["Cover delivers"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "first15-retention",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Visual hook strong"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "scope-completeness",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Coverage complete"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "explanation-depth",
+          "score": 13,
+          "maxScore": 15,
+          "evidence": ["Visual supports depth"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "fact-evidence",
+          "score": 14,
+          "maxScore": 15,
+          "evidence": ["Evidence clear"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "actionable-value",
+          "score": 9,
+          "maxScore": 10,
+          "evidence": ["Action visually clear"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "voiceover-expression",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["Sync good"],
+          "gaps": [],
+          "action": "pass"
+        },
+        {
+          "id": "visual-explainability",
+          "score": 5,
+          "maxScore": 5,
+          "evidence": ["Metaphors work"],
+          "gaps": [],
+          "action": "pass"
+        }
+      ],
+      "hardVetoes": [],
+      "recommendation": "pass",
+      "reviewedAt": "2026-06-24T10:00:00Z"
+    }
+  ],
+  "consensus": {
+    "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
+    "meanScore": 93.5,
+    "medianScore": 93.5,
+    "minReviewerScore": 92,
+    "scoreSpread": 3,
+    "dimensionMeans": {
+      "audience-pain": 11,
+      "title-cover-promise": 7.75,
+      "first15-retention": 13.75,
+      "scope-completeness": 13.75,
+      "explanation-depth": 13.5,
+      "fact-evidence": 14,
+      "actionable-value": 9,
+      "voiceover-expression": 5,
+      "visual-explainability": 5
+    },
+    "passed": true,
+    "blockingReasons": []
+  },
+  "approval": {
+    "userDecision": "continue",
+    "approvedByUser": true,
+    "decisionNote": "Content and visual direction approved for production",
+    "decidedAt": "2026-06-24T11:00:00Z"
+  }
+}

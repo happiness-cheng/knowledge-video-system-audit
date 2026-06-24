@@ -22,12 +22,12 @@
 
 ## 快照与审批合约
 
-| 合约                    | 文件                                                                                           | 说明                     |
-| ----------------------- | ---------------------------------------------------------------------------------------------- | ------------------------ |
-| approvedContentSnapshot | [contracts/approvedContentSnapshot.schema.json](contracts/approvedContentSnapshot.schema.json) | 内容快照，只含内容产物（sources: contentMasterDraft, beatSheet, contentSegmentPlan, scopeContract, evidenceNotes；不含 shotDirectorSpec 或 coverBrief） |
-| visualSnapshot          | [contracts/visualSnapshot.schema.json](contracts/visualSnapshot.schema.json)                   | 视觉产物汇总快照         |
-| preProductionReview     | [contracts/preProductionReview.schema.json](contracts/preProductionReview.schema.json)         | 四角色独立审查           |
-| userApproval            | [contracts/userApproval.schema.json](contracts/userApproval.schema.json)                       | 用户批准，独立于 AI 审查 |
+| 合约                    | 文件                                                                                           | 说明                                                                                                                                                                   |
+| ----------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| approvedContentSnapshot | [contracts/approvedContentSnapshot.schema.json](contracts/approvedContentSnapshot.schema.json) | 内容快照，只含内容产物（sources: topicDecision, contentMasterDraft, beatSheet, contentSegmentPlan, scopeContract, evidenceNotes；不含 shotDirectorSpec 或 coverBrief） |
+| visualSnapshot          | [contracts/visualSnapshot.schema.json](contracts/visualSnapshot.schema.json)                   | 视觉产物汇总快照                                                                                                                                                       |
+| preProductionReview     | [contracts/preProductionReview.schema.json](contracts/preProductionReview.schema.json)         | 四角色独立审查                                                                                                                                                         |
+| userApproval            | [contracts/userApproval.schema.json](contracts/userApproval.schema.json)                       | 用户批准，独立于 AI 审查                                                                                                                                               |
 
 ## 视觉阶段合约
 
@@ -136,29 +136,29 @@ Agent 可以机械补齐类型字段，但不得改变：
 
 ## finalVideoReview
 
-5 分制：1=失败 2=明显问题 3=基本可用但需修改 4=达到发布标准 5=优秀
+9 维度评分，总分 100：
 
 ```json
 {
-  "scores": {
-    "promiseDelivery": 0,
-    "firstFiveSeconds": 0,
-    "midVideoPacing": 0,
-    "visualExplanation": 0,
-    "evidenceClarity": 0,
-    "mobileReadability": 0,
-    "motionAndInformationProgress": 0,
-    "subtitlesAndAudio": 0,
-    "overallFinish": 0
-  },
-  "averageScore": 0,
+  "dimensions": [
+    { "name": "audience-pain", "score": 0, "maxScore": 12 },
+    { "name": "title-cover-promise", "score": 0, "maxScore": 8 },
+    { "name": "first15-retention", "score": 0, "maxScore": 15 },
+    { "name": "scope-completeness", "score": 0, "maxScore": 15 },
+    { "name": "explanation-depth", "score": 0, "maxScore": 15 },
+    { "name": "fact-evidence", "score": 0, "maxScore": 15 },
+    { "name": "actionable-value", "score": 0, "maxScore": 10 },
+    { "name": "voiceover-expression", "score": 0, "maxScore": 5 },
+    { "name": "visual-explainability", "score": 0, "maxScore": 5 }
+  ],
+  "totalScore": 0,
   "issues": ["逐项列出"],
   "blockers": ["阻断项"],
   "recommendation": "pass / revise / stop"
 }
 ```
 
-通过规则：平均分 >= 4.0，promiseDelivery / firstFiveSeconds / visualExplanation / mobileReadability 均 >= 4，无 blocker。
+通过规则：totalScore >= 85，无 blocker。
 
 ---
 
@@ -222,16 +222,9 @@ V4 审查使用四个独立角色，每个角色独立评分：
 - max - min <= 8
 - 无 hard veto
 - 三个标识（contentSnapshotId、visualSnapshotId、candidateDigest）全部一致
-- scores 七个维度总分等于 totalScore
+- dimensions 9 个维度总分等于 totalScore
 
----
-
-## Legacy 结构
-
-以下结构仅用于 V3.1 数据迁移，新流程不得使用：
-
-- preProductionReview (V3.1 Standard dual-review) -> 已合并入四角色门禁
-- shotPlan (含 visualFocus / visualState / transition) -> 已拆分为 contentSegmentPlan + shotDirectorSpec
+> `approval`（userDecision / approvedByUser）是 preProductionReview 的子结构，记录在同一个审查文件中，不是独立合约。
 
 ---
 

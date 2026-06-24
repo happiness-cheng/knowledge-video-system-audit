@@ -1,4 +1,5 @@
 {
+  "contractVersion": "4.0",
   "coreQuestion": "Why does Claude Code lose memory every session?",
   "viewerSituation": "Developer using Claude Code daily, frustrated by repeated context loss",
   "openingTension": "You paid for Claude Code, why does it act like its first day?",
@@ -66,5 +67,6 @@
       "needsEmotionalExperience": ["Satisfaction of seeing it work"],
       "whyThisNeedsVisualSupport": "Evidence must be visible to be believed, not just described"
     }
-  ]
+  ],
+  "visualIntentSummary": "Show the developer repeating context setup, establishing the pain of memory loss, then revealing CLAUDE.md as the solution"
 }

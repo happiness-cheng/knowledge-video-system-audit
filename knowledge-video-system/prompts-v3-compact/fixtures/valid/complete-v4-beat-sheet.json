@@ -1,5 +1,6 @@
 {
-  "beatSheet": [
+  "contractVersion": "4.0",
+  "beats": [
     {
       "beatId": "B01",
       "timeRange": "0-5s",

@@ -20,10 +20,9 @@
   "spokenResponsibility": "Describes the general problem of memory loss",
   "visualResponsibility": "Shows the specific repeated action that triggers frustration",
   "onScreenTextPurpose": "Highlights the key repeated phrase to anchor recognition",
-  "semanticEvent": "Developer re-types project context explanation",
+  "semanticAction": "Developer re-types project context explanation",
   "objects": ["developer-avatar", "code-editor", "claude-code-terminal"],
   "initialState": "Developer opens Claude Code with empty context",
-  "stateChange": "Developer begins typing the same explanation",
   "finalState": "Explanation complete, Claude Code still does not remember",
   "carryIn": "None (first shot)",
   "carryOut": "Established: Claude Code forgets, developer must repeat",
@@ -52,7 +51,7 @@
     "purpose": "Life feeling without distraction"
   },
   "assetStrategy": "component-only",
-  "capabilityStatus": "confirmed",
+  "capabilityStatus": "supported",
   "capabilityGap": null,
   "negotiationLevel": "L0",
   "acceptanceCriteria": [
