@@ -404,11 +404,5 @@
     },
     "passed": true,
     "blockingReasons": []
-  },
-  "approval": {
-    "userDecision": "continue",
-    "approvedByUser": true,
-    "decisionNote": "Content and visual direction approved for production",
-    "decidedAt": "2026-06-24T11:00:00Z"
   }
 }

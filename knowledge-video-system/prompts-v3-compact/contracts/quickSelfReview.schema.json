@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "quickSelfReview",
+  "title": "QuickSelfReview",
+  "description": "Quick mode lightweight self-review. Not a formal gate. No multi-AI requirement, no 4-role requirement.",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "mode",
+    "selfScore",
+    "dimensions",
+    "issues",
+    "recommendation"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "mode": { "type": "string", "const": "quick" },
+    "selfScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "dimensions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/reviewDimension" },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "issues": { "type": "array", "items": { "type": "string" } },
+    "recommendation": { "type": "string", "enum": ["pass", "revise", "stop"] }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "reviewDimension": {
+      "type": "object",
+      "required": ["id", "score", "maxScore", "evidence", "gaps", "action"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "audience-pain",
+            "title-cover-promise",
+            "first15-retention",
+            "scope-completeness",
+            "explanation-depth",
+            "fact-evidence",
+            "actionable-value",
+            "voiceover-expression",
+            "visual-explainability"
+          ]
+        },
+        "name": { "type": "string" },
+        "score": { "type": "number", "minimum": 0 },
+        "maxScore": { "type": "number" },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "gaps": { "type": "array", "items": { "type": "string" } },
+        "action": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

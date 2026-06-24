@@ -158,29 +158,50 @@ interface SchemaValidationResult {
   errors: SchemaValidationError[];
 }
 
-/** Load all .schema.json files and compile an ajv instance */
-function createAjvInstance(): Ajv2020 {
+/** Load all .schema.json files and compile an ajv instance.
+ *  Returns the ajv instance and the count of discovered/compiled schemas.
+ *  Throws if any schema fails to compile. */
+function createAjvInstance(): {
+  ajv: Ajv2020;
+  schemasDiscovered: number;
+  schemasCompiled: number;
+} {
   const ajv = new Ajv2020({ allErrors: true });
 
   const schemaFiles = fs
     .readdirSync(CONTRACTS_DIR)
     .filter((f) => f.endsWith(".schema.json"));
 
+  const schemasDiscovered = schemaFiles.length;
+  let schemasCompiled = 0;
+
   for (const schemaFile of schemaFiles) {
     const fullPath = path.join(CONTRACTS_DIR, schemaFile);
     const schema = JSON.parse(fs.readFileSync(fullPath, "utf-8"));
 
     // If the schema has no $id, set it to the filename so $ref resolves correctly.
-    // Schemas like visualDirectionSpec use $ref: "./shotDirectorSpec.schema.json"
-    // which resolves relative to the current schema's base URI.
     if (!schema.$id) {
       schema.$id = schemaFile;
     }
 
     ajv.addSchema(schema);
+    schemasCompiled++;
   }
 
-  return ajv;
+  // Verify every registered schema can be retrieved and compiled
+  for (const schemaFile of schemaFiles) {
+    const schema = JSON.parse(
+      fs.readFileSync(path.join(CONTRACTS_DIR, schemaFile), "utf-8"),
+    );
+    const key = schema.$id ?? schemaFile;
+    if (!ajv.getSchema(key)) {
+      throw new Error(
+        `Schema "${schemaFile}" ($id="${key}") could not be compiled. Check for invalid $ref or syntax.`,
+      );
+    }
+  }
+
+  return { ajv, schemasDiscovered, schemasCompiled };
 }
 
 /** Resolve a friendly schema name to the ajv schema key */
@@ -316,20 +337,28 @@ interface AllResults {
   schemaResults: SchemaValidationResult[];
   gateResults: GateValidationResult[];
   summary: {
-    totalSchema: number;
-    passedSchema: number;
-    failedSchema: number;
-    totalGate: number;
-    passedGate: number;
-    failedGate: number;
+    schemasDiscovered: number;
+    schemasCompiled: number;
+    validFixturesPassed: number;
+    invalidSchemaFixturesFailed: number;
+    invalidGateFixturesFailed: number;
+    unexpectedPasses: string[];
     unexpectedFailures: string[];
   };
 }
 
-function runAll(ajv: Ajv2020): AllResults {
+function runAll(
+  ajv: Ajv2020,
+  schemasDiscovered: number,
+  schemasCompiled: number,
+): AllResults {
   const schemaResults: SchemaValidationResult[] = [];
   const gateResults: GateValidationResult[] = [];
   const unexpectedFailures: string[] = [];
+  const unexpectedPasses: string[] = [];
+  let validFixturesPassed = 0;
+  let invalidSchemaFixturesFailed = 0;
+  let invalidGateFixturesFailed = 0;
 
   for (const expectation of FIXTURE_EXPECTATIONS) {
     const fixtureDir =
@@ -351,24 +380,32 @@ function runAll(ajv: Ajv2020): AllResults {
     );
     schemaResults.push(schemaResult);
 
-    if (expectation.bucket === "valid" && !schemaResult.passed) {
-      unexpectedFailures.push(
-        `VALID fixture "${expectation.fixtureFile}" FAILED schema validation: ${schemaResult.errors.map((e) => e.message).join("; ")}`,
-      );
+    if (expectation.bucket === "valid") {
+      if (schemaResult.passed) {
+        validFixturesPassed++;
+      } else {
+        unexpectedFailures.push(
+          `VALID fixture "${expectation.fixtureFile}" FAILED schema: ${schemaResult.errors.map((e) => e.message).join("; ")}`,
+        );
+      }
     }
 
-    // For invalid fixtures that pass schema validation, check if they should have failed
+    if (expectation.bucket === "invalid" && !schemaResult.passed) {
+      invalidSchemaFixturesFailed++;
+    }
+
+    // Invalid fixture passes schema and has no gate → unexpected
     if (
       expectation.bucket === "invalid" &&
       schemaResult.passed &&
       !expectation.runGate
     ) {
       unexpectedFailures.push(
-        `INVALID fixture "${expectation.fixtureFile}" unexpectedly PASSED schema validation (no gate check configured)`,
+        `INVALID fixture "${expectation.fixtureFile}" unexpectedly PASSED schema (no gate configured)`,
       );
     }
 
-    // Layer B: gate validation for preProductionReview fixtures
+    // Layer B: gate validation
     if (expectation.runGate) {
       const gateResult = validateGate(fixturePath, false);
       gateResults.push(gateResult);
@@ -378,22 +415,30 @@ function runAll(ajv: Ajv2020): AllResults {
           `VALID fixture "${expectation.fixtureFile}" FAILED gate: ${gateResult.blockingReasons.join("; ")}`,
         );
       }
+
+      if (expectation.bucket === "invalid") {
+        if (gateResult.passed) {
+          // False-green: invalid fixture passed gate
+          unexpectedPasses.push(
+            `INVALID fixture "${expectation.fixtureFile}" unexpectedly PASSED gate`,
+          );
+        } else {
+          invalidGateFixturesFailed++;
+        }
+      }
     }
   }
-
-  const passedSchema = schemaResults.filter((r) => r.passed).length;
-  const passedGate = gateResults.filter((r) => r.passed).length;
 
   return {
     schemaResults,
     gateResults,
     summary: {
-      totalSchema: schemaResults.length,
-      passedSchema,
-      failedSchema: schemaResults.length - passedSchema,
-      totalGate: gateResults.length,
-      passedGate,
-      failedGate: gateResults.length - passedGate,
+      schemasDiscovered,
+      schemasCompiled,
+      validFixturesPassed,
+      invalidSchemaFixturesFailed,
+      invalidGateFixturesFailed,
+      unexpectedPasses,
       unexpectedFailures,
     },
   };
@@ -435,7 +480,7 @@ function main(): void {
       process.exit(1);
     }
 
-    const ajv = createAjvInstance();
+    const { ajv } = createAjvInstance();
     const result = validateSchema(ajv, jsonFile, schemaName);
     console.log(JSON.stringify(result, null, 2));
     process.exit(result.passed ? 0 : 1);
@@ -462,13 +507,14 @@ function main(): void {
 
   // --all
   if (mode === "--all") {
-    const ajv = createAjvInstance();
-    const results = runAll(ajv);
+    const { ajv, schemasDiscovered, schemasCompiled } = createAjvInstance();
+    const results = runAll(ajv, schemasDiscovered, schemasCompiled);
 
     console.log(JSON.stringify(results, null, 2));
 
     const hasFailures = results.summary.unexpectedFailures.length > 0;
-    process.exit(hasFailures ? 1 : 0);
+    const hasFalseGreens = results.summary.unexpectedPasses.length > 0;
+    process.exit(hasFailures || hasFalseGreens ? 1 : 0);
   }
 
   // Unknown flag

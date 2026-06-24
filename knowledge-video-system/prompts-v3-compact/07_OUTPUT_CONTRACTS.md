@@ -136,29 +136,35 @@ Agent 可以机械补齐类型字段，但不得改变：
 
 ## finalVideoReview
 
-9 维度评分，总分 100：
+9 维度评分，1-5 分制（与 pre-production 的 100 分制不同）：
+
+- 1 = 失败
+- 2 = 明显问题
+- 3 = 基本可用但需要修改
+- 4 = 达到发布标准
+- 5 = 优秀
 
 ```json
 {
-  "dimensions": [
-    { "name": "audience-pain", "score": 0, "maxScore": 12 },
-    { "name": "title-cover-promise", "score": 0, "maxScore": 8 },
-    { "name": "first15-retention", "score": 0, "maxScore": 15 },
-    { "name": "scope-completeness", "score": 0, "maxScore": 15 },
-    { "name": "explanation-depth", "score": 0, "maxScore": 15 },
-    { "name": "fact-evidence", "score": 0, "maxScore": 15 },
-    { "name": "actionable-value", "score": 0, "maxScore": 10 },
-    { "name": "voiceover-expression", "score": 0, "maxScore": 5 },
-    { "name": "visual-explainability", "score": 0, "maxScore": 5 }
-  ],
-  "totalScore": 0,
+  "scores": {
+    "promiseDelivery": 0,
+    "firstFiveSeconds": 0,
+    "midVideoPacing": 0,
+    "visualExplanation": 0,
+    "evidenceClarity": 0,
+    "mobileReadability": 0,
+    "motionAndInformationProgress": 0,
+    "subtitlesAndAudio": 0,
+    "overallFinish": 0
+  },
+  "averageScore": 0,
   "issues": ["逐项列出"],
   "blockers": ["阻断项"],
   "recommendation": "pass / revise / stop"
 }
 ```
 
-通过规则：totalScore >= 85，无 blocker。
+通过规则：averageScore >= 4.0，promiseDelivery / firstFiveSeconds / visualExplanation / mobileReadability 均 >= 4，无 blocker。
 
 ---
 
@@ -224,7 +230,7 @@ V4 审查使用四个独立角色，每个角色独立评分：
 - 三个标识（contentSnapshotId、visualSnapshotId、candidateDigest）全部一致
 - dimensions 9 个维度总分等于 totalScore
 
-> `approval`（userDecision / approvedByUser）是 preProductionReview 的子结构，记录在同一个审查文件中，不是独立合约。
+> `preProductionReview` 不包含 approval。approval 是独立的 `userApproval` 合约。
 
 ---
 

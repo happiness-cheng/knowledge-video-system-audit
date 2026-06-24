@@ -12,20 +12,24 @@
 
 ### 评分维度
 
-| 维度                 |    分值 |
-| -------------------- | ------: |
-| audience-pain        |      12 |
-| title-cover-promise  |       8 |
-| first15-retention    |      15 |
-| scope-completeness   |      15 |
-| explanation-depth    |      15 |
-| fact-evidence        |      15 |
-| actionable-value     |      10 |
-| voiceover-expression |       5 |
-| visual-explainability|       5 |
-| **总分**             | **100** |
+| 维度                  |    分值 |
+| --------------------- | ------: |
+| audience-pain         |      12 |
+| title-cover-promise   |       8 |
+| first15-retention     |      15 |
+| scope-completeness    |      15 |
+| explanation-depth     |      15 |
+| fact-evidence         |      15 |
+| actionable-value      |      10 |
+| voiceover-expression  |       5 |
+| visual-explainability |       5 |
+| **总分**              | **100** |
 
 ### Quick 门禁
+
+Quick 使用 `quickSelfReview`，不走 4-role gate。单次自评分，9 个维度，不要求多 AI 审查。Quick 不产生正式 review-ready 状态。
+
+通过条件：
 
 - 总分 ≥ 80
 - audience-pain ≥ 9/12
@@ -39,11 +43,36 @@
 - visual-explainability ≥ 4/5
 - 无 veto
 
-### Standard / Deep 门禁（V4 统一 4-role gate）
+### Standard / Deep 门禁（V4 统一两阶段架构）
 
-Standard 和 Deep 均使用统一的 4-role gate。4 个独立浏览器 AI 会话，冻结同一 candidateDigest。
+Standard 和 Deep 均使用统一的两阶段门禁架构。4 个独立浏览器 AI 会话，冻结同一 candidateDigest。
 
 Deep 进入 4-role gate 前需通过自检 >= 88 分。
+
+#### Stage 1: `evaluatePreProductionReviewReady`（审查就绪验证）
+
+仅验证审查数据完整性，不检查用户批准。验证内容：
+
+- 4 份独立 review 齐全，role 各不相同
+- 每份 review 的 9 个维度分数有效
+- meanScore / medianScore / minReviewerScore / scoreSpread 达标
+- consensus.passed = true
+- 无 hard veto
+- reviewedInputDigest 顶层和每份 review 全部一致
+- 至少 2 个不同 reviewerSystem
+
+不检查 userDecision、approvedByUser 等批准字段。
+
+#### Stage 2: `evaluatePreProductionGate`（执行门禁）
+
+先调用 Stage 1（review-ready），再验证用户批准：
+
+- userDecision = "continue"
+- approvedByUser = true
+- decisionNote 非空
+- decidedAt 非空
+
+两个阶段均通过，才视为门禁通过。
 
 4 个角色：
 
@@ -144,14 +173,13 @@ preProductionReview:
     dimensionMeans: { ... }
     passed: false
     blockingReasons: []
-  approval:
-    userDecision: pending
-    approvedByUser: false
 ```
 
-用户批准独立于审查，见 07 `userApproval` 小节。
+`preProductionReview` 不包含 approval。approval 是独立的 `userApproval` 合约，见 07。
 
 `reviewedInputDigest` 顶层和每份 review 全部必填，缺失或不一致均阻断。
+
+执行门禁（`evaluatePreProductionGate`）要求 review-ready 和 userApproval 均通过。
 
 ### 输出（Quick / Legacy）
 

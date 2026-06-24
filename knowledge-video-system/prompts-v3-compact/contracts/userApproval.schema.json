@@ -3,13 +3,25 @@
   "title": "userApproval",
   "description": "用户批准，独立于 AI 审查",
   "type": "object",
-  "required": ["contractVersion", "contentSnapshotId", "visualSnapshotId", "candidateDigest", "userDecision", "approvedByUser", "decisionNote", "decidedAt"],
+  "required": [
+    "contractVersion",
+    "contentSnapshotId",
+    "visualSnapshotId",
+    "candidateDigest",
+    "userDecision",
+    "approvedByUser",
+    "decisionNote",
+    "decidedAt"
+  ],
   "properties": {
     "contractVersion": { "type": "string", "const": "4.0" },
     "contentSnapshotId": { "type": "string" },
     "visualSnapshotId": { "type": "string" },
     "candidateDigest": { "type": "string" },
-    "userDecision": { "type": "string", "enum": ["pending", "continue", "revise", "stop"] },
+    "userDecision": {
+      "type": "string",
+      "enum": ["pending", "continue", "revise", "split", "stop"]
+    },
     "approvedByUser": { "type": "boolean" },
     "decisionNote": { "type": "string" },
     "decidedAt": { "type": ["string", "null"] }

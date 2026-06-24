@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "finalVideoReview",
+  "title": "FinalVideoReview",
+  "description": "Final video review contract. 9 dimensions scored 1-5. Used for actual rendered video, not pre-production artifacts.",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "scores",
+    "averageScore",
+    "blockers",
+    "recommendation"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "scores": {
+      "type": "object",
+      "required": [
+        "promiseDelivery",
+        "firstFiveSeconds",
+        "midVideoPacing",
+        "visualExplanation",
+        "evidenceClarity",
+        "mobileReadability",
+        "motionAndInformationProgress",
+        "subtitlesAndAudio",
+        "overallFinish"
+      ],
+      "properties": {
+        "promiseDelivery": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "firstFiveSeconds": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "midVideoPacing": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "visualExplanation": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "evidenceClarity": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "mobileReadability": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "motionAndInformationProgress": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "subtitlesAndAudio": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "overallFinish": { "type": "integer", "minimum": 1, "maximum": 5 }
+      },
+      "additionalProperties": false
+    },
+    "averageScore": { "type": "number", "minimum": 1, "maximum": 5 },
+    "issues": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "recommendation": { "type": "string", "enum": ["pass", "revise", "stop"] }
+  },
+  "additionalProperties": false
+}

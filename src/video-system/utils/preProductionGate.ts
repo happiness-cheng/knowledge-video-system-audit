@@ -151,6 +151,10 @@ function normalizeText(value: string): string {
   return value.replace(/\s+/g, "").trim();
 }
 
+function normalizeReviewerSystem(value: string): string {
+  return value.trim().toLowerCase();
+}
+
 export function sha256File(filePath: string): string {
   return crypto
     .createHash("sha256")
@@ -568,7 +572,11 @@ function validateInputFiles(
   return { errors, contentBrief };
 }
 
-export function evaluatePreProductionGate(
+/**
+ * 检查审阅是否就绪（角色、维度、分数、阈值、共识），不检查用户审批。
+ * 用于 promotion 审阅完成后、用户批准前的就绪性检查。
+ */
+export function evaluatePreProductionReviewReady(
   reviewFile: PreProductionReview,
   options: GateEvaluationOptions = {},
 ): GateEvaluation {
@@ -625,7 +633,9 @@ export function evaluatePreProductionGate(
   if (isStandardV31) {
     // V3.1 Standard: dual independent review, >85 threshold
     const distinctSystems = new Set(
-      reviews.map((item) => item.reviewerSystem?.trim()).filter(Boolean),
+      reviews
+        .map((item) => normalizeReviewerSystem(item.reviewerSystem ?? ""))
+        .filter(Boolean),
     );
     if (reviews.length < 2) {
       blockingReasons.push(
@@ -695,7 +705,9 @@ export function evaluatePreProductionGate(
       );
     }
     const distinctSystems = new Set(
-      reviews.map((item) => item.reviewerSystem?.trim()).filter(Boolean),
+      reviews
+        .map((item) => normalizeReviewerSystem(item.reviewerSystem ?? ""))
+        .filter(Boolean),
     );
     if (reviews.length > 0 && distinctSystems.size < 2) {
       blockingReasons.push(
@@ -775,22 +787,6 @@ export function evaluatePreProductionGate(
     }
   }
 
-  if (
-    reviewFile.approval?.userDecision !== "continue" ||
-    reviewFile.approval?.approvedByUser !== true
-  ) {
-    blockingReasons.push("user approval is not continue + approvedByUser=true");
-  }
-  if (!reviewFile.approval?.decisionNote?.trim()) {
-    blockingReasons.push("approval.decisionNote is empty");
-  }
-  if (
-    !reviewFile.approval?.decidedAt ||
-    Number.isNaN(Date.parse(reviewFile.approval.decidedAt))
-  ) {
-    blockingReasons.push("approval.decidedAt is empty or invalid");
-  }
-
   if (reviewFile.consensus?.reviewedInputDigest !== reviewedInputDigest) {
     blockingReasons.push(
       "stored consensus.reviewedInputDigest does not match calculated digest",
@@ -863,6 +859,71 @@ export function evaluatePreProductionGate(
   };
 }
 
+/**
+ * 执行门禁：先检查审阅就绪，再检查用户审批。
+ * 用于生产执行前的完整门禁校验。
+ */
+export function evaluatePreProductionGate(
+  reviewFile: PreProductionReview,
+  options: GateEvaluationOptions = {},
+): GateEvaluation {
+  const blockingReasons: string[] = [];
+  const inputs = Array.isArray(reviewFile?.reviewedInputs)
+    ? reviewFile.reviewedInputs
+    : [];
+  const reviewedInputDigest = calculateReviewedInputDigest(inputs);
+
+  const emptyCalculated = {
+    reviewedInputDigest,
+    meanScore: 0,
+    medianScore: 0,
+    minReviewerScore: 0,
+    scoreSpread: 0,
+    dimensionMeans: {} as Record<string, number>,
+  };
+
+  // contractVersion 路由
+  const cv = reviewFile?.contractVersion;
+  if (cv === "3.1") {
+    blockingReasons.push("contractVersion 3.1 is legacy, migrate to 4.0");
+    return { passed: false, calculated: emptyCalculated, blockingReasons };
+  }
+  if (cv !== "4.0") {
+    blockingReasons.push(`contractVersion must be "4.0", got "${cv}"`);
+    return { passed: false, calculated: emptyCalculated, blockingReasons };
+  }
+
+  // 审阅就绪检查（角色、维度、分数、阈值、共识）
+  const reviewResult = evaluatePreProductionReviewReady(reviewFile, options);
+
+  // 用户审批检查
+  if (
+    reviewFile.approval?.userDecision !== "continue" ||
+    reviewFile.approval?.approvedByUser !== true
+  ) {
+    blockingReasons.push("user approval is not continue + approvedByUser=true");
+  }
+  if (!reviewFile.approval?.decisionNote?.trim()) {
+    blockingReasons.push("approval.decisionNote is empty");
+  }
+  if (
+    !reviewFile.approval?.decidedAt ||
+    Number.isNaN(Date.parse(reviewFile.approval.decidedAt))
+  ) {
+    blockingReasons.push("approval.decidedAt is empty or invalid");
+  }
+
+  const allBlockingReasons = [
+    ...reviewResult.blockingReasons,
+    ...blockingReasons,
+  ];
+  return {
+    passed: allBlockingReasons.length === 0,
+    calculated: reviewResult.calculated,
+    blockingReasons: allBlockingReasons,
+  };
+}
+
 export function readPreProductionReview(
   filePath = path.resolve(__dirname, "../data/preProductionReview.json"),
 ): PreProductionReview {
@@ -892,7 +953,7 @@ export function assertPreProductionReviewReady(
   filePath = path.resolve(__dirname, "../data/preProductionReview.json"),
 ): GateEvaluation {
   const reviewFile = readPreProductionReview(filePath);
-  const evaluation = evaluatePreProductionGate(reviewFile, {
+  const evaluation = evaluatePreProductionReviewReady(reviewFile, {
     verifyInputFiles: true,
     requireExecutionInputs: false,
   });
