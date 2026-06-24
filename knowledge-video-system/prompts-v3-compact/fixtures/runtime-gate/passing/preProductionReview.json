@@ -42,7 +42,7 @@
       "role": "cold-viewer",
       "independent": true,
       "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
-      "score": 95,
+      "score": 94,
       "dimensions": [
         {
           "id": "audience-pain",
@@ -127,7 +127,7 @@
       "role": "content-editor",
       "independent": true,
       "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
-      "score": 93,
+      "score": 92,
       "dimensions": [
         {
           "id": "audience-pain",
@@ -212,7 +212,7 @@
       "role": "fact-evidence",
       "independent": true,
       "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
-      "score": 92,
+      "score": 91,
       "dimensions": [
         {
           "id": "audience-pain",
@@ -297,7 +297,7 @@
       "role": "visual-audio-director",
       "independent": true,
       "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
-      "score": 94,
+      "score": 93,
       "dimensions": [
         {
           "id": "audience-pain",
@@ -379,13 +379,13 @@
   ],
   "consensus": {
     "reviewedInputDigest": "eaacea791ada29bdebb5b794edf38555ebd02a75af7ee7308a80c38909a096f0",
-    "meanScore": 93.5,
-    "medianScore": 93.5,
-    "minReviewerScore": 92,
+    "meanScore": 92.5,
+    "medianScore": 92.5,
+    "minReviewerScore": 91,
     "scoreSpread": 3,
     "dimensionMeans": {
       "audience-pain": 11,
-      "title-cover-promise": 7.75,
+      "title-cover-promise": 7.5,
       "first15-retention": 13.75,
       "scope-completeness": 13.75,
       "explanation-depth": 13.5,
