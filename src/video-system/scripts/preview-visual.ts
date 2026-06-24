@@ -93,9 +93,13 @@ function resetKeyframeDirs() {
   }
 }
 
+// 定位：审查预览模式。
+// 本脚本只生成供用户批准前查看的关键帧、contact sheet、手机端预览和视觉风险报告。
+// 输出进入候选审查目录，不覆盖正式生产产物。
+// 如需依赖已提升的正式 videoSpec / 音频 / 字幕，改用 assertPreProductionExecutionGate。
 function main() {
   assertPreProductionReviewReady();
-  console.log(`\npreview:visual 视觉预览门禁`);
+  console.log(`\npreview:visual 审查预览门禁（review-only）`);
   console.log(`${"=".repeat(60)}`);
 
   resetKeyframeDirs();
