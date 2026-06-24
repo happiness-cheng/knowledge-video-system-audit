@@ -6,7 +6,8 @@
  *
  * CLI:
  *   npx tsx contracts/validate.ts --schema <json-file> <schema-name>
- *   npx tsx contracts/validate.ts --gate <review-json-path> [--verify-inputs]
+ *   npx tsx contracts/validate.ts --review-ready <preProductionReview.json>
+ *   npx tsx contracts/validate.ts --execution-gate <preProductionReview.json> <userApproval.json>
  *   npx tsx contracts/validate.ts --all
  */
 
@@ -15,11 +16,13 @@ import type { ErrorObject } from "ajv";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import {
-  evaluatePreProductionGate,
+  evaluatePreProductionReviewReady,
+  evaluatePreProductionExecutionGate,
   calculateReviewedInputDigest,
 } from "../../../src/video-system/utils/preProductionGate";
 import type {
   PreProductionReview,
+  UserApproval,
   GateEvaluation,
 } from "../../../src/video-system/utils/preProductionGate";
 
@@ -288,10 +291,7 @@ interface GateValidationResult {
   calculated: GateEvaluation["calculated"];
 }
 
-function validateGate(
-  reviewJsonPath: string,
-  verifyInputs: boolean,
-): GateValidationResult {
+function validateReviewReady(reviewJsonPath: string): GateValidationResult {
   const fileName = path.basename(reviewJsonPath);
 
   let reviewData: PreProductionReview;
@@ -318,9 +318,8 @@ function validateGate(
     };
   }
 
-  const evaluation: GateEvaluation = evaluatePreProductionGate(reviewData, {
-    verifyInputFiles: verifyInputs,
-  });
+  const evaluation: GateEvaluation =
+    evaluatePreProductionReviewReady(reviewData);
 
   return {
     mode: "gate",
@@ -407,7 +406,7 @@ function runAll(
 
     // Layer B: gate validation
     if (expectation.runGate) {
-      const gateResult = validateGate(fixturePath, false);
+      const gateResult = validateReviewReady(fixturePath);
       gateResults.push(gateResult);
 
       if (expectation.bucket === "valid" && !gateResult.passed) {
@@ -449,7 +448,8 @@ function runAll(
 function printUsage(): void {
   console.error(`Usage:
   npx tsx contracts/validate.ts --schema <json-file> <schema-name>
-  npx tsx contracts/validate.ts --gate <review-json-path> [--verify-inputs]
+  npx tsx contracts/validate.ts --review-ready <preProductionReview.json>
+  npx tsx contracts/validate.ts --execution-gate <preProductionReview.json> <userApproval.json>
   npx tsx contracts/validate.ts --all
 
 Schema names:
@@ -486,21 +486,61 @@ function main(): void {
     process.exit(result.passed ? 0 : 1);
   }
 
-  // --gate <review-json-path> [--verify-inputs]
-  if (mode === "--gate") {
+  // --review-ready <preProductionReview.json>
+  if (mode === "--review-ready") {
     if (args.length < 2) {
-      console.error("Usage: --gate <review-json-path> [--verify-inputs]");
+      console.error("Usage: --review-ready <preProductionReview.json>");
       process.exit(1);
     }
     const reviewPath = path.resolve(args[1]);
-    const verifyInputs = args.includes("--verify-inputs");
 
     if (!fs.existsSync(reviewPath)) {
       console.error(`File not found: ${reviewPath}`);
       process.exit(1);
     }
 
-    const result = validateGate(reviewPath, verifyInputs);
+    const result = validateReviewReady(reviewPath);
+    console.log(JSON.stringify(result, null, 2));
+    process.exit(result.passed ? 0 : 1);
+  }
+
+  // --execution-gate <preProductionReview.json> <userApproval.json>
+  if (mode === "--execution-gate") {
+    if (args.length < 3) {
+      console.error(
+        "Usage: --execution-gate <preProductionReview.json> <userApproval.json>",
+      );
+      process.exit(1);
+    }
+    const reviewPath = path.resolve(args[1]);
+    const approvalPath = path.resolve(args[2]);
+
+    if (!fs.existsSync(reviewPath)) {
+      console.error(`File not found: ${reviewPath}`);
+      process.exit(1);
+    }
+    if (!fs.existsSync(approvalPath)) {
+      console.error(`File not found: ${approvalPath}`);
+      process.exit(1);
+    }
+
+    const reviewData = JSON.parse(
+      fs.readFileSync(reviewPath, "utf-8"),
+    ) as PreProductionReview;
+    const approvalData = JSON.parse(
+      fs.readFileSync(approvalPath, "utf-8"),
+    ) as UserApproval;
+    const evaluation = evaluatePreProductionExecutionGate(
+      reviewData,
+      approvalData,
+    );
+    const result: GateValidationResult = {
+      mode: "gate",
+      file: `${path.basename(reviewPath)} + ${path.basename(approvalPath)}`,
+      passed: evaluation.passed,
+      blockingReasons: evaluation.blockingReasons,
+      calculated: evaluation.calculated,
+    };
     console.log(JSON.stringify(result, null, 2));
     process.exit(result.passed ? 0 : 1);
   }

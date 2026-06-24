@@ -49,11 +49,12 @@ export interface IndependentReview {
   candidateDigest?: string;
 }
 
+/** V4 review-only structure. Does NOT contain approval. */
 export interface PreProductionReview {
   schemaVersion: string;
-  contractVersion?: string;
+  contractVersion: "4.0";
   projectId: string;
-  mode: WorkflowMode;
+  mode: "standard" | "deep";
   contentSnapshotId?: string;
   visualSnapshotId?: string;
   candidateDigest?: string;
@@ -71,12 +72,18 @@ export interface PreProductionReview {
     passed: boolean;
     blockingReasons: string[];
   };
-  approval: {
-    userDecision: "pending" | "continue" | "revise" | "split" | "stop";
-    approvedByUser: boolean;
-    decisionNote: string;
-    decidedAt: string | null;
-  };
+}
+
+/** V4 independent user approval. Separate from review. */
+export interface UserApproval {
+  contractVersion: "4.0";
+  contentSnapshotId: string;
+  visualSnapshotId: string;
+  candidateDigest: string;
+  userDecision: "pending" | "continue" | "revise" | "split" | "stop";
+  approvedByUser: boolean;
+  decisionNote: string;
+  decidedAt: string | null;
 }
 
 export interface GateEvaluationOptions {
@@ -112,8 +119,7 @@ export const REQUIRED_DIMENSIONS: Record<string, number> = {
 
 const REQUIRED_INPUT_IDS = ["contentBrief", "videoSpec", "coverBrief"];
 
-const REQUIRED_ROLES_BY_MODE: Record<WorkflowMode, ReviewerRole[]> = {
-  quick: ["cold-viewer", "content-editor", "fact-evidence"],
+const REQUIRED_ROLES_BY_MODE: Record<"standard" | "deep", ReviewerRole[]> = {
   standard: [
     "cold-viewer",
     "content-editor",
@@ -603,8 +609,17 @@ export function evaluatePreProductionReviewReady(
     };
   }
 
-  if (!(["quick", "standard", "deep"] as const).includes(reviewFile.mode)) {
-    blockingReasons.push(`invalid mode: ${String(reviewFile.mode)}`);
+  // V4 contractVersion required
+  if (reviewFile.contractVersion !== "4.0") {
+    blockingReasons.push(
+      `contractVersion must be "4.0", got "${String(reviewFile.contractVersion)}"`,
+    );
+  }
+
+  if (!(["standard", "deep"] as const).includes(reviewFile.mode)) {
+    blockingReasons.push(
+      `invalid mode for V4 review-ready: ${String(reviewFile.mode)}. Quick uses quickSelfReview.`,
+    );
   }
   if (!reviewFile.scopeContract?.corePromise?.trim()) {
     blockingReasons.push("scopeContract.corePromise is empty");
@@ -620,100 +635,39 @@ export function evaluatePreProductionReviewReady(
     blockingReasons.push("scopeContract.splitDecision=stop");
   }
 
-  // V3.1 Standard: dispatch to dual-review logic
-  const isV31 = reviewFile.contractVersion === "3.1";
-  const isStandardV31 = isV31 && reviewFile.mode === "standard";
-
+  // V4: role-based review (standard/deep only)
   const reviews = Array.isArray(reviewFile.reviews) ? reviewFile.reviews : [];
   const reviewerIds = reviews.map((item) => item.reviewerId);
   if (new Set(reviewerIds).size !== reviewerIds.length) {
     blockingReasons.push("reviewerId values must be unique");
   }
 
-  if (isStandardV31) {
-    // V3.1 Standard: dual independent review, >85 threshold
-    const distinctSystems = new Set(
-      reviews
-        .map((item) => normalizeReviewerSystem(item.reviewerSystem ?? ""))
-        .filter(Boolean),
+  const requiredRoles = REQUIRED_ROLES_BY_MODE[reviewFile.mode] ?? [];
+  const reviewRoles = reviews.map((item) => item.role);
+  const presentRoles = new Set(reviewRoles);
+  if (presentRoles.size !== reviewRoles.length) {
+    blockingReasons.push(
+      "reviewer roles must be unique; use exactly one independent reviewer per required role",
     );
-    if (reviews.length < 2) {
-      blockingReasons.push(
-        `v3.1 standard requires at least 2 reviews, got ${reviews.length}`,
-      );
-    }
-    if (distinctSystems.size < 2) {
-      blockingReasons.push(
-        "v3.1 standard requires at least 2 distinct reviewerSystem values",
-      );
-    }
-    const hasGptSelfCheck = reviews.some(
-      (r) =>
-        r.reviewerSystem?.toLowerCase().includes("gpt") ||
-        r.reviewerSystem?.toLowerCase().includes("chatgpt"),
+  }
+  for (const role of requiredRoles) {
+    if (!presentRoles.has(role))
+      blockingReasons.push(`missing required reviewer role: ${role}`);
+  }
+  if (reviews.length !== requiredRoles.length) {
+    blockingReasons.push(
+      `review count ${reviews.length} must equal required ${requiredRoles.length} for mode=${reviewFile.mode}`,
     );
-    if (!hasGptSelfCheck && reviews.length > 0) {
-      blockingReasons.push(
-        "v3.1 standard requires at least one GPT self-check review",
-      );
-    }
-
-    // V3.1: each review must carry the same snapshot identifiers as the top-level
-    for (const review of reviews) {
-      if (
-        reviewFile.contentSnapshotId &&
-        review.contentSnapshotId !== reviewFile.contentSnapshotId
-      ) {
-        blockingReasons.push(
-          `${review.reviewerId}: review contentSnapshotId=${review.contentSnapshotId} does not match declared ${reviewFile.contentSnapshotId}`,
-        );
-      }
-      if (
-        reviewFile.visualSnapshotId &&
-        review.visualSnapshotId !== reviewFile.visualSnapshotId
-      ) {
-        blockingReasons.push(
-          `${review.reviewerId}: review visualSnapshotId=${review.visualSnapshotId} does not match declared ${reviewFile.visualSnapshotId}`,
-        );
-      }
-      if (
-        reviewFile.candidateDigest &&
-        review.candidateDigest !== reviewFile.candidateDigest
-      ) {
-        blockingReasons.push(
-          `${review.reviewerId}: review candidateDigest does not match declared snapshot`,
-        );
-      }
-    }
-  } else {
-    // V2 / V3.1 Quick / V3.1 Deep: role-based review
-    const requiredRoles = REQUIRED_ROLES_BY_MODE[reviewFile.mode] ?? [];
-    const reviewRoles = reviews.map((item) => item.role);
-    const presentRoles = new Set(reviewRoles);
-    if (presentRoles.size !== reviewRoles.length) {
-      blockingReasons.push(
-        "reviewer roles must be unique; use exactly one independent reviewer per required role",
-      );
-    }
-    for (const role of requiredRoles) {
-      if (!presentRoles.has(role))
-        blockingReasons.push(`missing required reviewer role: ${role}`);
-    }
-    if (reviews.length !== requiredRoles.length) {
-      blockingReasons.push(
-        `review count ${reviews.length} must equal required ${requiredRoles.length} for mode=${reviewFile.mode}`,
-      );
-    }
-    const distinctSystems = new Set(
-      reviews
-        .map((item) => normalizeReviewerSystem(item.reviewerSystem ?? ""))
-        .filter(Boolean),
+  }
+  const distinctSystems = new Set(
+    reviews
+      .map((item) => normalizeReviewerSystem(item.reviewerSystem ?? ""))
+      .filter(Boolean),
+  );
+  if (reviews.length > 0 && distinctSystems.size < 2) {
+    blockingReasons.push(
+      "multi-AI review requires at least two distinct reviewerSystem values",
     );
-    if (reviews.length > 0 && distinctSystems.size < 2) {
-      blockingReasons.push(
-        "multi-AI review requires at least two distinct reviewerSystem values",
-      );
-    }
   }
 
   for (const review of reviews) {
@@ -749,41 +703,30 @@ export function evaluatePreProductionReviewReady(
       : 0;
   }
 
-  // Score thresholds: V3.1 Standard uses >85, others use >=90
-  if (isStandardV31) {
-    if (meanScore <= 85)
-      blockingReasons.push(`v3.1 standard meanScore ${meanScore} must be > 85`);
-    if (minReviewerScore <= 85)
-      blockingReasons.push(
-        `v3.1 standard minReviewerScore ${minReviewerScore} must be > 85`,
-      );
-  } else {
-    if (meanScore < 90) blockingReasons.push(`meanScore ${meanScore} < 90`);
-    if (medianScore < 90)
-      blockingReasons.push(`medianScore ${medianScore} < 90`);
-    if (minReviewerScore < 85)
-      blockingReasons.push(`minReviewerScore ${minReviewerScore} < 85`);
-    if (scoreSpread > 8)
-      blockingReasons.push(
-        `reviewer score spread ${scoreSpread} > 8; arbitration required`,
-      );
-  }
+  // V4 score thresholds
+  if (meanScore < 90) blockingReasons.push(`meanScore ${meanScore} < 90`);
+  if (medianScore < 90) blockingReasons.push(`medianScore ${medianScore} < 90`);
+  if (minReviewerScore < 85)
+    blockingReasons.push(`minReviewerScore ${minReviewerScore} < 85`);
+  if (scoreSpread > 8)
+    blockingReasons.push(
+      `reviewer score spread ${scoreSpread} > 8; arbitration required`,
+    );
 
-  if (!isStandardV31) {
-    const thresholdByDimension: Record<string, number> = {
-      "first15-retention": 13,
-      "scope-completeness": 13,
-      "explanation-depth": 13,
-      "fact-evidence": 13,
-      "actionable-value": 8,
-      "visual-explainability": 4,
-    };
-    for (const [id, threshold] of Object.entries(thresholdByDimension)) {
-      if ((dimensionMeans[id] ?? 0) < threshold) {
-        blockingReasons.push(
-          `dimension mean ${id}=${dimensionMeans[id] ?? 0} < ${threshold}`,
-        );
-      }
+  // V4 dimension thresholds
+  const thresholdByDimension: Record<string, number> = {
+    "first15-retention": 13,
+    "scope-completeness": 13,
+    "explanation-depth": 13,
+    "fact-evidence": 13,
+    "actionable-value": 8,
+    "visual-explainability": 4,
+  };
+  for (const [id, threshold] of Object.entries(thresholdByDimension)) {
+    if ((dimensionMeans[id] ?? 0) < threshold) {
+      blockingReasons.push(
+        `dimension mean ${id}=${dimensionMeans[id] ?? 0} < ${threshold}`,
+      );
     }
   }
 
@@ -860,11 +803,88 @@ export function evaluatePreProductionReviewReady(
 }
 
 /**
- * 执行门禁：先检查审阅就绪，再检查用户审批。
- * 用于生产执行前的完整门禁校验。
+ * V4 执行门禁：先检查审阅就绪，再检查独立用户审批。
+ * review 和 approval 是完全独立的两个输入。
+ */
+export function evaluatePreProductionExecutionGate(
+  review: PreProductionReview,
+  approval: UserApproval,
+  options: GateEvaluationOptions = {},
+): GateEvaluation {
+  const blockingReasons: string[] = [];
+  const inputs = Array.isArray(review?.reviewedInputs)
+    ? review.reviewedInputs
+    : [];
+  const reviewedInputDigest = calculateReviewedInputDigest(inputs);
+
+  const emptyCalculated = {
+    reviewedInputDigest,
+    meanScore: 0,
+    medianScore: 0,
+    minReviewerScore: 0,
+    scoreSpread: 0,
+    dimensionMeans: {} as Record<string, number>,
+  };
+
+  // Stage 1: review-ready
+  const reviewResult = evaluatePreProductionReviewReady(review, options);
+  if (!reviewResult.passed) {
+    return reviewResult;
+  }
+
+  // Stage 2: approval validation
+  if (!approval || typeof approval !== "object") {
+    blockingReasons.push("userApproval is not an object");
+    return {
+      passed: false,
+      calculated: reviewResult.calculated,
+      blockingReasons,
+    };
+  }
+
+  // Identifier consistency
+  if (approval.contentSnapshotId !== review.contentSnapshotId) {
+    blockingReasons.push(
+      `approval.contentSnapshotId="${approval.contentSnapshotId}" does not match review.contentSnapshotId="${review.contentSnapshotId}"`,
+    );
+  }
+  if (approval.visualSnapshotId !== review.visualSnapshotId) {
+    blockingReasons.push(
+      `approval.visualSnapshotId="${approval.visualSnapshotId}" does not match review.visualSnapshotId="${review.visualSnapshotId}"`,
+    );
+  }
+  if (approval.candidateDigest !== review.candidateDigest) {
+    blockingReasons.push(
+      `approval.candidateDigest does not match review.candidateDigest`,
+    );
+  }
+
+  // Approval state
+  if (
+    approval.userDecision !== "continue" ||
+    approval.approvedByUser !== true
+  ) {
+    blockingReasons.push("user approval is not continue + approvedByUser=true");
+  }
+  if (!approval.decisionNote?.trim()) {
+    blockingReasons.push("approval.decisionNote is empty");
+  }
+  if (!approval.decidedAt || Number.isNaN(Date.parse(approval.decidedAt))) {
+    blockingReasons.push("approval.decidedAt is empty or invalid");
+  }
+
+  return {
+    passed: blockingReasons.length === 0,
+    calculated: reviewResult.calculated,
+    blockingReasons,
+  };
+}
+
+/**
+ * @deprecated Legacy single-file gate. Use evaluatePreProductionExecutionGate with separate review + approval.
  */
 export function evaluatePreProductionGate(
-  reviewFile: PreProductionReview,
+  reviewFile: PreProductionReview & { approval?: Record<string, unknown> },
   options: GateEvaluationOptions = {},
 ): GateEvaluation {
   const blockingReasons: string[] = [];
@@ -882,35 +902,36 @@ export function evaluatePreProductionGate(
     dimensionMeans: {} as Record<string, number>,
   };
 
-  // contractVersion 路由
+  // contractVersion check
   const cv = reviewFile?.contractVersion;
-  if (cv === "3.1") {
-    blockingReasons.push("contractVersion 3.1 is legacy, migrate to 4.0");
-    return { passed: false, calculated: emptyCalculated, blockingReasons };
-  }
   if (cv !== "4.0") {
     blockingReasons.push(`contractVersion must be "4.0", got "${cv}"`);
     return { passed: false, calculated: emptyCalculated, blockingReasons };
   }
 
-  // 审阅就绪检查（角色、维度、分数、阈值、共识）
+  // Review-ready check
   const reviewResult = evaluatePreProductionReviewReady(reviewFile, options);
 
-  // 用户审批检查
-  if (
-    reviewFile.approval?.userDecision !== "continue" ||
-    reviewFile.approval?.approvedByUser !== true
-  ) {
-    blockingReasons.push("user approval is not continue + approvedByUser=true");
-  }
-  if (!reviewFile.approval?.decisionNote?.trim()) {
-    blockingReasons.push("approval.decisionNote is empty");
-  }
-  if (
-    !reviewFile.approval?.decidedAt ||
-    Number.isNaN(Date.parse(reviewFile.approval.decidedAt))
-  ) {
-    blockingReasons.push("approval.decidedAt is empty or invalid");
+  // Legacy inline approval check (for backward compat with old test fixtures)
+  const approval = reviewFile.approval as Record<string, unknown> | undefined;
+  if (approval) {
+    if (
+      approval.userDecision !== "continue" ||
+      approval.approvedByUser !== true
+    ) {
+      blockingReasons.push(
+        "user approval is not continue + approvedByUser=true",
+      );
+    }
+    if (!String(approval.decisionNote ?? "").trim()) {
+      blockingReasons.push("approval.decisionNote is empty");
+    }
+    if (
+      !approval.decidedAt ||
+      Number.isNaN(Date.parse(String(approval.decidedAt)))
+    ) {
+      blockingReasons.push("approval.decidedAt is empty or invalid");
+    }
   }
 
   const allBlockingReasons = [
@@ -933,6 +954,32 @@ export function readPreProductionReview(
   return JSON.parse(fs.readFileSync(filePath, "utf-8")) as PreProductionReview;
 }
 
+export function readUserApproval(filePath: string): UserApproval {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Missing user approval file: ${filePath}`);
+  }
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as UserApproval;
+}
+
+export function assertPreProductionExecutionGate(
+  reviewPath = path.resolve(__dirname, "../data/preProductionReview.json"),
+  approvalPath = path.resolve(__dirname, "../data/userApproval.json"),
+): GateEvaluation {
+  const reviewFile = readPreProductionReview(reviewPath);
+  const approval = readUserApproval(approvalPath);
+  const evaluation = evaluatePreProductionExecutionGate(reviewFile, approval, {
+    verifyInputFiles: true,
+    requireExecutionInputs: true,
+  });
+  if (!evaluation.passed) {
+    throw new Error(
+      `PRE-PRODUCTION EXECUTION GATE BLOCKED\n- ${evaluation.blockingReasons.join("\n- ")}`,
+    );
+  }
+  return evaluation;
+}
+
+/** @deprecated Use assertPreProductionExecutionGate with separate review + approval paths */
 export function assertPreProductionGate(
   filePath = path.resolve(__dirname, "../data/preProductionReview.json"),
 ): GateEvaluation {

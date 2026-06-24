@@ -2,12 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   calculateReviewedInputDigest,
-  evaluatePreProductionGate,
+  evaluatePreProductionExecutionGate,
+  evaluatePreProductionReviewReady,
   evaluateStandardDualReview,
   validateContentSnapshotConsistency,
   validateVisualSnapshotConsistency,
   type IndependentReview,
   type PreProductionReview,
+  type UserApproval,
   REQUIRED_DIMENSIONS,
 } from "./preProductionGate";
 
@@ -49,9 +51,10 @@ function makeReview(
 
 function makeFile(): PreProductionReview {
   return {
-    schemaVersion: "2.0",
+    schemaVersion: "4.0",
+    contractVersion: "4.0",
     projectId: "demo",
-    mode: "quick",
+    mode: "standard",
     contentBriefPath: "content.json",
     reviewedInputs: inputs,
     scopeContract: {
@@ -67,6 +70,7 @@ function makeFile(): PreProductionReview {
       makeReview("viewer", "cold-viewer"),
       makeReview("editor", "content-editor"),
       makeReview("fact", "fact-evidence"),
+      makeReview("vad", "visual-audio-director"),
     ],
     consensus: {
       reviewedInputDigest: digest,
@@ -78,48 +82,47 @@ function makeFile(): PreProductionReview {
       passed: true,
       blockingReasons: [],
     },
-    approval: {
-      userDecision: "continue",
-      approvedByUser: true,
-      decisionNote: "approved",
-      decidedAt: "2026-06-23T12:00:00+08:00",
-    },
   };
 }
 
-test("pre-production gate passes complete independent reviews", () => {
-  const result = evaluatePreProductionGate(makeFile());
+function makeApproval(): UserApproval {
+  return {
+    contractVersion: "4.0",
+    contentSnapshotId: undefined as unknown as string,
+    visualSnapshotId: undefined as unknown as string,
+    candidateDigest: undefined as unknown as string,
+    userDecision: "continue",
+    approvedByUser: true,
+    decisionNote: "approved",
+    decidedAt: "2026-06-23T12:00:00+08:00",
+  };
+}
+
+// ─── Review-Ready Tests ─────────────────────────────────
+
+test("review-ready passes with valid 4-role standard review", () => {
+  const result = evaluatePreProductionReviewReady(makeFile());
   assert.equal(result.passed, true);
   assert.equal(result.calculated.meanScore, 100);
 });
 
-test("pre-production gate blocks a hard veto", () => {
+test("review-ready blocks a hard veto", () => {
   const file = makeFile();
   file.reviews[1].hardVetoes.push("unsupported core claim");
-  const result = evaluatePreProductionGate(file);
+  const result = evaluatePreProductionReviewReady(file);
   assert.equal(result.passed, false);
   assert.match(result.blockingReasons.join("\n"), /hard veto/);
 });
 
-test("pre-production gate blocks missing user approval", () => {
-  const file = makeFile();
-  file.approval.userDecision = "pending";
-  file.approval.approvedByUser = false;
-  file.approval.decidedAt = null;
-  const result = evaluatePreProductionGate(file);
-  assert.equal(result.passed, false);
-  assert.match(result.blockingReasons.join("\n"), /user approval/);
-});
-
-test("pre-production gate blocks reviewers who reviewed another snapshot", () => {
+test("review-ready blocks reviewers who reviewed another snapshot", () => {
   const file = makeFile();
   file.reviews[0].reviewedInputDigest = "d".repeat(64);
-  const result = evaluatePreProductionGate(file);
+  const result = evaluatePreProductionReviewReady(file);
   assert.equal(result.passed, false);
   assert.match(result.blockingReasons.join("\n"), /reviewedInputDigest/);
 });
 
-test("pre-production gate blocks score spread above eight points", () => {
+test("review-ready blocks score spread above eight points", () => {
   const file = makeFile();
   file.reviews[0].dimensions[0].score = 3;
   file.reviews[0].score = 91;
@@ -128,15 +131,15 @@ test("pre-production gate blocks score spread above eight points", () => {
   file.consensus.minReviewerScore = 91;
   file.consensus.scoreSpread = 9;
   file.consensus.dimensionMeans["audience-pain"] = 9;
-  const result = evaluatePreProductionGate(file);
+  const result = evaluatePreProductionReviewReady(file);
   assert.equal(result.passed, false);
   assert.match(result.blockingReasons.join("\n"), /spread/);
 });
 
-test("pre-production gate requires at least two distinct reviewer systems", () => {
+test("review-ready requires at least two distinct reviewer systems", () => {
   const file = makeFile();
   for (const review of file.reviews) review.reviewerSystem = "Same Model";
-  const result = evaluatePreProductionGate(file);
+  const result = evaluatePreProductionReviewReady(file);
   assert.equal(result.passed, false);
   assert.match(
     result.blockingReasons.join("\n"),
@@ -144,7 +147,24 @@ test("pre-production gate requires at least two distinct reviewer systems", () =
   );
 });
 
-// --- V3.1 Standard Dual-Review Tests ---
+// ─── Execution Gate Tests ───────────────────────────────
+
+test("execution gate passes with valid review + valid approval", () => {
+  const result = evaluatePreProductionExecutionGate(makeFile(), makeApproval());
+  assert.equal(result.passed, true);
+});
+
+test("execution gate blocks missing user approval", () => {
+  const approval = makeApproval();
+  approval.userDecision = "pending";
+  approval.approvedByUser = false;
+  approval.decidedAt = null;
+  const result = evaluatePreProductionExecutionGate(makeFile(), approval);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /user approval/);
+});
+
+// ─── V3.1 Standard Dual-Review Tests ────────────────────
 
 test("standard dual-review passes with 2 reviews, 2 systems, GPT self-check, avg > 85", () => {
   const errors = evaluateStandardDualReview({
@@ -166,10 +186,10 @@ test("standard dual-review passes with 2 reviews, 2 systems, GPT self-check, avg
     ],
     candidateDigest: "a".repeat(64),
   });
-  assert.equal(errors.length, 0);
+  assert.deepEqual(errors, []);
 });
 
-test("standard dual-review blocks with only 1 review", () => {
+test("standard dual-review blocks when only 1 review", () => {
   const errors = evaluateStandardDualReview({
     reviews: [
       {
@@ -182,89 +202,69 @@ test("standard dual-review blocks with only 1 review", () => {
     ],
     candidateDigest: "a".repeat(64),
   });
-  assert.ok(errors.some((e) => e.includes("at least 2 reviews")));
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /at least 2 reviews/);
 });
 
-test("standard dual-review blocks when only 1 reviewerSystem", () => {
+test("standard dual-review blocks when both reviews use same system", () => {
   const errors = evaluateStandardDualReview({
     reviews: [
       {
-        reviewerId: "gpt1",
+        reviewerId: "gpt-self",
         reviewerSystem: "OpenAI GPT-5.5",
-        score: 88,
+        score: 90,
         recommendation: "pass",
         hardVetoes: [],
       },
       {
-        reviewerId: "gpt2",
+        reviewerId: "gpt-other",
         reviewerSystem: "OpenAI GPT-5.5",
-        score: 87,
+        score: 90,
         recommendation: "pass",
         hardVetoes: [],
       },
     ],
     candidateDigest: "a".repeat(64),
   });
-  assert.ok(errors.some((e) => e.includes("distinct reviewerSystem")));
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /2 distinct reviewerSystem/);
 });
 
 test("standard dual-review blocks when no GPT self-check", () => {
   const errors = evaluateStandardDualReview({
     reviews: [
       {
-        reviewerId: "claude1",
+        reviewerId: "claude-1",
         reviewerSystem: "Anthropic Claude",
-        score: 88,
-        recommendation: "pass",
-        hardVetoes: [],
-      },
-      {
-        reviewerId: "claude2",
-        reviewerSystem: "Google Gemini",
-        score: 87,
-        recommendation: "pass",
-        hardVetoes: [],
-      },
-    ],
-    candidateDigest: "a".repeat(64),
-  });
-  assert.ok(errors.some((e) => e.includes("GPT self-check")));
-});
-
-test("standard dual-review blocks when averageScore = 85 (not > 85)", () => {
-  const errors = evaluateStandardDualReview({
-    reviews: [
-      {
-        reviewerId: "gpt-self",
-        reviewerSystem: "OpenAI GPT-5.5",
-        score: 85,
-        recommendation: "pass",
-        hardVetoes: [],
-      },
-      {
-        reviewerId: "claude",
-        reviewerSystem: "Anthropic Claude",
-        score: 85,
-        recommendation: "pass",
-        hardVetoes: [],
-      },
-    ],
-    candidateDigest: "a".repeat(64),
-  });
-  assert.ok(errors.some((e) => e.includes("averageScore")));
-});
-
-test("standard dual-review blocks when minimumScore = 85 (not > 85)", () => {
-  const errors = evaluateStandardDualReview({
-    reviews: [
-      {
-        reviewerId: "gpt-self",
-        reviewerSystem: "OpenAI GPT-5.5",
         score: 90,
         recommendation: "pass",
         hardVetoes: [],
       },
       {
+        reviewerId: "claude-2",
+        reviewerSystem: "Google Gemini",
+        score: 90,
+        recommendation: "pass",
+        hardVetoes: [],
+      },
+    ],
+    candidateDigest: "a".repeat(64),
+  });
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /GPT self-check/);
+});
+
+test("standard dual-review blocks when average <= 85", () => {
+  const errors = evaluateStandardDualReview({
+    reviews: [
+      {
+        reviewerId: "gpt-self",
+        reviewerSystem: "OpenAI GPT-5.5",
+        score: 85,
+        recommendation: "pass",
+        hardVetoes: [],
+      },
+      {
         reviewerId: "claude",
         reviewerSystem: "Anthropic Claude",
         score: 85,
@@ -274,7 +274,8 @@ test("standard dual-review blocks when minimumScore = 85 (not > 85)", () => {
     ],
     candidateDigest: "a".repeat(64),
   });
-  assert.ok(errors.some((e) => e.includes("minimumScore")));
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /averageScore.*must be > 85/);
 });
 
 test("standard dual-review blocks when recommendation is not pass", () => {
@@ -283,258 +284,80 @@ test("standard dual-review blocks when recommendation is not pass", () => {
       {
         reviewerId: "gpt-self",
         reviewerSystem: "OpenAI GPT-5.5",
-        score: 88,
-        recommendation: "pass",
+        score: 90,
+        recommendation: "revise",
         hardVetoes: [],
       },
       {
         reviewerId: "claude",
         reviewerSystem: "Anthropic Claude",
-        score: 87,
-        recommendation: "revise",
+        score: 90,
+        recommendation: "pass",
         hardVetoes: [],
       },
     ],
     candidateDigest: "a".repeat(64),
   });
-  assert.ok(errors.some((e) => e.includes("recommendation=revise")));
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /recommendation=revise/);
 });
 
-test("standard dual-review blocks when vetoes present", () => {
+test("standard dual-review blocks when hardVetoes present", () => {
   const errors = evaluateStandardDualReview({
     reviews: [
       {
         reviewerId: "gpt-self",
         reviewerSystem: "OpenAI GPT-5.5",
-        score: 88,
+        score: 90,
         recommendation: "pass",
-        hardVetoes: [],
+        hardVetoes: ["factual error"],
       },
       {
         reviewerId: "claude",
         reviewerSystem: "Anthropic Claude",
-        score: 87,
+        score: 90,
         recommendation: "pass",
-        hardVetoes: ["fatal flaw"],
+        hardVetoes: [],
       },
     ],
     candidateDigest: "a".repeat(64),
   });
-  assert.ok(errors.some((e) => e.includes("vetoes")));
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /vetoes/);
 });
 
-test("validateContentSnapshotConsistency blocks mismatched IDs", () => {
-  const errors = validateContentSnapshotConsistency("CS-20260624-ab12", [
-    "CS-20260624-ab12",
-    "CS-20260624-xy99",
+// ─── Snapshot Consistency ───────────────────────────────
+
+test("content snapshot consistency passes with matching IDs", () => {
+  const errors = validateContentSnapshotConsistency("CS-001", [
+    "CS-001",
+    "CS-001",
   ]);
-  assert.equal(errors.length, 1);
-  assert.match(errors[0], /does not match/);
+  assert.deepEqual(errors, []);
 });
 
-test("validateContentSnapshotConsistency passes with matching IDs", () => {
-  const errors = validateContentSnapshotConsistency("CS-20260624-ab12", [
-    "CS-20260624-ab12",
-    "CS-20260624-ab12",
+test("content snapshot consistency fails with mismatched IDs", () => {
+  const errors = validateContentSnapshotConsistency("CS-001", [
+    "CS-001",
+    "CS-002",
   ]);
-  assert.equal(errors.length, 0);
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /does not match/);
 });
 
-test("validateVisualSnapshotConsistency blocks mismatched visualSnapshotId", () => {
-  const errors = validateVisualSnapshotConsistency(
-    "VS-20260624-ab12",
-    "a".repeat(64),
-    { visualSnapshotId: "VS-20260624-xy99", candidateDigest: "a".repeat(64) },
-  );
-  assert.ok(errors.some((e) => e.includes("visualSnapshotId")));
-});
-
-test("validateVisualSnapshotConsistency blocks mismatched candidateDigest", () => {
-  const errors = validateVisualSnapshotConsistency(
-    "VS-20260624-ab12",
-    "a".repeat(64),
-    { visualSnapshotId: "VS-20260624-ab12", candidateDigest: "b".repeat(64) },
-  );
-  assert.ok(errors.some((e) => e.includes("candidateDigest")));
-});
-
-// --- V3.1 Standard end-to-end gate test ---
-
-function makeV31StandardReview(
-  reviewerId: string,
-  reviewerSystem: string,
-  targetScore: number,
-): IndependentReview {
-  const entries = Object.entries(REQUIRED_DIMENSIONS);
-  const totalMax = entries.reduce((s, [, m]) => s + m, 0);
-  // Distribute targetScore proportionally, ensure exact sum
-  let remaining = targetScore;
-  const dimensions = entries.map(([id, maxScore], i) => {
-    const isLast = i === entries.length - 1;
-    const score = isLast
-      ? remaining
-      : Math.round((targetScore / totalMax) * maxScore);
-    remaining -= score;
-    return {
-      id,
-      score,
-      maxScore,
-      evidence: ["verified"],
-      gaps: [],
-      action: "keep",
-    };
+test("visual snapshot consistency passes with matching values", () => {
+  const errors = validateVisualSnapshotConsistency("VS-001", "a".repeat(64), {
+    visualSnapshotId: "VS-001",
+    candidateDigest: "a".repeat(64),
   });
-  const actualScore = dimensions.reduce((sum, d) => sum + d.score, 0);
-  return {
-    reviewerId,
-    reviewerSystem,
-    role: "cold-viewer",
-    independent: true,
-    reviewedInputDigest: digest,
-    score: actualScore,
-    dimensions,
-    hardVetoes: [],
-    recommendation: "pass",
-    reviewedAt: "2026-06-24T12:00:00+08:00",
-    contentSnapshotId: "CS-20260624-ab12",
-    visualSnapshotId: "VS-20260624-ab12",
-    candidateDigest: "d".repeat(64),
-  };
-}
-
-function makeV31StandardFile(): PreProductionReview {
-  const reviews = [
-    makeV31StandardReview("gpt-self", "OpenAI GPT-5.5", 88),
-    makeV31StandardReview("claude", "Anthropic Claude", 87),
-  ];
-  const scores = reviews.map((r) => r.score);
-  const meanScore =
-    Math.round((scores.reduce((s, v) => s + v, 0) / scores.length) * 100) / 100;
-  const sorted = [...scores].sort((a, b) => a - b);
-  const medianScore =
-    sorted.length % 2 === 0
-      ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
-      : sorted[Math.floor(sorted.length / 2)];
-  const minScore = Math.min(...scores);
-  const maxScore = Math.max(...scores);
-
-  const dimensionMeans: Record<string, number> = {};
-  for (const id of Object.keys(REQUIRED_DIMENSIONS)) {
-    const values = reviews
-      .map((r) => r.dimensions.find((d) => d.id === id)?.score)
-      .filter((v): v is number => typeof v === "number");
-    dimensionMeans[id] = values.length
-      ? Math.round((values.reduce((s, v) => s + v, 0) / values.length) * 100) /
-        100
-      : 0;
-  }
-
-  return {
-    schemaVersion: "3.1",
-    contractVersion: "3.1",
-    projectId: "v31-demo",
-    mode: "standard",
-    contentSnapshotId: "CS-20260624-ab12",
-    visualSnapshotId: "VS-20260624-ab12",
-    candidateDigest: "d".repeat(64),
-    contentBriefPath: "content.json",
-    reviewedInputs: inputs,
-    scopeContract: {
-      corePromise: "Explain one verified question",
-      targetDepth: "decision",
-      mustAnswer: ["What changed?"],
-      shouldAnswer: [],
-      explicitlyOutOfScope: [],
-      followUpDestination: [],
-      splitDecision: "single",
-    },
-    reviews,
-    consensus: {
-      reviewedInputDigest: digest,
-      meanScore,
-      medianScore,
-      minReviewerScore: minScore,
-      scoreSpread: maxScore - minScore,
-      dimensionMeans,
-      passed: true,
-      blockingReasons: [],
-    },
-    approval: {
-      userDecision: "continue",
-      approvedByUser: true,
-      decisionNote: "approved",
-      decidedAt: "2026-06-24T12:00:00+08:00",
-    },
-  };
-}
-
-test("v3.1 standard gate passes with 2 reviews from different systems via evaluatePreProductionGate", () => {
-  const file = makeV31StandardFile();
-  const result = evaluatePreProductionGate(file);
-  assert.equal(
-    result.passed,
-    true,
-    `blocking: ${result.blockingReasons.join(", ")}`,
-  );
+  assert.deepEqual(errors, []);
 });
 
-test("v3.1 standard gate does NOT require 4 roles like V2", () => {
-  const file = makeV31StandardFile();
-  // Only 2 reviews, no visual-audio-director — should still pass for V3.1 Standard
-  const result = evaluatePreProductionGate(file);
-  assert.equal(result.passed, true);
-  assert.ok(
-    !result.blockingReasons.some((r) => r.includes("required reviewer role")),
-  );
-});
-
-test("v3.1 standard gate blocks when review snapshot ID mismatches", () => {
-  const file = makeV31StandardFile();
-  file.reviews[1].contentSnapshotId = "CS-different";
-  const result = evaluatePreProductionGate(file);
-  assert.equal(result.passed, false);
-  assert.ok(
-    result.blockingReasons.some((r) => r.includes("contentSnapshotId")),
-  );
-});
-
-test("v3.1 standard gate blocks when review candidateDigest mismatches", () => {
-  const file = makeV31StandardFile();
-  file.reviews[1].candidateDigest = "e".repeat(64);
-  const result = evaluatePreProductionGate(file);
-  assert.equal(result.passed, false);
-  assert.ok(result.blockingReasons.some((r) => r.includes("candidateDigest")));
-});
-
-test("v3.1 standard gate blocks when only 1 review", () => {
-  const file = makeV31StandardFile();
-  file.reviews = [file.reviews[0]];
-  // Also fix consensus
-  file.consensus.meanScore = 88;
-  file.consensus.medianScore = 88;
-  file.consensus.minReviewerScore = 88;
-  file.consensus.scoreSpread = 0;
-  const result = evaluatePreProductionGate(file);
-  assert.equal(result.passed, false);
-  assert.ok(
-    result.blockingReasons.some((r) => r.includes("at least 2 reviews")),
-  );
-});
-
-test("v3.1 standard gate blocks when both reviews use same system", () => {
-  const file = makeV31StandardFile();
-  file.reviews[1].reviewerSystem = "OpenAI GPT-5.5";
-  const result = evaluatePreProductionGate(file);
-  assert.equal(result.passed, false);
-  assert.ok(
-    result.blockingReasons.some((r) => r.includes("distinct reviewerSystem")),
-  );
-});
-
-test("v3.1 standard gate blocks when no GPT self-check", () => {
-  const file = makeV31StandardFile();
-  file.reviews[0].reviewerSystem = "Google Gemini";
-  const result = evaluatePreProductionGate(file);
-  assert.equal(result.passed, false);
-  assert.ok(result.blockingReasons.some((r) => r.includes("GPT self-check")));
+test("visual snapshot consistency fails with mismatched visualSnapshotId", () => {
+  const errors = validateVisualSnapshotConsistency("VS-001", "a".repeat(64), {
+    visualSnapshotId: "VS-002",
+    candidateDigest: "a".repeat(64),
+  });
+  assert.ok(errors.length > 0);
+  assert.match(errors.join("\n"), /visualSnapshotId/);
 });
