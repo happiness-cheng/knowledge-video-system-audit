@@ -18,6 +18,10 @@ import {
 
 // ─── 基础 fixture 工厂 ─────────────────────────────────
 
+const CS_ID = "CS-20260624-test";
+const VS_ID = "VS-20260624-test";
+const DIGEST = "a".repeat(64);
+
 const inputs = [
   { id: "contentBrief", path: "content.json", sha256: "a".repeat(64) },
   { id: "videoSpec", path: "video.json", sha256: "b".repeat(64) },
@@ -62,6 +66,9 @@ function makeReviewFile(): PreProductionReview {
     contractVersion: "4.0",
     projectId: "test-v4",
     mode: "standard",
+    contentSnapshotId: CS_ID,
+    visualSnapshotId: VS_ID,
+    candidateDigest: DIGEST,
     contentBriefPath: "content.json",
     reviewedInputs: inputs,
     scopeContract: {
@@ -95,9 +102,9 @@ function makeReviewFile(): PreProductionReview {
 function makeApproval(): UserApproval {
   return {
     contractVersion: "4.0",
-    contentSnapshotId: undefined as unknown as string,
-    visualSnapshotId: undefined as unknown as string,
-    candidateDigest: undefined as unknown as string,
+    contentSnapshotId: CS_ID,
+    visualSnapshotId: VS_ID,
+    candidateDigest: DIGEST,
     userDecision: "continue",
     approvedByUser: true,
     decisionNote: "approved",
@@ -336,4 +343,111 @@ test("reviewerSystem normalization: mixed case/whitespace counts as one system",
   const result = evaluatePreProductionReviewReady(file);
   assert.equal(result.passed, false);
   assert.match(result.blockingReasons.join("\n"), /distinct reviewerSystem/);
+});
+
+// ─── 三标识验证 ─────────────────────────────────────────
+
+test("review-ready fails when all three identifiers are missing", () => {
+  const file = makeReviewFile();
+  file.contentSnapshotId = "";
+  file.visualSnapshotId = "";
+  file.candidateDigest = "";
+  const result = evaluatePreProductionReviewReady(file);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /contentSnapshotId/);
+  assert.match(result.blockingReasons.join("\n"), /visualSnapshotId/);
+  assert.match(result.blockingReasons.join("\n"), /candidateDigest/);
+});
+
+test("review-ready fails when contentSnapshotId is empty", () => {
+  const file = makeReviewFile();
+  file.contentSnapshotId = "";
+  const result = evaluatePreProductionReviewReady(file);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /contentSnapshotId/);
+});
+
+test("review-ready fails when visualSnapshotId is empty", () => {
+  const file = makeReviewFile();
+  file.visualSnapshotId = "";
+  const result = evaluatePreProductionReviewReady(file);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /visualSnapshotId/);
+});
+
+test("review-ready fails when candidateDigest is not 64-char hex", () => {
+  const file = makeReviewFile();
+  file.candidateDigest = "not-a-valid-digest";
+  const result = evaluatePreProductionReviewReady(file);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /candidateDigest/);
+});
+
+test("review-ready passes with real identifiers present", () => {
+  const file = makeReviewFile();
+  assert.equal(file.contentSnapshotId, CS_ID);
+  assert.equal(file.visualSnapshotId, VS_ID);
+  assert.equal(file.candidateDigest, DIGEST);
+  const result = evaluatePreProductionReviewReady(file);
+  assert.equal(result.passed, true);
+});
+
+test("execution gate fails when both sides have missing identifiers", () => {
+  const review = makeReviewFile();
+  review.contentSnapshotId = "";
+  review.visualSnapshotId = "";
+  review.candidateDigest = "";
+  const approval = makeApproval();
+  approval.contentSnapshotId = "";
+  approval.visualSnapshotId = "";
+  approval.candidateDigest = "";
+  const result = evaluatePreProductionExecutionGate(review, approval);
+  assert.equal(result.passed, false);
+});
+
+test("execution gate fails when approval contractVersion is missing", () => {
+  const review = makeReviewFile();
+  const approval = makeApproval();
+  delete (approval as Record<string, unknown>).contractVersion;
+  const result = evaluatePreProductionExecutionGate(review, approval);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /contractVersion/);
+});
+
+test("execution gate fails when approval contractVersion is 3.1", () => {
+  const review = makeReviewFile();
+  const approval = makeApproval();
+  (approval as Record<string, unknown>).contractVersion = "3.1";
+  const result = evaluatePreProductionExecutionGate(review, approval);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /contractVersion/);
+});
+
+test("execution gate fails when approval identifiers are empty", () => {
+  const review = makeReviewFile();
+  const approval = makeApproval();
+  approval.contentSnapshotId = "";
+  approval.visualSnapshotId = "";
+  approval.candidateDigest = "";
+  const result = evaluatePreProductionExecutionGate(review, approval);
+  assert.equal(result.passed, false);
+});
+
+test("execution gate fails when review and approval use different candidateDigest", () => {
+  const review = makeReviewFile();
+  const approval = makeApproval();
+  approval.candidateDigest = "f".repeat(64);
+  const result = evaluatePreProductionExecutionGate(review, approval);
+  assert.equal(result.passed, false);
+  assert.match(result.blockingReasons.join("\n"), /candidateDigest/);
+});
+
+test("execution gate passes with real matching identifiers", () => {
+  const review = makeReviewFile();
+  const approval = makeApproval();
+  assert.equal(review.contentSnapshotId, approval.contentSnapshotId);
+  assert.equal(review.visualSnapshotId, approval.visualSnapshotId);
+  assert.equal(review.candidateDigest, approval.candidateDigest);
+  const result = evaluatePreProductionExecutionGate(review, approval);
+  assert.equal(result.passed, true);
 });

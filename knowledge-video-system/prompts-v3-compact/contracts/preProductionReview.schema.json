@@ -13,7 +13,10 @@
     "scopeContract",
     "reviews",
     "consensus",
-    "contractVersion"
+    "contractVersion",
+    "contentSnapshotId",
+    "visualSnapshotId",
+    "candidateDigest"
   ],
   "properties": {
     "schemaVersion": {
@@ -37,15 +40,20 @@
     },
     "contentSnapshotId": {
       "type": "string",
-      "description": "Optional content snapshot identifier"
+      "pattern": "^[A-Z]{2}-\\d{8}-[a-z0-9]{4}$",
+      "minLength": 1,
+      "description": "Content snapshot identifier (CS-YYYYMMDD-xxxx format)"
     },
     "visualSnapshotId": {
       "type": "string",
-      "description": "Optional visual snapshot identifier"
+      "pattern": "^[A-Z]{2}-\\d{8}-[a-z0-9]{4}$",
+      "minLength": 1,
+      "description": "Visual snapshot identifier (VS-YYYYMMDD-xxxx format)"
     },
     "candidateDigest": {
       "type": "string",
-      "description": "Optional candidate digest (sha256 hex)"
+      "pattern": "^[a-fA-F0-9]{64}$",
+      "description": "SHA-256 hex digest of the candidate"
     },
     "contentBriefPath": {
       "type": "string",

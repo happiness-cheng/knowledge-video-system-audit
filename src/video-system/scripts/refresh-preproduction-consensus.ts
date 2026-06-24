@@ -6,9 +6,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import {
-  evaluatePreProductionGate,
+  evaluatePreProductionReviewReady,
   readPreProductionReview,
-  type PreProductionReview,
 } from "../utils/preProductionGate";
 
 const reviewPath = process.argv[2]
@@ -18,31 +17,20 @@ const root = path.resolve(__dirname, "../../..");
 
 function main() {
   const review = readPreProductionReview(reviewPath);
-  const first = evaluatePreProductionGate(review);
-  review.consensus.reviewedInputDigest = first.calculated.reviewedInputDigest;
-  review.consensus.meanScore = first.calculated.meanScore;
-  review.consensus.medianScore = first.calculated.medianScore;
-  review.consensus.minReviewerScore = first.calculated.minReviewerScore;
-  review.consensus.scoreSpread = first.calculated.scoreSpread;
-  review.consensus.dimensionMeans = first.calculated.dimensionMeans;
-
-  const simulated: PreProductionReview = JSON.parse(JSON.stringify(review));
-  simulated.consensus.passed = true;
-  simulated.consensus.blockingReasons = [];
-  simulated.approval = {
-    userDecision: "continue",
-    approvedByUser: true,
-    decisionNote: "simulation for consensus calculation only",
-    decidedAt: new Date().toISOString(),
-  };
-  const reviewOnly = evaluatePreProductionGate(simulated, {
+  const result = evaluatePreProductionReviewReady(review, {
     verifyInputFiles: true,
-    requireExecutionInputs: false,
     projectRoot: root,
   });
 
-  review.consensus.passed = reviewOnly.passed;
-  review.consensus.blockingReasons = reviewOnly.blockingReasons;
+  review.consensus.reviewedInputDigest = result.calculated.reviewedInputDigest;
+  review.consensus.meanScore = result.calculated.meanScore;
+  review.consensus.medianScore = result.calculated.medianScore;
+  review.consensus.minReviewerScore = result.calculated.minReviewerScore;
+  review.consensus.scoreSpread = result.calculated.scoreSpread;
+  review.consensus.dimensionMeans = result.calculated.dimensionMeans;
+  review.consensus.passed = result.passed;
+  review.consensus.blockingReasons = result.blockingReasons;
+
   fs.writeFileSync(reviewPath, `${JSON.stringify(review, null, 2)}\n`);
 
   console.log(`Consensus refreshed: ${reviewPath}`);
@@ -51,17 +39,10 @@ function main() {
   console.log(`median=${review.consensus.medianScore}`);
   console.log(`minimum=${review.consensus.minReviewerScore}`);
   console.log(`spread=${review.consensus.scoreSpread}`);
-  if (!review.consensus.passed) {
-    for (const reason of review.consensus.blockingReasons) {
-      console.error(`- ${reason}`);
-    }
-    process.exitCode = 1;
+  if (result.blockingReasons.length > 0) {
+    console.log("Blocking reasons:");
+    for (const reason of result.blockingReasons) console.log(`- ${reason}`);
   }
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-}
+main();

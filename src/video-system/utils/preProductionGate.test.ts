@@ -13,6 +13,10 @@ import {
   REQUIRED_DIMENSIONS,
 } from "./preProductionGate";
 
+const CS_ID = "CS-20260624-test";
+const VS_ID = "VS-20260624-test";
+const DIGEST = "a".repeat(64);
+
 const inputs = [
   { id: "contentBrief", path: "content.json", sha256: "a".repeat(64) },
   { id: "videoSpec", path: "video.json", sha256: "b".repeat(64) },
@@ -55,6 +59,9 @@ function makeFile(): PreProductionReview {
     contractVersion: "4.0",
     projectId: "demo",
     mode: "standard",
+    contentSnapshotId: CS_ID,
+    visualSnapshotId: VS_ID,
+    candidateDigest: DIGEST,
     contentBriefPath: "content.json",
     reviewedInputs: inputs,
     scopeContract: {
@@ -88,9 +95,9 @@ function makeFile(): PreProductionReview {
 function makeApproval(): UserApproval {
   return {
     contractVersion: "4.0",
-    contentSnapshotId: undefined as unknown as string,
-    visualSnapshotId: undefined as unknown as string,
-    candidateDigest: undefined as unknown as string,
+    contentSnapshotId: CS_ID,
+    visualSnapshotId: VS_ID,
+    candidateDigest: DIGEST,
     userDecision: "continue",
     approvedByUser: true,
     decisionNote: "approved",

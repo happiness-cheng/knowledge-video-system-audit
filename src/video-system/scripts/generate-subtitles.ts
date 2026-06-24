@@ -9,7 +9,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import { assertPreProductionGate } from "../utils/preProductionGate";
+import { assertPreProductionReviewReady } from "../utils/preProductionGate";
 
 // ─── 类型 ─────────────────────────────────────────
 
@@ -132,7 +132,7 @@ export function runSubtitleGeneration(
 // ─── CLI wrapper（门禁 → 执行） ───────────────────
 
 // 门禁必须在读取任何生产数据前执行
-assertPreProductionGate();
+assertPreProductionReviewReady();
 
 const subtitles = runSubtitleGeneration();
 const outputPath = path.resolve(__dirname, "../data/subtitles.json");

@@ -1,11 +1,11 @@
 {
   "schemaVersion": "4.0",
   "contractVersion": "4.0",
-  "projectId": "PID-TEST-001",
+  "projectId": "PID-TEST-BAD-DIGEST",
   "mode": "standard",
   "contentSnapshotId": "CS-20260624-0001",
   "visualSnapshotId": "VS-20260624-0001",
-  "candidateDigest": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+  "candidateDigest": "not-a-valid-digest",
   "contentBriefPath": "fixtures/valid/contentBrief.json",
   "reviewedInputs": [
     {
@@ -128,11 +128,5 @@
     },
     "passed": true,
     "blockingReasons": []
-  },
-  "approval": {
-    "userDecision": "continue",
-    "approvedByUser": true,
-    "decisionNote": "Test",
-    "decidedAt": "2026-06-24T11:00:00Z"
   }
 }

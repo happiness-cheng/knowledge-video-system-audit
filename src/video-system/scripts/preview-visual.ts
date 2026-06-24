@@ -9,7 +9,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { execSync } from "node:child_process";
-import { assertPreProductionGate } from "../utils/preProductionGate";
+import { assertPreProductionReviewReady } from "../utils/preProductionGate";
 
 const DATA_DIR = path.resolve(__dirname, "../data");
 const OUT_DIR = path.resolve(__dirname, "../../../out");
@@ -94,7 +94,7 @@ function resetKeyframeDirs() {
 }
 
 function main() {
-  assertPreProductionGate();
+  assertPreProductionReviewReady();
   console.log(`\npreview:visual 视觉预览门禁`);
   console.log(`${"=".repeat(60)}`);
 

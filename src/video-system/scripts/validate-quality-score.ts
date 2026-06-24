@@ -2,7 +2,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import {
-  assertPreProductionGate,
+  assertPreProductionReviewReady,
   calculateReviewedInputDigest,
   readPreProductionReview,
 } from "../utils/preProductionGate";
@@ -16,8 +16,11 @@ const filePath = fileArg
   : path.resolve(__dirname, "../data/qualityScore.json");
 
 try {
-  const reviewPath = path.resolve(__dirname, "../data/preProductionReview.json");
-  const gate = assertPreProductionGate(reviewPath);
+  const reviewPath = path.resolve(
+    __dirname,
+    "../data/preProductionReview.json",
+  );
+  const gate = assertPreProductionReviewReady(reviewPath);
   const review = readPreProductionReview(reviewPath);
   const digest = calculateReviewedInputDigest(review.reviewedInputs);
   if (gate.calculated.reviewedInputDigest !== digest) {
@@ -28,7 +31,9 @@ try {
     requirePublish: !draftMode,
     expectedPreProductionDigest: digest,
   });
-  console.log(`Quality score gate: ${errors.length === 0 ? "PASS" : "BLOCKED"}`);
+  console.log(
+    `Quality score gate: ${errors.length === 0 ? "PASS" : "BLOCKED"}`,
+  );
   if (errors.length > 0) {
     for (const error of errors) console.error(`- ${error}`);
     process.exitCode = 1;

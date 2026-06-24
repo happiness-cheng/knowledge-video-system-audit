@@ -6,7 +6,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import {
-  assertPreProductionGate,
+  assertPreProductionReviewReady,
   assertPreProductionReviewReady,
   readPreProductionReview,
 } from "../utils/preProductionGate";
@@ -30,9 +30,10 @@ function main() {
     promoted.push(`${input.path} -> ${input.executionPath}`);
   }
 
-  assertPreProductionGate(reviewPath);
+  assertPreProductionReviewReady(reviewPath);
   console.log("Pre-production candidates promoted successfully.");
-  if (promoted.length === 0) console.log("No separate candidate paths required promotion.");
+  if (promoted.length === 0)
+    console.log("No separate candidate paths required promotion.");
   for (const item of promoted) console.log(`- ${item}`);
 }
 

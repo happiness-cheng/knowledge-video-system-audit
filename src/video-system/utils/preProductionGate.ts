@@ -55,9 +55,9 @@ export interface PreProductionReview {
   contractVersion: "4.0";
   projectId: string;
   mode: "standard" | "deep";
-  contentSnapshotId?: string;
-  visualSnapshotId?: string;
-  candidateDigest?: string;
+  contentSnapshotId: string;
+  visualSnapshotId: string;
+  candidateDigest: string;
   contentBriefPath: string;
   reviewedInputs: ReviewedInput[];
   scopeContract: ScopeContractV2;
@@ -159,6 +159,21 @@ function normalizeText(value: string): string {
 
 function normalizeReviewerSystem(value: string): string {
   return value.trim().toLowerCase();
+}
+
+const SNAPSHOT_ID_PATTERN = /^[A-Z]{2}-\d{8}-[a-z0-9]{4}$/;
+const DIGEST_PATTERN = /^[a-f0-9]{64}$/i;
+
+function validateIdentifier(
+  value: string | undefined,
+  label: string,
+  pattern: RegExp,
+  patternDesc: string,
+): string | null {
+  if (!value || !value.trim()) return `${label} is missing or empty`;
+  if (!pattern.test(value))
+    return `${label}="${value}" does not match ${patternDesc}`;
+  return null;
 }
 
 export function sha256File(filePath: string): string {
@@ -616,6 +631,29 @@ export function evaluatePreProductionReviewReady(
     );
   }
 
+  // Three-identifier validation
+  const idErrors = [
+    validateIdentifier(
+      reviewFile.contentSnapshotId,
+      "contentSnapshotId",
+      SNAPSHOT_ID_PATTERN,
+      "CS-YYYYMMDD-xxxx",
+    ),
+    validateIdentifier(
+      reviewFile.visualSnapshotId,
+      "visualSnapshotId",
+      SNAPSHOT_ID_PATTERN,
+      "VS-YYYYMMDD-xxxx",
+    ),
+    validateIdentifier(
+      reviewFile.candidateDigest,
+      "candidateDigest",
+      DIGEST_PATTERN,
+      "64-char hex SHA-256",
+    ),
+  ].filter(Boolean) as string[];
+  blockingReasons.push(...idErrors);
+
   if (!(["standard", "deep"] as const).includes(reviewFile.mode)) {
     blockingReasons.push(
       `invalid mode for V4 review-ready: ${String(reviewFile.mode)}. Quick uses quickSelfReview.`,
@@ -680,6 +718,34 @@ export function evaluatePreProductionReviewReady(
     if (review.recommendation !== "pass") {
       blockingReasons.push(
         `${review.reviewerId} recommendation=${review.recommendation}`,
+      );
+    }
+  }
+
+  // Per-review identifier consistency
+  for (const review of reviews) {
+    if (
+      review.contentSnapshotId &&
+      review.contentSnapshotId !== reviewFile.contentSnapshotId
+    ) {
+      blockingReasons.push(
+        `${review.reviewerId}: review.contentSnapshotId="${review.contentSnapshotId}" does not match top-level "${reviewFile.contentSnapshotId}"`,
+      );
+    }
+    if (
+      review.visualSnapshotId &&
+      review.visualSnapshotId !== reviewFile.visualSnapshotId
+    ) {
+      blockingReasons.push(
+        `${review.reviewerId}: review.visualSnapshotId="${review.visualSnapshotId}" does not match top-level "${reviewFile.visualSnapshotId}"`,
+      );
+    }
+    if (
+      review.candidateDigest &&
+      review.candidateDigest !== reviewFile.candidateDigest
+    ) {
+      blockingReasons.push(
+        `${review.reviewerId}: review.candidateDigest does not match top-level`,
       );
     }
   }
@@ -842,6 +908,36 @@ export function evaluatePreProductionExecutionGate(
     };
   }
 
+  // Approval contractVersion check
+  if (approval.contractVersion !== "4.0") {
+    blockingReasons.push(
+      `approval.contractVersion must be "4.0", got "${String(approval.contractVersion)}"`,
+    );
+  }
+
+  // Approval identifier validation
+  const approvalIdErrors = [
+    validateIdentifier(
+      approval.contentSnapshotId,
+      "approval.contentSnapshotId",
+      SNAPSHOT_ID_PATTERN,
+      "CS-YYYYMMDD-xxxx",
+    ),
+    validateIdentifier(
+      approval.visualSnapshotId,
+      "approval.visualSnapshotId",
+      SNAPSHOT_ID_PATTERN,
+      "VS-YYYYMMDD-xxxx",
+    ),
+    validateIdentifier(
+      approval.candidateDigest,
+      "approval.candidateDigest",
+      DIGEST_PATTERN,
+      "64-char hex SHA-256",
+    ),
+  ].filter(Boolean) as string[];
+  blockingReasons.push(...approvalIdErrors);
+
   // Identifier consistency
   if (approval.contentSnapshotId !== review.contentSnapshotId) {
     blockingReasons.push(
@@ -884,64 +980,22 @@ export function evaluatePreProductionExecutionGate(
  * @deprecated Legacy single-file gate. Use evaluatePreProductionExecutionGate with separate review + approval.
  */
 export function evaluatePreProductionGate(
-  reviewFile: PreProductionReview & { approval?: Record<string, unknown> },
-  options: GateEvaluationOptions = {},
+  _reviewFile: PreProductionReview & { approval?: Record<string, unknown> },
+  _options: GateEvaluationOptions = {},
 ): GateEvaluation {
-  const blockingReasons: string[] = [];
-  const inputs = Array.isArray(reviewFile?.reviewedInputs)
-    ? reviewFile.reviewedInputs
-    : [];
-  const reviewedInputDigest = calculateReviewedInputDigest(inputs);
-
-  const emptyCalculated = {
-    reviewedInputDigest,
-    meanScore: 0,
-    medianScore: 0,
-    minReviewerScore: 0,
-    scoreSpread: 0,
-    dimensionMeans: {} as Record<string, number>,
-  };
-
-  // contractVersion check
-  const cv = reviewFile?.contractVersion;
-  if (cv !== "4.0") {
-    blockingReasons.push(`contractVersion must be "4.0", got "${cv}"`);
-    return { passed: false, calculated: emptyCalculated, blockingReasons };
-  }
-
-  // Review-ready check
-  const reviewResult = evaluatePreProductionReviewReady(reviewFile, options);
-
-  // Legacy inline approval check (for backward compat with old test fixtures)
-  const approval = reviewFile.approval as Record<string, unknown> | undefined;
-  if (approval) {
-    if (
-      approval.userDecision !== "continue" ||
-      approval.approvedByUser !== true
-    ) {
-      blockingReasons.push(
-        "user approval is not continue + approvedByUser=true",
-      );
-    }
-    if (!String(approval.decisionNote ?? "").trim()) {
-      blockingReasons.push("approval.decisionNote is empty");
-    }
-    if (
-      !approval.decidedAt ||
-      Number.isNaN(Date.parse(String(approval.decidedAt)))
-    ) {
-      blockingReasons.push("approval.decidedAt is empty or invalid");
-    }
-  }
-
-  const allBlockingReasons = [
-    ...reviewResult.blockingReasons,
-    ...blockingReasons,
-  ];
   return {
-    passed: allBlockingReasons.length === 0,
-    calculated: reviewResult.calculated,
-    blockingReasons: allBlockingReasons,
+    passed: false,
+    calculated: {
+      reviewedInputDigest: "",
+      meanScore: 0,
+      medianScore: 0,
+      minReviewerScore: 0,
+      scoreSpread: 0,
+      dimensionMeans: {},
+    },
+    blockingReasons: [
+      "Legacy single-file execution gate is disabled. Use separate preProductionReview.json and userApproval.json with evaluatePreProductionExecutionGate.",
+    ],
   };
 }
 
@@ -980,20 +1034,10 @@ export function assertPreProductionExecutionGate(
 }
 
 /** @deprecated Use assertPreProductionExecutionGate with separate review + approval paths */
-export function assertPreProductionGate(
-  filePath = path.resolve(__dirname, "../data/preProductionReview.json"),
-): GateEvaluation {
-  const reviewFile = readPreProductionReview(filePath);
-  const evaluation = evaluatePreProductionGate(reviewFile, {
-    verifyInputFiles: true,
-    requireExecutionInputs: true,
-  });
-  if (!evaluation.passed) {
-    throw new Error(
-      `PRE-PRODUCTION GATE BLOCKED\n- ${evaluation.blockingReasons.join("\n- ")}`,
-    );
-  }
-  return evaluation;
+export function assertPreProductionGate(_filePath?: string): GateEvaluation {
+  throw new Error(
+    "Legacy assertPreProductionGate is disabled. Use assertPreProductionExecutionGate(reviewPath, approvalPath).",
+  );
 }
 
 export function assertPreProductionReviewReady(

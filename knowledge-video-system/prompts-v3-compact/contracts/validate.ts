@@ -142,6 +142,27 @@ const FIXTURE_EXPECTATIONS: FixtureExpectation[] = [
     bucket: "invalid",
     runGate: true,
   },
+  {
+    fixtureFile: "missing-identifiers.json",
+    schemaName: "preProductionReview",
+    bucket: "invalid",
+  },
+  {
+    fixtureFile: "invalid-candidate-digest.json",
+    schemaName: "preProductionReview",
+    bucket: "invalid",
+  },
+  {
+    fixtureFile: "approval-wrong-version.json",
+    schemaName: "userApproval",
+    bucket: "invalid",
+  },
+  {
+    fixtureFile: "approval-missing-identifiers.json",
+    schemaName: "userApproval",
+    bucket: "invalid",
+    runGate: true,
+  },
 ];
 
 // ─── Layer A: ajv Schema Validation ───────────────────────
