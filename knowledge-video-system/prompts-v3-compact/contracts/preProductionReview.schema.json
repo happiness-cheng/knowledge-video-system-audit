@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "preProductionReview",
+  "description": "四角色独立审查。角色：cold-viewer、content-editor、fact-evidence、visual-audio-director",
+  "type": "object",
+  "required": ["contractVersion", "contentSnapshotId", "visualSnapshotId", "candidateDigest", "reviews", "aggregate"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "contentSnapshotId": { "type": "string" },
+    "visualSnapshotId": { "type": "string" },
+    "candidateDigest": { "type": "string" },
+    "reviews": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "reviewId",
+          "role",
+          "independent",
+          "contentSnapshotId",
+          "visualSnapshotId",
+          "candidateDigest",
+          "scores",
+          "totalScore",
+          "issues",
+          "recommendation",
+          "reviewedAt"
+        ],
+        "properties": {
+          "reviewId": { "type": "string" },
+          "role": {
+            "type": "string",
+            "enum": ["cold-viewer", "content-editor", "fact-evidence", "visual-audio-director"]
+          },
+          "independent": { "type": "boolean", "const": true },
+          "contentSnapshotId": { "type": "string" },
+          "visualSnapshotId": { "type": "string" },
+          "candidateDigest": { "type": "string" },
+          "scores": {
+            "type": "object",
+            "required": ["topicPromise", "researchAndTruth", "contentMasterDraft", "hookStructure", "cover", "voiceoverVisualSync", "consistency"],
+            "properties": {
+              "topicPromise": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "researchAndTruth": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "contentMasterDraft": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "hookStructure": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "cover": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "voiceoverVisualSync": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "consistency": { "type": "integer", "minimum": 0, "maximum": 100 }
+            },
+            "additionalProperties": false
+          },
+          "totalScore": { "type": "integer" },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["dimension", "severity", "description"],
+              "properties": {
+                "dimension": { "type": "string" },
+                "severity": { "type": "string", "enum": ["info", "warning", "critical"] },
+                "description": { "type": "string" },
+                "evidence": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "recommendation": { "type": "string", "enum": ["pass", "revise", "stop"] },
+          "reviewedAt": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "aggregate": {
+      "type": "object",
+      "required": ["meanScore", "medianScore", "minimumScore", "scoreRange", "pass"],
+      "properties": {
+        "meanScore": { "type": "number" },
+        "medianScore": { "type": "number" },
+        "minimumScore": { "type": "number" },
+        "scoreRange": { "type": "number" },
+        "pass": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "viewerAcceptanceReview",
+  "description": "最终观众验收审查",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "reviewId",
+    "contentSnapshotId",
+    "viewingContext",
+    "overallImpression",
+    "promiseDelivery",
+    "comprehensionCheck",
+    "engagementCheck",
+    "issues",
+    "verdict"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "reviewId": { "type": "string", "pattern": "^VAR-\\d{8}-[a-z0-9]+$" },
+    "contentSnapshotId": { "type": "string" },
+    "viewingContext": {
+      "type": "string",
+      "enum": ["normal-playback", "mobile", "cold-viewing"]
+    },
+    "overallImpression": { "type": "string" },
+    "promiseDelivery": { "type": "string" },
+    "comprehensionCheck": { "type": "string" },
+    "engagementCheck": { "type": "string" },
+    "issues": { "type": "array", "items": { "type": "string" } },
+    "verdict": { "type": "string", "enum": ["accept", "revise", "reject"] }
+  },
+  "additionalProperties": false
+}

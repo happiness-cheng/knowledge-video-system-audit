@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "capabilityNegotiation",
+  "description": "能力谈判结果，L0-L3 降级级别",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "negotiationId",
+    "contentSnapshotId",
+    "shotId",
+    "originalIntent",
+    "viewerCognitiveGoal",
+    "coreVisualEvent",
+    "lockedMeaning",
+    "capabilityGap",
+    "whyExistingComponentsFail",
+    "silentDowngradeRisk",
+    "options",
+    "recommendedOption",
+    "reason",
+    "requiresUserApproval",
+    "userDecision",
+    "decidedAt"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "negotiationId": { "type": "string", "pattern": "^NEG-\\d{8}-[a-z0-9]+$" },
+    "contentSnapshotId": { "type": "string" },
+    "shotId": { "type": "string" },
+    "originalIntent": { "type": "string" },
+    "viewerCognitiveGoal": { "type": "string" },
+    "coreVisualEvent": { "type": "string" },
+    "lockedMeaning": { "type": "string" },
+    "capabilityGap": { "type": "string" },
+    "whyExistingComponentsFail": { "type": "string" },
+    "silentDowngradeRisk": { "type": "string" },
+    "options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "optionId",
+          "implementationApproach",
+          "explanationLoss",
+          "comprehensionLoss",
+          "attentionLoss",
+          "truthRisk",
+          "estimatedCost",
+          "reusableValue",
+          "downgradeLevel"
+        ],
+        "properties": {
+          "optionId": { "type": "string" },
+          "implementationApproach": { "type": "string" },
+          "explanationLoss": { "type": "string", "enum": ["none", "mild", "obvious", "severe"] },
+          "comprehensionLoss": { "type": "string", "enum": ["none", "mild", "obvious", "severe"] },
+          "attentionLoss": { "type": "string", "enum": ["none", "mild", "obvious", "severe"] },
+          "truthRisk": { "type": "string", "enum": ["none", "possible", "will"] },
+          "estimatedCost": { "type": "string" },
+          "reusableValue": { "type": "string", "enum": ["none", "low", "medium", "high"] },
+          "downgradeLevel": { "type": "string", "enum": ["L0", "L1", "L2", "L3"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "recommendedOption": { "type": "string" },
+    "reason": { "type": "string" },
+    "requiresUserApproval": { "type": "boolean" },
+    "userDecision": { "type": "string" },
+    "decidedAt": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "capabilityPreflight",
+  "description": "每个 Shot 的能力预检结果",
+  "type": "object",
+  "required": ["contractVersion", "items"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["shotId", "capabilityStatus", "recommendedHost", "requiredCapabilities", "missingCapabilities", "implementationPlan"],
+        "properties": {
+          "shotId": { "type": "string" },
+          "capabilityStatus": {
+            "type": "string",
+            "enum": ["supported", "hold-motion-patch", "new-component-gap", "fallback-unacceptable"]
+          },
+          "recommendedHost": { "type": "string" },
+          "requiredCapabilities": { "type": "array", "items": { "type": "string" } },
+          "missingCapabilities": { "type": "array", "items": { "type": "string" } },
+          "implementationPlan": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

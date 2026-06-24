@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "coverBrief",
+  "description": "封面方向，含 coverViewerStateChange",
+  "type": "object",
+  "required": ["contractVersion", "directions", "recommended", "mobileReadable", "consistentWithHook", "thumbnailCompetitive", "coverViewerStateChange"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "directions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["mainTitle", "visualEvent", "firstVisualCenter", "emotion", "style", "evidenceHint"],
+        "properties": {
+          "mainTitle": { "type": "string" },
+          "visualEvent": { "type": "string" },
+          "firstVisualCenter": { "type": "string" },
+          "emotion": { "type": "string" },
+          "style": { "type": "string" },
+          "evidenceHint": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "recommended": { "type": "integer", "minimum": 0 },
+    "mobileReadable": { "type": "boolean" },
+    "consistentWithHook": { "type": "boolean" },
+    "thumbnailCompetitive": { "type": "string" },
+    "coverViewerStateChange": {
+      "type": "object",
+      "required": ["viewerStateBefore", "viewerStateAfter", "stateChangeReason"],
+      "properties": {
+        "viewerStateBefore": { "type": "string", "description": "看到封面前观众的状态" },
+        "viewerStateAfter": { "type": "string", "description": "看到封面后观众的状态" },
+        "stateChangeReason": { "type": "string", "description": "依靠什么完成状态变化" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

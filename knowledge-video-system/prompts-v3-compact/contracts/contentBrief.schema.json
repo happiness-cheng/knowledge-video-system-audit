@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "contentBrief",
+  "description": "从已批准母稿派生的结构化交接摘要",
+  "type": "object",
+  "required": ["title", "targetAudience", "coreThesis", "contentType", "tone", "audienceStrategy", "narrativeDesign", "scopeContract"],
+  "properties": {
+    "title": { "type": "string" },
+    "targetAudience": { "type": "string" },
+    "coreThesis": { "type": "string" },
+    "contentType": { "type": "string" },
+    "tone": { "type": "string" },
+    "audienceStrategy": {
+      "type": "object",
+      "required": ["viewerPain", "whyWatchNow", "primaryViewer", "potentialViewer"],
+      "properties": {
+        "viewerPain": { "type": "string" },
+        "whyWatchNow": { "type": "string" },
+        "primaryViewer": { "type": "string" },
+        "potentialViewer": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "narrativeDesign": {
+      "type": "object",
+      "required": ["hook", "turningPoints", "conclusion"],
+      "properties": {
+        "hook": { "type": "string" },
+        "turningPoints": { "type": "array", "items": { "type": "string" } },
+        "conclusion": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "scopeContract": {
+      "type": "object",
+      "required": ["mustAnswer", "mustNotExceed", "outOfScope"],
+      "properties": {
+        "mustAnswer": { "type": "array", "items": { "type": "string" } },
+        "mustNotExceed": { "type": "string" },
+        "outOfScope": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

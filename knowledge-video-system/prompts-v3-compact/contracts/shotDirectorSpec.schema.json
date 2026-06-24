@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "shotDirectorSpec",
+  "description": "单 Shot 导演卡，是内容与画面的唯一交接规格",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "contentSnapshotId",
+    "beatId",
+    "shotId",
+    "contentSourceRef",
+    "spokenClause",
+    "explanationGoal",
+    "informationDelta",
+    "primaryAttentionTarget",
+    "objects",
+    "initialState",
+    "semanticAction",
+    "finalState",
+    "enterMotion",
+    "holdMotion",
+    "exitOrCarryMotion",
+    "continuityAnchor",
+    "ambientMotion",
+    "assetStrategy",
+    "evidenceAnchor",
+    "implementationLock",
+    "capabilityStatus",
+    "fallbackPolicy",
+    "acceptanceCriteria"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "contentSnapshotId": { "type": "string" },
+    "beatId": { "type": "string" },
+    "shotId": { "type": "string" },
+    "contentSourceRef": { "type": "string" },
+    "spokenClause": { "type": "string" },
+    "explanationGoal": { "type": "string" },
+    "informationDelta": { "type": "string" },
+    "primaryAttentionTarget": { "type": "string" },
+    "objects": { "type": "array", "items": { "type": "string" } },
+    "initialState": { "type": "string" },
+    "semanticAction": { "type": "string" },
+    "finalState": { "type": "string" },
+    "enterMotion": {
+      "type": "object",
+      "required": ["type", "purpose"],
+      "properties": {
+        "type": { "type": "string" },
+        "purpose": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "holdMotion": {
+      "type": "object",
+      "required": ["type", "purpose", "noneReason"],
+      "properties": {
+        "type": { "type": "string" },
+        "purpose": { "type": "string" },
+        "noneReason": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "exitOrCarryMotion": {
+      "type": "object",
+      "required": ["type", "carryObject"],
+      "properties": {
+        "type": { "type": "string" },
+        "carryObject": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "continuityAnchor": { "type": "string" },
+    "ambientMotion": {
+      "type": "object",
+      "required": ["type", "purpose"],
+      "properties": {
+        "type": { "type": "string", "enum": ["none", "drift", "pulse", "flow", "breathe"] },
+        "purpose": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "assetStrategy": {
+      "type": "string",
+      "enum": ["generated-static", "screenshot-led-raw", "screenshot-led-prepared", "component-only", "hybrid"]
+    },
+    "evidenceAnchor": { "type": ["string", "null"] },
+    "implementationLock": { "type": "string", "enum": ["locked", "preferred", "open"] },
+    "capabilityStatus": {
+      "type": "string",
+      "enum": ["supported", "hold-motion-patch", "new-component-gap", "fallback-unacceptable"]
+    },
+    "fallbackPolicy": { "type": "string", "const": "return-gap" },
+    "acceptanceCriteria": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

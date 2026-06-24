@@ -1,20 +1,163 @@
-# 画面方向与交接
+# 视觉方向与交接
 
 ## 目标
 
-回答一个问题：给 Agent 的画面描述是否清晰、可执行、不需要猜？
+回答两个问题：
+
+1. 画面要表达什么——视觉意图是否清晰、不可替代？
+2. 画面怎么做——能力映射是否诚实、可执行？
 
 ## 核心原则
 
-- 画面必须参与讲解，不能只是给旁白配文字
+- 画面不是内容包装，而是与口播并行的视觉表达线
 - 抽象概念转化为可见对象
 - 关系转化为空间结构
 - 变化转化为运动或状态转换
 - 结论从前面的因果关系中浮现
 
+---
+
+## 阶段一：Intent-First Visual Design
+
+此阶段不得选择具体组件。先定义视觉意图。
+
+### 1.1 视觉意图定义
+
+每个关键 Shot 必须先回答：
+
+```text
+viewerStateBefore: [进入本 Shot 前观众的状态]
+viewerStateAfter: [离开本 Shot 后观众的状态]
+designRationale: [为什么需要这个画面——想改变什么认知]
+```
+
+### 1.2 五类视觉模式
+
+每个关键 Shot 一个主模式，最多一个辅助模式。不得把模式名称直接绑定成唯一 Scene 组件。
+
+#### visual-narrative（视觉叙事）
+
+让观众经历一个过程。
+
+适用：Hook、案例展示、状态变化、冲突与解决。
+选型条件：内容有时间线、因果链或状态变化。
+
+#### visual-explanation（视觉解释）
+
+让观众看懂一个关系或机制。
+
+适用：流程、对比、结构、原理。
+选型条件：内容有空间关系、层次结构或并行对比。
+
+#### editorial-design（编辑设计）
+
+让观众看清信息结构。
+
+适用：列表、要点、数据、总结。
+选型条件：内容是信息集合，需要清晰组织。
+
+#### typographic-performance（文字表演）
+
+让观众感受到语气和节奏。
+
+适用：关键判断、反转、情绪强调。
+选型条件：内容的情感重量需要通过文字的空间运动来传达。
+
+#### real-evidence（真实证据）
+
+让观众相信事实。
+
+适用：截图、代码、数据、实验结果。
+选型条件：内容需要真实材料支撑，不能用抽象图形替代。
+
+### 1.3 三类贡献
+
+每个关键 Shot 必须明确主贡献：
+
+```text
+explanationContribution: [画面让观众看到口播无法单独传达的什么]
+comprehensionContribution: [画面降低什么认知负荷]
+attentionContribution: [画面产生什么继续观看的意愿]
+```
+
+三项都弱的画面应删除、合并或重写。
+
+### 1.4 声画关系
+
+枚举：
+
+```text
+reinforce: 画面让口播信息更具体
+complement: 画面承担口播无法传达的部分
+contrast: 画面与口播形成张力
+evidence: 画面展示口播所引用的真实材料
+typographic-performance: 文字按语气进行空间运动
+```
+
+必须说明声画各自承担什么。禁止理由只写"为了让观众看到口播内容"。
+
+### 1.5 连续性定义
+
+关键 Shot 必须说明：
+
+```text
+carryIn: [从上一个 Shot 带入什么——对象、状态、问题、情绪]
+stateChange: [本 Shot 改变什么]
+carryOut: [传递给下一个 Shot 什么]
+persistentObjects: [哪些对象持续存在]
+resetJustification: [如果重置，理由是什么——叙事、认知或节奏理由，不能因为组件无法继承状态]
+```
+
+画面清空必须有叙事、认知或节奏理由，不能因为组件无法继承状态而默认重置。
+
+### 1.6 不可丢失意义
+
+```text
+lockedMeaning: [锁定时 Agent 不得改变什么]
+flexibleImplementation: [Agent 可以自由决定什么]
+forbiddenDowngrade: [哪些降级是禁止的]
+```
+
+---
+
+## 阶段二：Capability Mapping
+
+视觉意图锁定后，才允许读取能力信息。
+
+### 2.1 能力查询
+
+读取：
+
+- capabilityRegistry
+- Scene 类型
+- 现有组件
+- 素材能力
+- Remotion 实现约束
+
+### 2.2 能力决策
+
+选择：
+
+- 直接复用
+- 组合现有原语
+- 扩展能力
+- 新建通用能力
+- 使用外部素材
+- 发起能力谈判（见 capabilityNegotiation 合约）
+
+### 2.3 能力状态
+
+```text
+capabilityStatus: [confirmed | needs-preflight | gap]
+capabilityGap: [具体缺什么]
+negotiationLevel: [L0 | L1 | L2 | L3]
+```
+
+---
+
 ## GPT 与 Agent 的实现边界
 
-- GPT 锁定：explanationGoal、知识对象、初始状态、状态变化、最终结论、证据和验收标准
+- GPT 锁定：explanationGoal、知识对象、初始状态、状态变化、最终结论、证据、验收标准、视觉模式、声画关系、连续性
 - GPT 推荐：scene host 和 semantic pattern
 - Agent 决定：实际组件、props、布局、时间轴、动效和代码实现
 - Agent 不得静默改变 lockedMeaning
@@ -27,7 +170,7 @@
 内容进入画面系统前必须生成 approvedContentSnapshot：
 
 ```text
-contractVersion: "3.1"
+contractVersion: "4.0"
 contentSnapshotId: CS-YYYYMMDD-xxxx
 sourceDigest: sha256
 approvedAt: ISO date | null
@@ -42,7 +185,7 @@ sources: { contentMasterDraft, beatSheet, shotPlan, coverBrief }
 视觉产物汇总快照：
 
 ```text
-contractVersion: "3.1"
+contractVersion: "4.0"
 visualSnapshotId: VS-YYYYMMDD-xxxx
 contentSnapshotId: CS-...
 candidateDigest: sha256
@@ -50,30 +193,53 @@ shotDirectorSpecs: [路径列表]
 semanticAlignments: [路径列表]
 ```
 
-## 关键 scene 导演卡
+## 关键 Shot 导演卡
 
 ```text
-sceneId: [S01, S02, ...]
-explanationGoal: [这个 scene 要解释什么]
-firstVisualFocus: [观众第一眼看到什么]
+shotId: [B01-S01]
+beatId: [B01]
+
+viewerStateBefore: [进入前状态]
+viewerStateAfter: [离开后状态]
+designRationale: [为什么需要这个画面]
+
+primaryVisualMode: [visual-narrative | visual-explanation | editorial-design | typographic-performance | real-evidence]
+secondaryVisualMode: [可选]
+
+explanationContribution: [解释贡献]
+comprehensionContribution: [理解贡献]
+attentionContribution: [吸引贡献]
+
+audioVisualRelation: [reinforce | complement | contrast | evidence | typographic-performance]
+spokenResponsibility: [口播承担什么]
+visualResponsibility: [画面承担什么]
+onScreenTextPurpose: [画面上的文字为什么存在]
+
+semanticEvent: [核心语义事件]
 objects: [出现哪些对象]
 initialState: [对象的初始状态]
-transition: [对象发生什么变化]
-voiceoverSync: [口播说到哪里时画面变化]
+stateChange: [对象发生什么变化]
 finalState: [对象的最终状态]
-informationDelta: [比上一 scene 新增什么认知]
-evidenceAnchor: [使用哪份截图、数据或事实作为证据]
-mustShow: [必须显示的文字或元素]
-mustAvoid: [不要出现什么]
-assetStrategy: [generated-static | screenshot-led-raw | screenshot-led-prepared | component-only | hybrid]
-acceptanceCriteria: [怎么判断画面成功]
-preferredSceneHost: [推荐的 scene type]
-preferredSemanticPattern: [推荐的 semantic pattern]
-implementationLock: [locked | preferred | open]
-lockedMeaning: [锁定时 Agent 不得改变什么]
-flexibleImplementation: [Agent 可以自由决定什么]
-fallbackPlan: [能力不足时的降级方案]
+
+carryIn: [带入什么]
+carryOut: [带出什么]
+persistentObjects: [持续存在的对象]
+resetJustification: [重置理由或 null]
+
+truthMode: [fact | experiment | inference | opinion | analogy]
+evidenceAnchor: [使用哪份证据]
+evidenceBoundary: [证据不得被怎样改变]
+
+lockedMeaning: [锁定意义]
+flexibleImplementation: [可自由决定的部分]
+forbiddenDowngrade: [禁止的降级]
+
 capabilityStatus: [confirmed | needs-preflight | gap]
+capabilityGap: [具体缺什么]
+negotiationLevel: [L0 | L1 | L2 | L3]
+
+acceptanceCriteria: [验收标准]
+requiredRenderEvidence: [需要什么渲染证据]
 ```
 
 ### implementationLock 定义
@@ -82,18 +248,12 @@ capabilityStatus: [confirmed | needs-preflight | gap]
 - `preferred`（默认）：GPT 推荐实现方式，Agent 可在不改变解释目标的前提下调整
 - `open`：Agent 自由实现，但不得改变解释目标
 
-### capabilityStatus 定义
-
-- `confirmed`：capabilityRegistry 中已注册，Agent 可直接使用
-- `needs-preflight`：GPT 不确定，Agent 需查源码确认
-- `gap`：当前无对应组件，需返回用户确认是否新建
-
 ## Shot Director Spec
 
-每个 Shot 必须生成 shotDirectorSpec：
+每个 Shot 必须生成 shotDirectorSpec（详细 JSON Schema 见 `contracts/` 目录）：
 
 ```text
-contractVersion: "3.1"
+contractVersion: "4.0"
 contentSnapshotId: CS-...
 beatId: B01
 shotId: B01-S01
@@ -102,21 +262,37 @@ spokenClause: 该 Shot 对应的口播含义
 explanationGoal: 该 Shot 必须让观众理解什么
 informationDelta: 相比上一个 Shot 新增什么认知
 primaryAttentionTarget: 此刻观众首先看哪里
+
+primaryVisualMode: [主视觉模式]
+secondaryVisualMode: [辅助视觉模式]
+audioVisualRelation: [声画关系]
+
 objects: [画面知识对象]
 initialState: 初始状态
 semanticAction: 核心解释动作
 finalState: 最终状态
+
+carryIn: [带入]
+carryOut: [带出]
+persistentObjects: [持续对象]
+
 enterMotion: { type, purpose }
 holdMotion: { type, purpose, noneReason? }
 exitOrCarryMotion: { type, carryObject }
 continuityAnchor: 与前后 Shot 保持连续的对象
 ambientMotion: { type: none|drift|pulse|flow|breathe, purpose }
+
 assetStrategy: generated-static | screenshot-led-raw | screenshot-led-prepared | component-only | hybrid
 evidenceAnchor: 证据引用或 null
+truthMode: fact | experiment | inference | opinion | analogy
+evidenceBoundary: [证据不得被怎样改变]
+
 implementationLock: locked | preferred | open
+lockedMeaning: [锁定意义]
 capabilityStatus: supported | hold-motion-patch | new-component-gap | fallback-unacceptable
 fallbackPolicy: return-gap
 acceptanceCriteria: [验收标准]
+requiredRenderEvidence: [需要什么渲染证据]
 ```
 
 ### enterMotion / holdMotion / exitOrCarryMotion
@@ -126,7 +302,7 @@ acceptanceCriteria: [验收标准]
 - exitOrCarryMotion：退出方式，或带入下一 Shot 的对象
 - ambientMotion：只负责生命感，不承担核心结论
 
-## 非关键 scene 最低要求
+## 非关键 Shot 最低要求
 
 - visualRole：[支持 shot / 过渡 / 呼吸]
 - firstVisualFocus：[观众第一眼看到什么]
@@ -293,5 +469,7 @@ motionLevel:
 
 ## 参考
 
+- 设计哲学见 11（核心）、12（完整版）
 - 能力真源见 08
+- 能力谈判见 capabilityNegotiation 合约
 - 输出格式见 07

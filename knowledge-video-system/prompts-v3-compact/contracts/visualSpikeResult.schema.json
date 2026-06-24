@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "visualSpikeResult",
+  "description": "原型验证结果，在正式制作前对高风险能力进行原型验证",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "spikeId",
+    "targetCapability",
+    "prototypeDescription",
+    "semanticGoal",
+    "renderEvidence",
+    "viewerFeedback",
+    "verdict",
+    "issues",
+    "nextSteps"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "spikeId": { "type": "string", "pattern": "^SPIKE-\\d{8}-[a-z0-9]+$" },
+    "targetCapability": { "type": "string" },
+    "prototypeDescription": { "type": "string" },
+    "semanticGoal": { "type": "string" },
+    "renderEvidence": { "type": "array", "items": { "type": "string" } },
+    "viewerFeedback": { "type": "string" },
+    "verdict": { "type": "string", "enum": ["pass", "iterate", "abandon"] },
+    "issues": { "type": "array", "items": { "type": "string" } },
+    "nextSteps": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

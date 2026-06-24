@@ -35,53 +35,51 @@
 - consistency ≥ 3/5
 - 无 veto
 
-### Standard 门禁
+### Standard / Deep 门禁（V4 统一 4-role gate）
 
-Standard 执行双独立审查：
+Standard 和 Deep 均使用统一的 4-role gate。4 个独立浏览器 AI 会话，冻结同一 candidateDigest。
 
-- 至少 2 份 review
+Deep 进入 4-role gate 前需通过自检 >= 88 分。
+
+4 个角色：
+
+| 角色                  | 职责                                 |
+| --------------------- | ------------------------------------ |
+| cold-viewer           | 模拟首次观众，检查理解和参与度       |
+| content-editor        | 检查内容质量、结构、完整性           |
+| fact-evidence         | 检查事实准确性、证据充分性、真值边界 |
+| visual-audio-director | 检查视觉解释、声画同步、动效质量     |
+
+要求：
+
+- 4 份独立 review，每份 independent: true
 - 至少 2 个不同 reviewerSystem
-- 其中一份必须是 GPT 自检
-- 另一份必须来自独立 AI
-- averageScore > 85
-- minimumScore > 85
-- 所有 recommendation = pass
-- 所有 vetoes 为空
-- candidateDigest 完全相同
+- 所有 review 使用相同 candidateDigest
+- 无 hard veto
 
-评分为 85 不通过。
+通过条件：
 
-单份自评分维度门槛：
+- meanScore >= 90
+- medianScore >= 90
+- minimumScore >= 85
+- max-min <= 8
 
-- topicPromise ≥ 16/20
-- researchAndTruth ≥ 12/15
-- contentMasterDraft ≥ 20/25
-- hookStructure ≥ 12/15
-- cover ≥ 8/10
-- voiceoverVisualSync ≥ 8/10
-- consistency ≥ 4/5
-- 无事实、承诺或可执行性 veto
+不允许 Agent 模拟审查。必须是真实、独立的浏览器 AI 会话。
 
-### Deep 内部预检
-
-- GPT 自评分 ≥ 88
-- 选题 ≥ 17/20，研究事实 ≥ 13/15，内容母稿 ≥ 22/25
-- Hook ≥ 13/15，封面 ≥ 8/10，声画同步 ≥ 9/10，一致性 ≥ 4/5
-- 通过后才进入多 AI 审查（见 09）
-
-### 输出（V3.1 Standard 双审查）
+### 输出（V4 4-role gate）
 
 ```text
 preProductionReview：
-  contractVersion: "3.1"
-  mode: standard
+  contractVersion: "4.0"
+  mode: standard | deep
   contentSnapshotId: CS-...
   visualSnapshotId: VS-...
   candidateDigest: sha256
   reviews:
     - reviewId: R01
-      reviewerKind: gpt-self
+      reviewerRole: cold-viewer
       reviewerSystem: openai-gpt
+      reviewerId: unique-id
       independent: true
       contentSnapshotId: CS-...
       visualSnapshotId: VS-...
@@ -89,12 +87,12 @@ preProductionReview：
       scores: { topicPromise, researchAndTruth, contentMasterDraft, hookStructure, cover, voiceoverVisualSync, consistency }
       totalScore: 0-100
       issues: []
-      vetoes: []
       recommendation: pass / revise / stop
       reviewedAt: ISO date
     - reviewId: R02
-      reviewerKind: external-ai
+      reviewerRole: content-editor
       reviewerSystem: anthropic-claude
+      reviewerId: unique-id
       independent: true
       contentSnapshotId: CS-...
       visualSnapshotId: VS-...
@@ -102,12 +100,39 @@ preProductionReview：
       scores: { ... }
       totalScore: 0-100
       issues: []
-      vetoes: []
+      recommendation: pass / revise / stop
+      reviewedAt: ISO date
+    - reviewId: R03
+      reviewerRole: fact-evidence
+      reviewerSystem: google-gemini
+      reviewerId: unique-id
+      independent: true
+      contentSnapshotId: CS-...
+      visualSnapshotId: VS-...
+      candidateDigest: sha256
+      scores: { ... }
+      totalScore: 0-100
+      issues: []
+      recommendation: pass / revise / stop
+      reviewedAt: ISO date
+    - reviewId: R04
+      reviewerRole: visual-audio-director
+      reviewerSystem: openai-gpt
+      reviewerId: unique-id
+      independent: true
+      contentSnapshotId: CS-...
+      visualSnapshotId: VS-...
+      candidateDigest: sha256
+      scores: { ... }
+      totalScore: 0-100
+      issues: []
       recommendation: pass / revise / stop
       reviewedAt: ISO date
   aggregate:
-    averageScore: 0
+    meanScore: 0
+    medianScore: 0
     minimumScore: 0
+    maxMinSpread: 0
     pass: false
 ```
 
@@ -115,9 +140,127 @@ preProductionReview：
 
 三个标识（contentSnapshotId、visualSnapshotId、candidateDigest）顶层和每份 review 全部必填，缺失或不一致均阻断。
 
-### 输出（Quick / Deep / Legacy）
+### 输出（Quick / Legacy）
 
-Quick 和 Deep 使用旧单审查格式，见 07 legacy 小节。
+Quick 使用轻量自检格式，不是正式门禁。Legacy 格式见 07 legacy 小节。
+
+---
+
+## A2. V4 Visual Gates
+
+以下门禁在视觉设计和实现阶段执行，与 A 阶段的预制作审查互补。
+
+### VisualContributionGate
+
+分别判断关键 Shot 的三类贡献：
+
+- explanationContribution：画面让观众看到口播无法单独传达的什么
+- comprehensionContribution：画面降低什么认知负荷
+- attentionContribution：画面产生什么继续观看的意愿
+
+关键 Shot 不要求三项都最高，但必须有明确主贡献。
+
+三项都弱，或删除后几乎无损失，判为无贡献占位画面。
+
+### SemanticFidelityGate
+
+检查：
+
+- 实际画面是否表达了 lockedMeaning
+- 因果方向是否正确
+- 视觉事件是否真实发生
+- 是否只用标签冒充事件
+- 是否发生未经批准的语义降级
+
+### VisualContinuityGate
+
+检查：
+
+- 对象身份是否连续
+- 状态是否继承
+- 因果是否承接
+- Beat 状态弧线是否完整
+- 全片视觉主线是否回收
+
+### TruthBoundaryGate
+
+检查：
+
+- 戏剧化是否只放大体验，不放大结论
+- 隐喻是否越界代替证据
+- 证据是否被改变
+- 个案是否被表现成普遍结论
+
+### CapabilityNegotiationGate
+
+检查：
+
+- 是否先完成意图设计（Intent-First）
+- 是否被现有组件反向锚定
+- 能力不足是否报告
+- L2 是否有用户批准
+- 是否出现 L3
+
+### RenderEvidenceGate
+
+不同问题必须提交对应证据：
+
+| 问题类型 | 证据形式                        |
+| -------- | ------------------------------- |
+| 裁切     | 实际帧截图 + 边界标注           |
+| 动态事件 | 前、中、后三帧或短片段          |
+| 状态继承 | 相邻 Shot 边界截图              |
+| 可读性   | 手机端缩放截图 + 正常播放       |
+| 节奏     | 连续片段播放                    |
+| 全片重复 | contact sheet + 统计 + 完整观看 |
+
+命令输出、测试报告、Agent 自报状态不构成视觉证据。
+
+### ViewerAcceptanceGate
+
+最终判断依据是：
+
+- 实际画面
+- 正常播放
+- 手机端观看
+- 冷观看
+- 观众实际理解
+
+---
+
+## A3. 完成状态分级
+
+正式采用六级完成状态：
+
+```text
+Not Implemented          → 代码未编写
+Implemented, Unverified  → 代码存在但未验证
+Technically Verified     → 代码运行无报错
+Visually Verified        → 实际渲染画面符合设计意图
+Semantically Verified    → 画面表达了正确的语义
+Viewer Accepted          → 观众实际观看后确认理解
+```
+
+只有 `Viewer Accepted` 才能称为视觉完成。
+
+命令成功不等于视觉通过。测试通过不等于语义正确。
+
+---
+
+## A4. 硬否决项
+
+以下任一出现，禁止发布：
+
+- 画面语义与口播相反
+- 因果方向错误
+- 核心视觉事件缺失
+- 连续状态被重置冒充为持续变化
+- 隐喻代替证据
+- 修改证据原意
+- 核心信息在实际设备不可见
+- 未经批准的 L2 降级
+- 任何 L3 降级
+- Agent 以测试通过或渲染成功宣称视觉完成
 
 ---
 

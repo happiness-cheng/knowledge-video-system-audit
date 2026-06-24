@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "contentMasterDraft",
+  "description": "内容母稿，含 viewerStateChange、contentDesignRationale、visualHandoff",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "coreQuestion",
+    "viewerSituation",
+    "openingTension",
+    "personalCase",
+    "keyEvidence",
+    "progressiveReveals",
+    "mustAnswer",
+    "examplesAndAnalogies",
+    "boundaries",
+    "finalTakeaway",
+    "immediateAction",
+    "contentToDefer",
+    "toneReference",
+    "draftBody",
+    "viewerStateChange",
+    "contentDesignRationale",
+    "visualHandoff"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "coreQuestion": { "type": "string" },
+    "viewerSituation": { "type": "string" },
+    "openingTension": { "type": "string" },
+    "personalCase": { "type": "string" },
+    "keyEvidence": { "type": "array", "items": { "type": "string" } },
+    "progressiveReveals": { "type": "array", "items": { "type": "string" } },
+    "mustAnswer": { "type": "array", "items": { "type": "string" }, "minItems": 4, "maxItems": 6 },
+    "examplesAndAnalogies": { "type": "array", "items": { "type": "string" } },
+    "boundaries": { "type": "string" },
+    "finalTakeaway": { "type": "string" },
+    "immediateAction": { "type": "string" },
+    "contentToDefer": { "type": "array", "items": { "type": "string" } },
+    "toneReference": { "type": "string" },
+    "draftBody": {
+      "type": "string",
+      "description": "连续自然的内容母稿正文，是作品内容真源。后续 Beat、口播和画面必须从 draftBody 派生。不得只输出字段提纲代替母稿正文。"
+    },
+    "viewerStateChange": {
+      "type": "object",
+      "required": ["viewerStateBefore", "viewerStateAfter", "stateChangeReason"],
+      "properties": {
+        "viewerStateBefore": { "type": "string", "description": "观众观看前怎么想" },
+        "viewerStateAfter": { "type": "string", "description": "观看后应该怎么想" },
+        "stateChangeReason": { "type": "string", "description": "依靠什么完成变化" }
+      },
+      "additionalProperties": false
+    },
+    "contentDesignRationale": {
+      "type": "object",
+      "required": ["whyThisOpening", "whyThisCase", "whyThisEvidenceOrder", "whyThisRevealOrder", "whyThisBoundary"],
+      "properties": {
+        "whyThisOpening": { "type": "string" },
+        "whyThisCase": { "type": "string" },
+        "whyThisEvidenceOrder": { "type": "string" },
+        "whyThisRevealOrder": { "type": "string" },
+        "whyThisBoundary": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "visualHandoff": {
+      "type": "array",
+      "description": "内容层向视觉层的交接说明，每项对应一个需要视觉支持的内容单元",
+      "items": {
+        "type": "object",
+        "required": ["beatId", "contentSourceRef", "mustBeSeen", "canBeSpoken", "mustUseEvidence", "needsVisualProcess", "needsEmotionalExperience", "whyThisNeedsVisualSupport"],
+        "properties": {
+          "beatId": { "type": "string" },
+          "contentSourceRef": { "type": "string", "description": "draftBody 中对应的段落或论点引用" },
+          "mustBeSeen": { "type": "boolean", "description": "是否必须被观众看到（而非仅口播）" },
+          "canBeSpoken": { "type": "boolean", "description": "是否可以通过口播传递" },
+          "mustUseEvidence": { "type": "boolean", "description": "是否必须使用证据素材" },
+          "needsVisualProcess": { "type": "boolean", "description": "是否需要视觉化展示过程" },
+          "needsEmotionalExperience": { "type": "boolean", "description": "是否需要情感体验" },
+          "whyThisNeedsVisualSupport": { "type": "string", "description": "为什么这个内容单元需要视觉支持" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "visualVerificationBundle",
+  "description": "完整视觉验证包，Phase I 回归验证必须输出",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "bundleId",
+    "contentSnapshotId",
+    "renderedClips",
+    "keyFrames",
+    "mobilePreview",
+    "contactSheet",
+    "automatedTestResults",
+    "semanticGoalVsActual",
+    "unresolvedIssues",
+    "completionStatus"
+  ],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "bundleId": { "type": "string", "pattern": "^VVB-\\d{8}-[a-z0-9]+$" },
+    "contentSnapshotId": { "type": "string" },
+    "renderedClips": { "type": "array", "items": { "type": "string" } },
+    "keyFrames": {
+      "type": "object",
+      "required": ["hook", "midpoint", "ending"],
+      "properties": {
+        "hook": { "type": "string" },
+        "midpoint": { "type": "string" },
+        "ending": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "mobilePreview": { "type": "string" },
+    "contactSheet": { "type": "string" },
+    "automatedTestResults": {
+      "type": "object",
+      "required": ["typecheck", "lint", "unitTests", "visualGates"],
+      "properties": {
+        "typecheck": { "type": "string", "enum": ["pass", "fail"] },
+        "lint": { "type": "string", "enum": ["pass", "fail"] },
+        "unitTests": { "type": "string", "enum": ["pass", "fail"] },
+        "visualGates": { "type": "string", "enum": ["pass", "fail"] }
+      },
+      "additionalProperties": false
+    },
+    "semanticGoalVsActual": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["shotId", "semanticGoal", "actualVisual", "match"],
+        "properties": {
+          "shotId": { "type": "string" },
+          "semanticGoal": { "type": "string" },
+          "actualVisual": { "type": "string" },
+          "match": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unresolvedIssues": { "type": "array", "items": { "type": "string" } },
+    "completionStatus": {
+      "type": "object",
+      "required": ["notImplemented", "implementedUnverified", "technicallyVerified", "visuallyVerified", "semanticallyVerified", "viewerAccepted"],
+      "properties": {
+        "notImplemented": { "type": "array", "items": { "type": "string" } },
+        "implementedUnverified": { "type": "array", "items": { "type": "string" } },
+        "technicallyVerified": { "type": "array", "items": { "type": "string" } },
+        "visuallyVerified": { "type": "array", "items": { "type": "string" } },
+        "semanticallyVerified": { "type": "array", "items": { "type": "string" } },
+        "viewerAccepted": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

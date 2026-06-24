@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "visualSnapshot",
+  "description": "视觉产物汇总快照",
+  "type": "object",
+  "required": ["contractVersion", "visualSnapshotId", "contentSnapshotId", "candidateDigest", "shotDirectorSpecs", "semanticAlignments"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "visualSnapshotId": { "type": "string", "pattern": "^VS-\\d{8}-[a-z0-9]+$" },
+    "contentSnapshotId": { "type": "string" },
+    "candidateDigest": { "type": "string" },
+    "shotDirectorSpecs": { "type": "array", "items": { "type": "string" } },
+    "semanticAlignments": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

@@ -122,21 +122,53 @@ Scene = Remotion 执行单位
 - Shot 一般为 2—10 秒，证据阅读或刻意停顿可更长
 - Scene/Shot 的数量由信息变化决定，不由章节数量决定
 
-## 输出：Beat Sheet + Shot Plan
+## Beat 增量要求
+
+每个主要 Beat 必须明确以下字段，没有明确增量的 Beat 不得进入 Shot 设计：
+
+```text
+beat:
+  contentFunction: [本 Beat 在叙事中的功能——建立处境 / 制造冲突 / 提供证据 / 揭示原因 / 给出边界 / 推动行动]
+  viewerStateBefore: [进入本 Beat 前观众的状态]
+  viewerStateAfter: [离开本 Beat 后观众的状态]
+  informationDelta: [本 Beat 产生的新信息——新事实 / 新证据 / 新问题 / 新理解]
+  emotionalShift: [情绪变化——从什么到什么]
+  whyThisBeatExists: [为什么需要这个 Beat——删除后损失什么]
+```
+
+没有变化的 Beat 应删除、合并或重写。
+
+## 输出：Beat Sheet + Content Segment Plan
 
 ```text
 beatSheet:
-  [0-5s] Hook：[具体痛点/现场 + 反差]
-  [5-15s] 第一次兑现：[证据或结果]
-  [15-30s] 核心问题：[到底怎么回事]
-  [30-90s] 证据与揭示：[每 10-20s 认知增量]
-  [90s+] 机制与收获：[每 20-40s 新证据或转折]
+  - beatId: B01
+    timeRange: [0-5s]
+    contentFunction: [建立处境]
+    summary: [具体痛点/现场 + 反差]
+    viewerStateBefore: [进入前状态]
+    viewerStateAfter: [离开后状态]
+    informationDelta: [新信息]
+    emotionalShift: [情绪变化]
+    whyThisBeatExists: [为什么需要]
 
-shotPlan:
-  - beatId: [所属 Beat]
-    shots: [
-      { shotId, duration, visualFocus, visualState, transition }
-    ]
+  - beatId: B02
+    timeRange: [5-15s]
+    contentFunction: [提供证据]
+    summary: [证据或结果]
+    ...
+
+contentSegmentPlan:
+  - beatId: B01
+    segmentId: SEG-01
+    spokenUnit: [口播分句或段落含义]
+    mustBeSeen: [必须被看见的内容]
+    evidenceRequirement: [需要什么证据]
+    emotionalRequirement: [情绪要求]
+    semanticRelationship: [与上一段的语义关系]
+
+注意：内容阶段不输出视觉实现细节（visualFocus、visualState、transition、assetStrategy）。
+这些在读取视觉哲学后，由 Intent-First Shot Design 阶段输出到 shotDirectorSpec。
 ```
 
 ## 参考

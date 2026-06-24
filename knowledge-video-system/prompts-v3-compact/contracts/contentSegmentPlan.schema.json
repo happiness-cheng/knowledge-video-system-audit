@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "contentSegmentPlan",
+  "description": "内容分段计划，取代旧流程中内容阶段的 shotPlan。不含视觉实现细节。",
+  "type": "object",
+  "required": ["contractVersion", "segments"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "segments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "beatId",
+          "segmentId",
+          "spokenUnit",
+          "mustBeSeen",
+          "evidenceRequirement",
+          "emotionalRequirement",
+          "semanticRelationship"
+        ],
+        "properties": {
+          "beatId": { "type": "string" },
+          "segmentId": { "type": "string" },
+          "spokenUnit": { "type": "string", "description": "该分段对应的口播单元" },
+          "mustBeSeen": { "type": "boolean", "description": "是否必须被观众看到" },
+          "evidenceRequirement": {
+            "type": "string",
+            "enum": ["none", "optional", "required"],
+            "description": "证据需求等级"
+          },
+          "emotionalRequirement": { "type": "string", "description": "情感层面的要求" },
+          "semanticRelationship": { "type": "string", "description": "与前一分段的语义关系" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

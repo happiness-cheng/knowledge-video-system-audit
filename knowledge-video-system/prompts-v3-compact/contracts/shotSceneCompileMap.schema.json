@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "shotSceneCompileMap",
+  "description": "Shot 到 Scene 的编译映射。合并时保留所有 sourceShotIds 和 alignmentIds",
+  "type": "object",
+  "required": ["contractVersion", "entries"],
+  "properties": {
+    "contractVersion": { "type": "string", "const": "4.0" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sceneId", "sourceShotIds", "alignmentIds"],
+        "properties": {
+          "sceneId": { "type": "string" },
+          "sourceShotIds": { "type": "array", "items": { "type": "string" } },
+          "alignmentIds": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

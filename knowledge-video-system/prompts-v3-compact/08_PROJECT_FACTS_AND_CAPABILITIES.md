@@ -165,6 +165,36 @@ voiceoverMustVerbalizeEvidence：
 - 不得依赖观众自行阅读密集截图
 - 手机端审片不清楚时，通过 Revision Router 返回素材呈现层
 
+## V4 能力扩展字段
+
+capabilityRegistry V4 为每项能力新增语义描述：
+
+| 字段                  | 含义                     |
+| --------------------- | ------------------------ |
+| semanticAffordances   | 该能力能承载哪些语义目标 |
+| supportedStateChanges | 支持的状态变化类型       |
+| continuitySupport     | 跨 Shot 状态继承支持程度 |
+| evidenceSupport       | 证据展示支持程度         |
+| knownLimitations      | 已知限制                 |
+| mobileRisk            | 手机端风险等级           |
+| validatedExamples     | 已验证的使用示例         |
+| semanticGoal          | 语义模式的核心目标       |
+| initialState          | 语义模式的初始状态       |
+| coreChange            | 语义模式的核心变化       |
+| finalState            | 语义模式的最终状态       |
+| forbiddenDowngrade    | 禁止的降级方式           |
+| acceptanceCriteria    | 验收标准                 |
+
+语义模式的 V4 字段用于 Intent-First 设计阶段，不绑定具体组件。
+
+## 设计哲学文件
+
+| 文件 | 用途         |
+| ---- | ------------ |
+| 10   | 内容设计核心 |
+| 11   | 视觉设计核心 |
+| 12   | 视觉设计完整 |
+
 ## 参考文档索引
 
 | 主题         | 仓库文件                                                                        |
@@ -173,3 +203,4 @@ voiceoverMustVerbalizeEvidence：
 | 内容策略     | `knowledge-video-system/prompts/15_CONTENT_STRATEGY_AND_CREATOR_POSITIONING.md` |
 | 观众研究     | `knowledge-video-system/prompts/16_AUDIENCE_RESEARCH_AND_RETENTION_LOOP.md`     |
 | Agent 契约   | `docs/agent/KNOWLEDGE_VIDEO_V2_CONTRACT.md`                                     |
+| 能力谈判     | `knowledge-video-system/prompts-v3-compact/CAPABILITY_NEGOTIATION.md`           |
