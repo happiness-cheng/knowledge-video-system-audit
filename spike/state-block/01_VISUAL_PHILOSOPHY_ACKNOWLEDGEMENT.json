@@ -1,0 +1,14 @@
+{
+  "contractVersion": "4.0",
+  "contentSnapshotId": null,
+  "viewerStateChange": "观众从看到一个普通生产流程，转变为直观理解：审查失败不是一句提醒，而会真实切断后续生产。",
+  "primaryVisualMode": "visual-explanation",
+  "criticalVisualMeanings": [
+    "审查失败发生在流程中间",
+    "失败以后所有下游节点真实停止",
+    "停止是状态和动作变化，不是文字声明",
+    "失败前后的因果方向必须清楚"
+  ],
+  "likelySilentDowngrade": "把失败节点标红或写上'停止生产'，但音频、字幕、渲染等下游节点仍然继续高亮或运动。",
+  "componentBlindnessReminder": "不得因为当前只有流程卡、步骤卡或高亮组件，就把核心事件降级成卡片说明。"
+}

@@ -111,6 +111,7 @@ import {
   TriggerFrame_VariantC,
   TRIGGER_FRAME_VARIANT_C_FRAMES,
 } from "./video-system/experiments/visual-trigger/TriggerFrame_VariantC";
+import { StateBlockSpike } from "./video-system/compositions/StateBlockSpike";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -427,6 +428,16 @@ export const RemotionRoot: React.FC = () => {
         id="TriggerFrameVariantC"
         component={TriggerFrame_VariantC}
         durationInFrames={TRIGGER_FRAME_VARIANT_C_FRAMES}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{}}
+      />
+      {/* Visual Spike 01: 状态阻断 — 审查失败后下游真实停止 */}
+      <Composition
+        id="StateBlockSpike"
+        component={StateBlockSpike}
+        durationInFrames={300}
         fps={30}
         width={1920}
         height={1080}

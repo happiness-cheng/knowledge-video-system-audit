@@ -1,0 +1,25 @@
+{
+  "contractVersion": "4.0",
+  "shotId": "SPIKE-01",
+  "viewerStateBefore": "观众可能认为'审查不通过'只是一条提示，后续流程理论上仍然存在。",
+  "viewerStateAfter": "观众应该理解：审查失败会改变系统状态，下游生产链无法继续执行。",
+  "designRationale": "把抽象的执行门禁转化为清楚的状态变化和因果关系。审查失败不是文字提醒，是系统状态改变。",
+  "primaryVisualMode": "visual-explanation",
+  "secondaryVisualMode": "visual-narrative",
+  "explanationContribution": "让观众看到'失败节点怎样切断下游流程'，而不是只听见停止生产。",
+  "comprehensionContribution": "把抽象的执行门禁转化为清楚的状态变化和因果关系。",
+  "attentionContribution": "正常流动突然被中断，产生视觉反差和'为什么停了'的瞬间注意力。",
+  "audioVisualRelation": "reinforce",
+  "spokenResponsibility": "描述审查失败的事实",
+  "visualResponsibility": "展示失败如何切断下游流程",
+  "lockedMeaning": "失败发生 → 流程状态改变 → 下游无法继续",
+  "flexibleImplementation": "使用流体/光点/数据包；使用闸门/断路器/锁/冻结；具体颜色形状镜头运动",
+  "forbiddenDowngrade": [
+    "只把审查标红",
+    "只显示停止生产文字",
+    "下游节点仍继续依次高亮",
+    "用三张静态步骤卡解释",
+    "失败后切到全新独立页面",
+    "用转场掩盖状态并未真正继承"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "contractVersion": "4.0",
+  "existingPrimitives": [
+    "ProcessStepsScene: 步骤流程 + blockedAfter 静态阻断",
+    "MotionListItem: 危险色、灰化、降低透明度",
+    "Arrow: 活跃/非活跃连接线",
+    "BackgroundLayer: 网格背景"
+  ],
+  "reusableComponents": ["ProcessStepsScene + blockAtFrame 扩展（时序阻断）"],
+  "missingCapabilities": [],
+  "continuitySupport": "manual（通过 blockedAfter 持续生效）",
+  "blockingStateSupport": "built-in（ProcessStepsScene 原生支持）",
+  "mobileRisk": "low（步骤列表在手机端可读）",
+  "implementationDecision": "直接复用 ProcessStepsScene，新增 blockAtFrame 字段实现时序阻断。无需新建组件。"
+}

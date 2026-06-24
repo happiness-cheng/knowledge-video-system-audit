@@ -1,0 +1,49 @@
+{
+  "contractVersion": "4.0",
+  "spikeId": "SPIKE-STATE-BLOCK-01",
+  "targetCapability": "state-block",
+  "semanticGoal": "审查失败后，下游生产真实停止",
+  "prototypeDescription": "6 步生产流程（内容候选→审查→音频→字幕→渲染→发布），使用 ProcessStepsScene 的 blockAtFrame 实现时序阻断。审查步骤完成后（frame 120），下游 4 个步骤同时进入阻断状态（红色、灰化、打叉、删除线）。",
+  "renderEvidence": [
+    "render/state-block-spike.mp4",
+    "frames/01-before-review.png",
+    "frames/02-reviewing.png",
+    "frames/03-failure-event.png",
+    "frames/04-downstream-blocked.png",
+    "frames/05-final-hold.png",
+    "mobile/mobile-preview.mp4",
+    "mobile/mobile-keyframe.png"
+  ],
+  "coldViewQuestions": [
+    {
+      "question": "哪个节点失败了？",
+      "expectedAnswer": "审查节点",
+      "verifiable": true
+    },
+    {
+      "question": "失败后发生了什么？",
+      "expectedAnswer": "流程停止推进，下游节点被阻断",
+      "verifiable": true
+    },
+    {
+      "question": "哪些步骤没有继续？",
+      "expectedAnswer": "音频、字幕、渲染、发布",
+      "verifiable": true
+    },
+    {
+      "question": "停止是系统状态变化还是一句文字提醒？",
+      "expectedAnswer": "系统状态变化",
+      "verifiable": true
+    }
+  ],
+  "explanationContribution": "让观众看到失败节点怎样切断下游流程，而不是只听见停止生产。阻断的视觉效果（红叉、灰化、删除线、箭头暗淡）清楚展示了因果关系。",
+  "comprehensionContribution": "把抽象的执行门禁转化为清楚的状态变化。6 步流程清晰可读，阻断位置一目了然。",
+  "attentionContribution": "正常流动在 frame 120 突然被中断，产生视觉反差。阻断原因标签在中断后淡入，引导注意力。",
+  "knownIssues": [
+    "阻断是即时生效的，没有过渡动画（可后续优化）",
+    "下游步骤在阻断前没有'等待'视觉状态（可增加 pending 样式）",
+    "没有展示'审查通过后恢复'的场景（本次 Spike 范围外）"
+  ],
+  "completionStatus": "Visually Verified",
+  "completionStatusNote": "视频已渲染，关键帧已提取，冷观看验证通过。等待用户确认后可升级为 Viewer Accepted。"
+}
